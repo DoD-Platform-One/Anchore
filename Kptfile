@@ -1,6 +1,13 @@
 apiVersion: kpt.dev/v1alpha1
 kind: Kptfile
 metadata:
-  name: anchore
+    name: anchore
+upstream:
+    type: git
+    git:
+        commit: b1390aba9f4c721d27c5d66b1e5106b6aa215320
+        repo: https://repo1.dsop.io/platform-one/private/big-bang/apps/anchore
+        directory: /
+        ref: master
 packageMetadata:
-  shortDescription: baseline anchore
+    shortDescription: baseline anchore
