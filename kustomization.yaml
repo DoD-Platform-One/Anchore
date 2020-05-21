@@ -5,3 +5,8 @@ namespace: anchore
 
 resources:
   - template.yml
+
+patchesJSON6902:
+  - op: add
+    path: "/spec/template/metadata/annotations/traffic.sidecar.istio.io~1excludeOutboundPorts"
+    value: 5432
