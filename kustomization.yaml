@@ -1,9 +1,7 @@
-resources:
-  - namespace.yaml
-
 namespace: anchore
 
 resources:
+  - namespace.yaml
   - template.yml
 
 patchesJSON6902:
@@ -37,3 +35,9 @@ patchesJSON6902:
       kind: Deployment
       name: anchore-anchore-engine-simplequeue
     path: patch.deployment.yaml
+  - target:
+      group: batch
+      version: v1
+      kind: Job
+      name: anchore-engine-upgrade
+    path: patch.job.yaml

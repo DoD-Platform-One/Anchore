@@ -1,4 +1,4 @@
 - op: add
   path: "/spec/template/metadata/annotations"
   value:
-    traffic.sidecar.istio.io/excludeOutboundPorts: 5432
+    traffic.sidecar.istio.io/excludeOutboundPorts: "5432"
