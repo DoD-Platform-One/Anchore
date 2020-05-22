@@ -5,7 +5,7 @@ metadata:
 upstream:
     type: git
     git:
-        commit: 6bef2b91b24d12fcb56a1ad6db2c8a0033f52a65
+        commit: 9184869204e055ab829df04831a29c385b88ba6f
         repo: https://repo1.dsop.io/platform-one/private/big-bang/apps/anchore
         directory: /
         ref: master
