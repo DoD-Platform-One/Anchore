@@ -1,13 +1,6 @@
 apiVersion: kpt.dev/v1alpha1
 kind: Kptfile
 metadata:
-    name: anchore
-upstream:
-    type: git
-    git:
-        commit: 9184869204e055ab829df04831a29c385b88ba6f
-        repo: https://repo1.dsop.io/platform-one/private/big-bang/apps/anchore
-        directory: /
-        ref: master
+  name: anchore
 packageMetadata:
-    shortDescription: baseline anchore
+  shortDescription: baseline anchore for argocd
