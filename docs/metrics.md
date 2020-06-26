@@ -2,12 +2,36 @@
 
 ## Anchore metrics
 
+anchore_db_read_seconds_count
+anchore_db_read_seconds_created
+anchore_db_read_seconds_sum
+anchore_db_readwrite_seconds_count
+anchore_db_readwrite_seconds_created
+anchore-db_readwrite_seconds_sum
+anchore_db_write_seconds_count
+anchore_db_write_seconds_created
+anchore_db_write_seconds_sum
+anchore_monitor_runtime_seconds_count
+anchore_monitor_runtime_seconds_created
+anchore_monitor_runtime_seconds_sum
+anchore_queue_length
+anchore_service_info
+anchore_tmpspace_available_bytes
+
 ### API service
 
 - Metric Name - Value - Comment
 
 ### Engine
 
+prometheus_engine_queries
+prometheus_engine_queries_concurrent_max
+prometheus_engine_query_duration_seconds
+prometheus_engine_query_duration_seconds_count
+prometheus_engine_query_duration_seconds_sum
+
 ## Prometheus metric queries 
+
+
 
 ### Troubleshooting
