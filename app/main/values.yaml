@@ -138,10 +138,10 @@ anchoreGlobal:
   allowECRUseIAMRole: false
 
   # Enable prometheus metrics
-  enableMetrics: false
+  enableMetrics: true
 
   # Disable auth on prometheus metrics
-  metricsAuthDisabled: false
+  metricsAuthDisabled: true
 
   # Sets the password & email address for the default anchore-engine admin user.
   defaultAdminPassword: foobar

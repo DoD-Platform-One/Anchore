@@ -53,8 +53,8 @@ data:
     global_client_read_timeout: 0
 
     metrics:
-      enabled: false
-      auth_disabled: false
+      enabled: true
+      auth_disabled: true
     
     # Configure what feeds to sync.
     # The sync will hit http://ancho.re/feeds, if any outbound firewall config needs to be set in your environment.

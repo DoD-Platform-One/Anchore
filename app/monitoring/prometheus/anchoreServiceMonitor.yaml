@@ -1,0 +1,51 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    prometheus: k8s
+  name: anchore
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: anchore-anchore-engine
+  namespaceSelector:
+    matchNames:
+      - anchore
+  endpoints:
+    - interval: 30s
+      path: /metrics
+      params:
+        format: 
+          - prometheus
+      port: anchore-external-api
+      scheme: http
+      jobLabel: anchore-metrics-external-api
+
+    - interval: 30s
+      path: /metrics
+      params:
+        format: 
+          - prometheus
+      port: anchore-catalog-api
+      scheme: http
+      jobLabel: anchore-metrics-catalog-api
+
+    - interval: 30s
+      path: /metrics
+      params:
+        format: 
+          - prometheus
+      port: anchore-policy-api
+      scheme: http
+      jobLabel: anchore-metrics-policy-api
+
+    - interval: 30s
+      path: /metrics
+      params:
+        format: 
+          - prometheus
+      port: anchore-simplequeue-api
+      scheme: http
+      jobLabel: anchore-metrics-simplequeue-api
+      
