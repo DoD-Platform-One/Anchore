@@ -4,7 +4,7 @@ This repo contains manifests that deploy the Anchore Engine container image anal
 
 ## Table Of contents
 
-- Metrics [./metrics.md]
+- [Metrics](./metrics.md)
 
 ### Pre-requisites
 
