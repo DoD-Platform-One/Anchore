@@ -6,7 +6,7 @@ metadata:
   name: anchore-anchore-engine-analyzer
   labels:
     app: anchore-anchore-engine
-    chart: anchore-engine-1.6.6
+    chart: anchore-engine-1.6.9
     release: anchore
     heritage: Helm
     component: analyzer
@@ -33,7 +33,7 @@ metadata:
   name: anchore-anchore-engine
   labels:
     app: anchore-anchore-engine
-    chart: anchore-engine-1.6.6
+    chart: anchore-engine-1.6.9
     release: anchore
     heritage: Helm
 data:
@@ -189,7 +189,7 @@ metadata:
   name: anchore-anchore-engine-env
   labels:
     app: anchore-anchore-engine
-    chart: anchore-engine-1.6.6
+    chart: anchore-engine-1.6.9
     release: anchore
     heritage: Helm
 data:
@@ -204,7 +204,7 @@ metadata:
   name: anchore-anchore-engine-api
   labels:
     app: anchore-anchore-engine
-    chart: anchore-engine-1.6.6
+    chart: anchore-engine-1.6.9
     release: anchore
     heritage: Helm
     component: api
@@ -226,7 +226,7 @@ metadata:
   name: anchore-anchore-engine-catalog
   labels:
     app: anchore-anchore-engine
-    chart: anchore-engine-1.6.6
+    chart: anchore-engine-1.6.9
     release: anchore
     heritage: Helm
     component: catalog
@@ -248,7 +248,7 @@ metadata:
   name: anchore-anchore-engine-policy
   labels:
     app: anchore-anchore-engine
-    chart: anchore-engine-1.6.6
+    chart: anchore-engine-1.6.9
     release: anchore
     heritage: Helm
     component: policy
@@ -270,7 +270,7 @@ metadata:
   name: anchore-anchore-engine-simplequeue
   labels:
     app: anchore-anchore-engine
-    chart: anchore-engine-1.6.6
+    chart: anchore-engine-1.6.9
     release: anchore
     heritage: Helm
     component: simplequeue
@@ -292,7 +292,7 @@ metadata:
   name: anchore-anchore-engine-analyzer
   labels:
     app: anchore-anchore-engine
-    chart: anchore-engine-1.6.6
+    chart: anchore-engine-1.6.9
     release: anchore
     heritage: Helm
     component: analyzer
@@ -380,7 +380,7 @@ metadata:
   labels:
     app: anchore-anchore-engine
     component: api
-    chart: anchore-engine-1.6.6
+    chart: anchore-engine-1.6.9
     release: anchore
     heritage: Helm
 spec:
@@ -460,7 +460,7 @@ metadata:
   name: anchore-anchore-engine-catalog
   labels:
     app: anchore-anchore-engine
-    chart: anchore-engine-1.6.6
+    chart: anchore-engine-1.6.9
     release: anchore
     heritage: Helm
     component: catalog
@@ -536,7 +536,7 @@ metadata:
   name: anchore-anchore-engine-policy
   labels:
     app: anchore-anchore-engine
-    chart: anchore-engine-1.6.6
+    chart: anchore-engine-1.6.9
     release: anchore
     heritage: Helm
     component: policy
@@ -617,7 +617,7 @@ metadata:
   name: anchore-anchore-engine-simplequeue
   labels:
     app: anchore-anchore-engine
-    chart: anchore-engine-1.6.6
+    chart: anchore-engine-1.6.9
     release: anchore
     heritage: Helm
     component: simplequeue
@@ -695,7 +695,7 @@ metadata:
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/instance: "anchore"
     app.kubernetes.io/version: 0.7.2
-    helm.sh/chart: "anchore-engine-1.6.6"
+    helm.sh/chart: "anchore-engine-1.6.9"
   annotations:
     "helm.sh/hook": post-upgrade
     "helm.sh/hook-weight": "-5"
@@ -706,7 +706,7 @@ spec:
       labels:
         app.kubernetes.io/managed-by: "Helm"
         app.kubernetes.io/instance: "anchore"
-        helm.sh/chart: "anchore-engine-1.6.6"
+        helm.sh/chart: "anchore-engine-1.6.9"
     spec:
       securityContext:
         runAsUser: 1000

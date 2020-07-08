@@ -25,7 +25,7 @@ brew install kustomize
 ```
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm repo update
-helm template anchore stable/anchore-engine -f values.yaml > template.yml
+helm template anchore stable/anchore-engine -f ./app/main/values.yaml > ./app/main/template.yml
 ```
 
 ## Template Usage
@@ -126,6 +126,3 @@ spec:
       restartPolicy: OnFailure
 
 ```
-## Contributing
-
-To contribute to Anchore, see the [Contributing Guide](CONTRIBUTING.md).
