@@ -893,7 +893,7 @@ spec:
       - name: anchore-enterprise-pullcreds
       containers:
       - name: anchore-engine-analyzer
-        image: docker.io/anchore/enterprise:v2.3.0
+        image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
         imagePullPolicy: IfNotPresent
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "analyzer"]
         envFrom:
@@ -988,7 +988,7 @@ spec:
       - name: anchore-enterprise-pullcreds
       containers:
       - name: "anchore-engine-api"
-        image: docker.io/anchore/enterprise:v2.3.0
+        image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
         imagePullPolicy: IfNotPresent
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "apiext"]
         envFrom:
@@ -1037,7 +1037,7 @@ spec:
           
           null
       - name: anchore-engine-rbac-manager
-        image: docker.io/anchore/enterprise:v2.3.0
+        image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
         imagePullPolicy: IfNotPresent
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "rbac_manager"]
         envFrom:
@@ -1081,7 +1081,7 @@ spec:
           
           null
       - name: anchore-engine-rbac-authorizer
-        image: docker.io/anchore/enterprise:v2.3.0
+        image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
         imagePullPolicy: IfNotPresent
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "rbac_authorizer"]
         envFrom:
@@ -1129,7 +1129,7 @@ spec:
           
           null
       - name: "anchore-engine-reports"
-        image: docker.io/anchore/enterprise:v2.3.0
+        image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
         imagePullPolicy: IfNotPresent
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "reports"]
         ports:
@@ -1173,7 +1173,7 @@ spec:
           
           null
       - name: "anchore-engine-notifications"
-        image: docker.io/anchore/enterprise:v2.3.0
+        image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
         imagePullPolicy: IfNotPresent
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "notifications"]
         ports:
@@ -1261,7 +1261,7 @@ spec:
       - name: anchore-enterprise-pullcreds
       containers:
       - name: anchore-engine-catalog
-        image: docker.io/anchore/enterprise:v2.3.0
+        image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
         imagePullPolicy: IfNotPresent
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "catalog"]
         envFrom:
@@ -1345,7 +1345,7 @@ spec:
       - name: anchore-enterprise-pullcreds
       containers:
       - name: "anchore-engine-enterprise-feeds"
-        image: docker.io/anchore/enterprise:v2.3.0
+        image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
         imagePullPolicy: IfNotPresent
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "feeds"]
         ports:
@@ -1442,7 +1442,7 @@ spec:
       - name: anchore-enterprise-pullcreds
       containers:
       - name: "anchore-engine-enterprise-ui"
-        image: docker.io/anchore/enterprise-ui:v2.3.0
+        image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise-ui:2.3.1
         imagePullPolicy: IfNotPresent
         env:
         
@@ -1516,7 +1516,7 @@ spec:
       - name: anchore-enterprise-pullcreds
       containers:
       - name: anchore-engine-policy
-        image: docker.io/anchore/enterprise:v2.3.0
+        image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
         imagePullPolicy: IfNotPresent
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "policy_engine"]
         envFrom:
@@ -1605,7 +1605,7 @@ spec:
       - name: anchore-enterprise-pullcreds
       containers:
       - name: "anchore-engine-simplequeue"
-        image: docker.io/anchore/enterprise:v2.3.0
+        image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
         imagePullPolicy: IfNotPresent
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "simplequeue"]
         envFrom:
@@ -1807,7 +1807,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: "anchore-enterprise-upgrade"
-        image: docker.io/anchore/enterprise:v2.3.0
+        image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
         imagePullPolicy: IfNotPresent
         args: ["/bin/bash", "-c", "anchore-manager db --db-connect postgresql://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_HOST}/${ANCHORE_DB_NAME} upgrade --dontask"]
         envFrom:
@@ -1848,7 +1848,7 @@ spec:
       containers:
       - name: "anchore-enterprise-upgrade"
         imagePullPolicy: IfNotPresent
-        image: docker.io/anchore/enterprise:v2.3.0
+        image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
         args: ["/bin/bash", "-c", "anchore-enterprise-manager db --db-connect postgresql://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_HOST}/${ANCHORE_DB_NAME} upgrade --dontask"]
         envFrom:
         - secretRef:
