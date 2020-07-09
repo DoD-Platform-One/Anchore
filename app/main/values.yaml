@@ -90,9 +90,9 @@ ingress:
 # Global configuration shared by all anchore-engine services.
 anchoreGlobal:
   # Image used for all anchore engine deployments (excluding enterprise components).
-  image: registry.dsop.io/platform-one/apps/anchore/anchore-engine:0.7.2
+  image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-engine:0.7.2
   imagePullPolicy: IfNotPresent
- e# Set image pull secret name if using an anchore-engine image from a private registry
+  # Set image pull secret name if using an anchore-engine image from a private registry
   imagePullSecretName:
 
   # Set this value to True to setup the chart for OpenShift deployment compatibility.
