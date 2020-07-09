@@ -1,0 +1,30 @@
+# intellij
+.idea
+
+# Swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Session
+Session.vim
+
+# Terraform stuff
+.terraform
+*.tfstate*
+
+# Just in case
+admin.conf
+
+# Deploy stuff
+build_gitops
+
+# Cypress test stuffs
+node_modules
+*.mp4
+*.png
+
+# Mac things
+.DS_Store
