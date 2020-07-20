@@ -1,0 +1,11 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+    name: anchore-engine
+upstream:
+    type: git
+    git:
+        commit: 4a91f70f2a60f22683754e0d3c449bd9c4b97c87
+        repo: https://github.com/helm/charts
+        directory: /stable/anchore-engine
+        ref: master
