@@ -5,7 +5,7 @@ metadata:
 upstream:
     type: git
     git:
-        commit: 4a91f70f2a60f22683754e0d3c449bd9c4b97c87
-        repo: https://github.com/helm/charts
-        directory: /stable/anchore-engine
-        ref: master
+        commit: bbd33335b9aa920deeb48b77ca6bbf08cf877b1b
+        repo: https://github.com/anchore/anchore-charts
+        directory: stable/anchore-engine
+        ref: anchore-engine-1.7.0
