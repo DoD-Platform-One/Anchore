@@ -1,5 +1,0 @@
-namespace: anchore
-
-resources:
-  - resources/namespace.yaml
-
