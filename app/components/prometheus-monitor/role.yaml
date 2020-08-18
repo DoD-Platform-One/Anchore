@@ -4,7 +4,7 @@ items:
   kind: Role
   metadata:
     name: prometheus-k8s
-    namespace: anchore
+    namespace: anchore-enterprise
   rules:
   - apiGroups:
     - ""

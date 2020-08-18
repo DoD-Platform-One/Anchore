@@ -4,7 +4,7 @@ items:
   kind: RoleBinding
   metadata:
     name: prometheus-k8s
-    namespace: anchore
+    namespace: anchore-enterprise
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: Role

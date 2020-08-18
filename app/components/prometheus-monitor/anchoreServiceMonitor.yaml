@@ -11,7 +11,7 @@ spec:
       app: anchore-anchore-engine
   namespaceSelector:
     matchNames:
-      - anchore
+      - anchore-enterprise
   endpoints:
     - interval: 30s
       path: /metrics
