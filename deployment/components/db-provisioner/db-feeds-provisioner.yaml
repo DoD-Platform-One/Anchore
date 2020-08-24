@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ensure-anchore-feeds-rds-db
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    metadata:
+      name: ensure-anchore-feeds-rds-db
+      annotations:
+        sidecar.istio.io/inject: 'false'
+    spec:
+      containers:
+        - name: psql
+          image: "bitnami/postgresql"
+          command:
+            - /bin/bash
+            - -exc
+            - |
+              psql -tc "SELECT 1 FROM pg_database WHERE datname = '$ANCHORE_DB_NAME'" | grep -q 1 || psql -c "CREATE DATABASE $ANCHORE_DB_NAME"
+              psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$ANCHORE_DB_USER'" | grep -q 1 && psql -c "ALTER USER $ANCHORE_DB_USER WITH PASSWORD '$ANCHORE_DB_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB_NAME TO $ANCHORE_DB_USER;" | grep -q GRANT || psql -c "CREATE USER $ANCHORE_DB_USER WITH PASSWORD '$ANCHORE_DB_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB_NAME TO $ANCHORE_DB_USER;"
+          env:
+            - name: ANCHORE_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: anchore-anchore-engine-enterprise-feeds-env
+                  key: ANCHORE_DB_NAME
+            - name: ANCHORE_DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: anchore-anchore-engine-enterprise-feeds-env
+                  key: ANCHORE_DB_USER
+            - name: ANCHORE_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: anchore-anchore-engine
+                  key: ANCHORE_DB_PASSWORD
+          envFrom:
+            - secretRef:
+                name: db-credentials
+      restartPolicy: OnFailure

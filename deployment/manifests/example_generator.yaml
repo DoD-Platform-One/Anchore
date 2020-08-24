@@ -7,3 +7,5 @@ chartPath: anchore-engine/
 namespace: anchore
 valueFiles:
   - values.yaml
+sopsValueFiles:
+  - values.enc.yaml

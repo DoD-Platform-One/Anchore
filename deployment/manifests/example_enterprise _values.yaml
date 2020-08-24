@@ -18,7 +18,7 @@ anchoreGlobal:
   # imagePullSecretName: repo1-registry-read-creds
 
   # Specifies an existing secret to be used for admin and db passwords
-  existingSecret: anchore-secret
+  # existingSecret: anchore-secret
 
 # Enable prometheus metrics
   enableMetrics: true
@@ -85,7 +85,7 @@ anchore-feeds-db:
 
   # Specify an external (already existing) postgres deployment for use.
   # Set to the host and port. eg. mypostgres.myserver.io:5432
-  externalEndpoint: db.fences.dsop.io
+  externalEndpoint: db.example.com
 
 # Configure & enable the Anchore Enterprise on-prem feeds service.
 anchoreEnterpriseFeeds:
@@ -113,8 +113,6 @@ anchoreEnterpriseUi:
   # imagePullSecretName: repo1-registry-read-creds
 
 anchore-ui-redis:
-  existingSecret: redis-creds
-  existingSecretPasswordKey: redis-password
   cluster:
     enabled: false
   persistence:

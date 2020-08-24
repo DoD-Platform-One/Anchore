@@ -1,0 +1,12 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: anchore-enterprise-upgrade
+$patch: delete
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: anchore-engine-upgrade
+$patch: delete
