@@ -1,11 +1,11 @@
 apiVersion: kpt.dev/v1alpha1
 kind: Kptfile
 metadata:
-    name: anchore-engine
+    name: redis
 upstream:
     type: git
     git:
-        commit: 277cf7cd9b0bfd19a85a49e4b1f6bb903dbc8bb0
-        repo: https://github.com/bitnami/charts
-        directory: /bitnami/redis
+        commit: f29039fabb34c7e4b8a69af22f080e5c3fe6b728
+        repo: https://repo1.dsop.io/platform-one/apps/redis
+        directory: /
         ref: master
