@@ -36,7 +36,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: anchore-anchore-engine
-                  key: ANCHORE_DB_PASSWORD
+                  key: .feedsDbPassword
           envFrom:
             - secretRef:
                 name: db-credentials
