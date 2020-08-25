@@ -12,7 +12,7 @@ postgresql:
 # Global configuration shared by all anchore-engine services.
 anchoreGlobal:
   # Image used for all anchore engine deployments (excluding enterprise components).
-  image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-engine:0.7.3
+  image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-engine-ib:0.7.3-ib
   imagePullPolicy: IfNotPresent
   # Set image pull secret name if using an anchore-engine image from a private registry
   # imagePullSecretName: repo1-registry-read-creds
@@ -68,7 +68,7 @@ anchoreEnterpriseGlobal:
   # Create this secret with the following command - kubectl create secret generic anchore-license --from-file=license.yaml=<PATH TO LICENSE.YAML>
   licenseSecretName: anchore-enterprise-license
 
-  image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
+  image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise-ib:2.3.1-ib
   imagePullPolicy: IfNotPresent
   # Name of the kubernetes secret containing your dockerhub creds with access to the anchore enterprise images.
   # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
@@ -108,7 +108,7 @@ anchoreEnterpriseNotifications:
 anchoreEnterpriseUi:
   # If enabled is set to false, set anchore-ui-redis.enabled to false to ensure that helm doesn't stand up a unneccessary redis instance.
   enabled: true
-  image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise-ui:2.3.1 
+  image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise-ui-ib:2.3.1-ib
   imagePullPolicy: IfNotPresent
   # imagePullSecretName: repo1-registry-read-creds
 
