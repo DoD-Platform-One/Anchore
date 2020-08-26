@@ -109,7 +109,7 @@ anchoreGlobal:
     #   value: bar
 
   # Specifies an existing secret to be used for admin and db passwords
-  existingSecret: anchore-secret
+  # existingSecret: anchore-secret
 
   # The scratchVolume controls the mounting of an external volume for scratch space for image analysis. Generally speaking
   # you need to provision 3x the size of the largest image (uncompressed) that you want to analyze for this space.
