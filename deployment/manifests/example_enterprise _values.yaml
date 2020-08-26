@@ -5,6 +5,7 @@ postgresql:
   # To use an external DB or Google CloudSQL in GKE, uncomment & set 'enabled: false'
   # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
   enabled: false
+  image: registry.dsop.io/platform-one/apps/anchore/postgres12-ib:12.3-ib
   postgresUser: anchore
   postgresDatabase: anchore
   externalEndpoint: db.example.com
@@ -113,11 +114,25 @@ anchoreEnterpriseUi:
   # imagePullSecretName: repo1-registry-read-creds
 
 anchore-ui-redis:
+  # existingSecret: redis-creds
+  # existingSecretPasswordKey: redis-password
+  image:
+    registry: registry.dsop.io
+    repository: platform-one/apps/redis/redis6-ib
+    tag: 6.0.4-ib
   cluster:
     enabled: false
   persistence:
     enabled: false
 
+  # The command value for the redis chart needs to be set here to work with the IronBank redis image. 
+  # By default, the Redis chart tries to run a 'run.sh' script that is not present in IronBank images.
+  # Setting the value of command to null /should/ automatically fix the problem, but the value isn't properly unset for dependency subcharts  (https://github.com/helm/helm/issues/5184)
+  master:
+    command: redis-server
+  
+  slave:
+    command: redis-server
   # To use an external redis endpoint, uncomment to set 'enabled: false'
   # enabled: false
 

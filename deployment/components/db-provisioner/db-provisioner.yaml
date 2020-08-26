@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: psql
-          image: "bitnami/postgresql"
+          image: "registry.dsop.io/platform-one/apps/anchore/postgres12-ib:12.3-ib"
           command:
             - /bin/bash
             - -exc
