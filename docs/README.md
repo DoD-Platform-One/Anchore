@@ -47,7 +47,7 @@ Deploys a Prometheus Operator ServiceMonitor
 ## Component Model
 For bootstraps that use the Kustomize container for generation in ArgoCD, the most flexible way to is to use Kustomize Components to layer the resources.
 ```
-namespace: anchore-enterprise
+namespace: anchore
 
 bases:
   - ../base/
