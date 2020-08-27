@@ -1,0 +1,141 @@
+# Default values for anchore_engine chart.
+
+# Anchore engine has a dependency on Postgresql, configure here
+postgresql:
+  # To use an external DB or Google CloudSQL in GKE, uncomment & set 'enabled: false'
+  # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
+  enabled: false
+  image: registry.dsop.io/platform-one/apps/anchore/postgres12-ib:12.3-ib
+  postgresUser: anchore
+  postgresDatabase: anchore
+  externalEndpoint: db.example.com
+
+# Global configuration shared by all anchore-engine services.
+anchoreGlobal:
+  # Image used for all anchore engine deployments (excluding enterprise components).
+  image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-engine-ib:0.7.3-ib
+  imagePullPolicy: IfNotPresent
+  # Set image pull secret name if using an anchore-engine image from a private registry
+  # imagePullSecretName: repo1-registry-read-creds
+
+  # Specifies an existing secret to be used for admin and db passwords
+  # existingSecret: anchore-secret
+
+# Enable prometheus metrics
+  enableMetrics: true
+
+  # Disable auth on prometheus metrics
+  metricsAuthDisabled: true
+  
+  saml:
+    # Locations for keys used for signing and encryption. Only one of 'secret' or 'public_key_path'/'private_key_path' needs to be set. If all are set then the keys take precedence over the secret value
+    # Secret is for a shared secret and if set, all components in anchore should have the exact same value in their configs.
+    secret: ${ANCHORE_DB_PASSWORD}
+
+  oauthEnabled: true
+  oauthTokenExpirationSeconds: 3600
+
+  # Set this to True to enable storing user passwords only as secure hashes in the db. This can dramatically increase CPU usage if you
+  # don't also use oauth and tokens for internal communications (which requires keys/secret to be configured as well)
+  # WARNING: you should not change this after a system has been initialized as it may cause a mismatch in existing passwords
+  hashedPasswords: true
+
+# Configuration for the analyzer pods that perform image analysis
+# There may be many of these analyzers but best practice is to not have more than one per node since analysis
+# is very IO intensive. Use of affinity/anti-affinity rules for scheduling the analyzers is future work.
+anchoreAnalyzer:
+  annotations: {traffic.sidecar.istio.io/excludeOutboundPorts: "5432"}
+
+
+# Pod configuration for the anchore engine api service.
+anchoreApi:
+  annotations: {traffic.sidecar.istio.io/excludeOutboundPorts: "5432"}
+
+anchoreCatalog:
+  annotations: {traffic.sidecar.istio.io/excludeOutboundPorts: "5432"}
+
+# Pod configuration for the anchore engine policy service.
+anchorePolicyEngine:
+  annotations: {traffic.sidecar.istio.io/excludeOutboundPorts: "5432"}
+
+# Pod configuration for the anchore engine simplequeue service.
+anchoreSimpleQueue:
+  annotations: {traffic.sidecar.istio.io/excludeOutboundPorts: "5432"}
+
+# This section is used for configuring anchore enterprise.
+anchoreEnterpriseGlobal:
+  enabled: true
+  # Name of kubernetes secret containing your license.yaml file.
+  # Create this secret with the following command - kubectl create secret generic anchore-license --from-file=license.yaml=<PATH TO LICENSE.YAML>
+  licenseSecretName: anchore-enterprise-license
+
+  image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise-ib:2.3.1-ib
+  imagePullPolicy: IfNotPresent
+  # Name of the kubernetes secret containing your dockerhub creds with access to the anchore enterprise images.
+  # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
+  # imagePullSecretName: repo1-registry-read-creds
+
+# Configure the second postgres database instance for the enterprise feeds service.
+# Only utilized if anchoreEnterpriseGlobal.enabled: true
+anchore-feeds-db:
+  # To use an external DB or Google CloudSQL, uncomment & set 'enabled: false'
+  # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
+  enabled: false
+  postgresUser: anchore
+  postgresDatabase: anchorefeeds
+
+  # Specify an external (already existing) postgres deployment for use.
+  # Set to the host and port. eg. mypostgres.myserver.io:5432
+  externalEndpoint: db.example.com
+
+# Configure & enable the Anchore Enterprise on-prem feeds service.
+anchoreEnterpriseFeeds:
+  # If enabled is set to false, set anchore-feeds-db.enabled to false to ensure that helm doesn't stand up a unneccessary postgres instance.
+  enabled: true
+  apiOnly: true
+  annotations: {traffic.sidecar.istio.io/excludeOutboundPorts: "5432"}
+
+# Configure the Anchore Enterprise reporting component.
+anchoreEnterpriseReports:
+  enabled: true
+  annotations: {traffic.sidecar.istio.io/excludeOutboundPorts: "5432"}
+
+# Configure the Anchore Enterprise notifications component.
+anchoreEnterpriseNotifications:
+  enabled: true
+  annotations: {traffic.sidecar.istio.io/excludeOutboundPorts: "5432"}
+
+# Configure the Anchore Enterprise UI.
+anchoreEnterpriseUi:
+  # If enabled is set to false, set anchore-ui-redis.enabled to false to ensure that helm doesn't stand up a unneccessary redis instance.
+  enabled: true
+  image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise-ui-ib:2.3.1-ib
+  imagePullPolicy: IfNotPresent
+  # imagePullSecretName: repo1-registry-read-creds
+
+anchore-ui-redis:
+  # existingSecret: redis-creds
+  # existingSecretPasswordKey: redis-password
+  image:
+    registry: registry.dsop.io
+    repository: platform-one/apps/redis/redis6-ib
+    tag: 6.0.4-ib
+  cluster:
+    enabled: false
+  persistence:
+    enabled: false
+
+  # The command value for the redis chart needs to be set here to work with the IronBank redis image. 
+  # By default, the Redis chart tries to run a 'run.sh' script that is not present in IronBank images.
+  # Setting the value of command to null /should/ automatically fix the problem, but the value isn't properly unset for dependency subcharts  (https://github.com/helm/helm/issues/5184)
+  master:
+    command: redis-server
+  
+  slave:
+    command: redis-server
+  # To use an external redis endpoint, uncomment to set 'enabled: false'
+  # enabled: false
+
+  # If 'enabled: false', specify an external redis endpoint -
+  # eg redis://:<password>@hostname:6379
+  externalEndpoint: Null

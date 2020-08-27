@@ -1,6 +1,0 @@
-namespace: anchore
-
-resources:
-  - anchoreServiceMonitor.yaml
-  - role.yaml
-  - roleBinding.yaml
