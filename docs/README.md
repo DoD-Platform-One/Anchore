@@ -1,6 +1,6 @@
-# Anchore Enterprise v2.3.1
+# Anchore Enterprise v2.4.0
 
-This repo contains manifests that deploy the Anchore Engine container image analysis system. Anchore Engine requires a PostgreSQL database for which the connection information needs to be provided. Anchore executes in a service based architecture utilizing the following Anchore Engine services: External API, UI, SimpleQueue, Catalog, Policy Engine, and Analyzer.
+This repo contains manifests that deploy the Anchore Enterprise container image analysis system. Anchore Enterprise requires a PostgreSQL database for which the connection information needs to be provided. Anchore executes in a service based architecture utilizing the following Anchore Enterprise services: External API, UI, SimpleQueue, Catalog, Policy Engine, and Analyzer.
 
 ## Table Of contents
 
@@ -26,7 +26,7 @@ brew install kustomize
 # Structure and Sources
 ## Manifests
 This folder consists of two pulled packages using KPT:
-1. The anchore helm chart from https://github.com/anchore/anchore-charts/tree/master/stable/anchore-engine (currently pinned to chart v1.7.0)
+1. The anchore helm chart from https://github.com/anchore/anchore-charts/tree/master/stable/anchore-engine (currently pinned to chart v1.9.5)
 2. The redis helm chart from https://github.com/bitnami/charts/tree/master/bitnami/redis into the anchore chart's 'charts' folder (Current Anchore chart doesn't include redis charts directly and we need to avoid requiring a `helm dependency update` to use Helm generator)
 
 ## Components
@@ -43,7 +43,7 @@ These need to be specifically called out in the environment-specific `kustomize.
 
 Deploys a Prometheus Operator ServiceMonitor
 
-# How to Deploy 
+# How to Deploy
 ## Component Model
 For bootstraps that use the Kustomize container for generation in ArgoCD, the most flexible way to is to use Kustomize Components to layer the resources.
 ```
@@ -125,7 +125,7 @@ spec:
       annotations:
         sidecar.istio.io/inject: 'false'
     spec:
-      containers: 
+      containers:
       - name: psql
         image: "bitnami/postgresql"
         command:
@@ -133,7 +133,7 @@ spec:
         - -exc
         - |
           psql -tc "SELECT 1 FROM pg_database WHERE datname = '$ANCHORE_DB_NAME'" | grep -q 1 || psql -c "CREATE DATABASE $ANCHORE_DB_NAME"
-          psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$ANCHORE_DB_USER'" | grep -q 1 && psql -c "ALTER USER $ANCHORE_DB_USER WITH PASSWORD '$ANCHORE_DB_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB_NAME TO $ANCHORE_DB_USER;" | grep -q GRANT || psql -c "CREATE USER $ANCHORE_DB_USER WITH PASSWORD '$ANCHORE_DB_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB_NAME TO $ANCHORE_DB_USER;" 
+          psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$ANCHORE_DB_USER'" | grep -q 1 && psql -c "ALTER USER $ANCHORE_DB_USER WITH PASSWORD '$ANCHORE_DB_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB_NAME TO $ANCHORE_DB_USER;" | grep -q GRANT || psql -c "CREATE USER $ANCHORE_DB_USER WITH PASSWORD '$ANCHORE_DB_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB_NAME TO $ANCHORE_DB_USER;"
         env:
         - name: ANCHORE_DB_NAME
           valueFrom:
