@@ -5,7 +5,7 @@ postgresql:
   # To use an external DB or Google CloudSQL in GKE, uncomment & set 'enabled: false'
   # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
   enabled: false
-  image: registry.dsop.io/platform-one/apps/anchore/postgres12-ib:12.3-ib
+  image: registry1.dsop.io/ironbank/opensource/postgres/postgresql12:12.4
   postgresUser: anchore
   postgresPassword: anchore,supersecretpass
   postgresDatabase: anchore
@@ -91,10 +91,10 @@ ingress:
 # Global configuration shared by all anchore-engine services.
 anchoreGlobal:
   # Image used for all anchore engine deployments (excluding enterprise components).
-  image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-engine:0.7.2
+  image: registry1.dsop.io/ironbank/anchore/enterprise/enterprise:2.4.0
   imagePullPolicy: IfNotPresent
   # Set image pull secret name if using an anchore-engine image from a private registry
-  imagePullSecretName:
+  imagePullSecretName: registry1-read-creds
 
   # Set this value to True to setup the chart for OpenShift deployment compatibility.
   openShiftDeployment: False
@@ -533,11 +533,11 @@ anchoreEnterpriseGlobal:
   # Create this secret with the following command - kubectl create secret generic anchore-license --from-file=license.yaml=<PATH TO LICENSE.YAML>
   licenseSecretName: anchore-enterprise-license
 
-  image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise:2.3.1
+  image: registry1.dsop.io/ironbank/anchore/enterprise/enterprise:2.4.0
   imagePullPolicy: IfNotPresent
   # Name of the kubernetes secret containing your dockerhub creds with access to the anchore enterprise images.
   # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
-  imagePullSecretName: anchore-enterprise-pullcreds
+  imagePullSecretName: registry1-read-creds
 
 # Configure the second postgres database instance for the enterprise feeds service.
 # Only utilized if anchoreEnterpriseGlobal.enabled: true
@@ -753,7 +753,7 @@ anchoreEnterpriseNotifications:
 anchoreEnterpriseUi:
   # If enabled is set to false, set anchore-ui-redis.enabled to false to ensure that helm doesn't stand up a unneccessary redis instance.
   enabled: true
-  image: registry.dsop.io/platform-one/apps/anchore-enterprise/anchore-enterprise-ui:2.3.1 
+  image: registry1.dsop.io/ironbank/anchore/enterpriseui/enterpriseui:2.4.0
   imagePullPolicy: IfNotPresent
 
   # Set extra environment variables. These will be set on all UI containers.
@@ -863,20 +863,20 @@ anchoreEnterpriseUi:
 anchore-ui-redis:
   password: anchore-redis,123
   image:
-    registry: registry.dsop.io
-    repository: platform-one/apps/redis/redis6-ib
-    tag: 6.0.4-ib
+    registry: registry1.dsop.io
+    repository: ironbank/opensource/redis/redis6
+    tag: 6.0.4
   cluster:
     enabled: false
   persistence:
     enabled: false
 
-  # The command value for the redis chart needs to be set here to work with the IronBank redis image. 
+  # The command value for the redis chart needs to be set here to work with the IronBank redis image.
   # By default, the Redis chart tries to run a 'run.sh' script that is not present in IronBank images.
   # Setting the value of command to null /should/ automatically fix the problem, but the value isn't properly unset for dependency subcharts  (https://github.com/helm/helm/issues/5184)
   master:
     command: redis-server
-  
+
   slave:
     command: redis-server
   # To use an external redis endpoint, uncomment to set 'enabled: false'
