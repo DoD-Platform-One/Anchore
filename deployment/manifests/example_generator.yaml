@@ -3,7 +3,7 @@ kind: HelmGenerator
 metadata:
   name: helmGenerator
 releaseName: anchore
-chartPath: anchore-engine/
+chartPath: chart/stable/anchore-engine/
 namespace: anchore
 valueFiles:
   - values.yaml

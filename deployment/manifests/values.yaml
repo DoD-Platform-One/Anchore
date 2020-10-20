@@ -1,4 +1,6 @@
-# Default values for anchore_engine chart.
+#
+# Anchore Deployment for Big Bang
+#
 
 # Anchore engine has a dependency on Postgresql, configure here
 postgresql:
@@ -7,12 +9,12 @@ postgresql:
   enabled: false
   image: registry1.dsop.io/ironbank/opensource/postgres/postgresql12:12.4
   postgresUser: anchore
-  postgresPassword: anchore,supersecretpass
   postgresDatabase: anchore
+  # NOTE: Set this in values.enc.yaml
+  # postgresPassword: anchore,supersecretpass
 
-  # Specify an external (already existing) postgres deployment for use.
-  # Set to the host and port. eg. mypostgres.myserver.io:5432
-  externalEndpoint: db.example.com
+  # Set to the
+  externalEndpoint: db.admin.dsop.io
 
   # Configure size of the persistent volume used with helm managed chart.
   # This should be commented out if using an external endpoint.
@@ -37,6 +39,9 @@ postgresql:
   # - name: PATH
   #   value: /opt/rh/rh-postgresql96/root/usr/bin:/opt/app-root/src/bin:/opt/app-root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+
+
+
 # Google CloudSQL support in GKE via gce-proxy
 cloudsql:
   # To use CloudSQL in GKE set 'enable: true'
@@ -52,6 +57,9 @@ cloudsql:
     repository: gcr.io/cloudsql-docker/gce-proxy
     tag: 1.12
     pullPolicy: IfNotPresent
+
+
+
 
 # Create an ingress resource for all external anchore engine services (API & Enterprise UI).
 # By default this chart is setup to use the NGINX ingress controller which needs to be installed & configured on your cluster.
@@ -88,6 +96,9 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+
+
+
 # Global configuration shared by all anchore-engine services.
 anchoreGlobal:
   # Image used for all anchore engine deployments (excluding enterprise components).
@@ -106,7 +117,8 @@ anchoreGlobal:
 
   # Add common annotations to set on all pods. Useful expecially when inject secrets directly into pods as ENV from vault via mutation-webhook-injection method.
   # Ref: https://banzaicloud.com/docs/bank-vaults/mutating-webhook/
-  annotations: {}
+  annotations:
+    traffic.sidecar.istio.io/excludeOutboundPorts: "5432"
     # vault.security.banzaicloud.io/vault-addr: "https://vault:8200"
     # vault.security.banzaicloud.io/vault-tls-secret: "vault-tls"
 
@@ -128,6 +140,7 @@ anchoreGlobal:
 
   # A secret must be created in the same namespace as anchore-engine is deployed, containing the certificates & public/private keys used for SSL, SAML & custom CAs.
   # Certs and keys should be added using the file name the certificate is stored at. This secret will be mounted to /home/anchore/certs.
+  # NOTE: Service Mesh should take care of this
   certStoreSecretName: Null
 
   # Specify your pod securityContext here, by default the anchore images utilize the user/group 'anchore' using uid/gid 1000
@@ -157,23 +170,29 @@ anchoreGlobal:
   metricsAuthDisabled: true
 
   # Sets the password & email address for the default anchore-engine admin user.
-  defaultAdminPassword: foobar
+  # NOTE: Set this in values.enc.yaml
+  # defaultAdminPassword: foobar
+  # NOTE: Set this email to your maintainer
   defaultAdminEmail: example@email.com
 
-  saml:
-    # Locations for keys used for signing and encryption. Only one of 'secret' or 'public_key_path'/'private_key_path' needs to be set. If all are set then the keys take precedence over the secret value
-    # Secret is for a shared secret and if set, all components in anchore should have the exact same value in their configs.
-    secret: Null
-    privateKeyName: Null
-    publicKeyName: Null
+  # NOTE: Set `saml.secret` to values.enc.yaml
+  # saml:
+  #   # Locations for keys used for signing and encryption. Only one of 'secret' or 'public_key_path'/'private_key_path' needs to be set. If all are set then the keys take precedence over the secret value
+  #   # Secret is for a shared secret and if set, all components in anchore should have the exact same value in their configs.
+  #   secret: Null
+  #   # NOTE: Don't need these when there is a `saml.secret`
+  #   # privateKeyName: Null
+  #   # publicKeyName: Null
 
-  oauthEnabled: false
+  # NOTE: Enable oauth for sso
+  oauthEnabled: true
   oauthTokenExpirationSeconds: 3600
 
   # Set this to True to enable storing user passwords only as secure hashes in the db. This can dramatically increase CPU usage if you
   # don't also use oauth and tokens for internal communications (which requires keys/secret to be configured as well)
   # WARNING: you should not change this after a system has been initialized as it may cause a mismatch in existing passwords
-  hashedPasswords: false
+  # NOTE: Ideally this should be set to true. Heed the warning above though.
+  hashedPasswords: true
 
   # Configure the database connection within anchore-engine & enterprise-ui. This may get split into 2 different configurations based on service utilized.
   dbConfig:
@@ -187,6 +206,7 @@ anchoreGlobal:
     connectionPoolSize: 30
     connectionPoolMaxOverflow: 100
 
+  # NOTE: Service mesh should take care of this
   internalServicesSsl:
     # Enable to force all anchore-engine services to communicate internally using SSL
     enabled: false
@@ -196,7 +216,7 @@ anchoreGlobal:
     certSecretCertName: Null
 
   # To enable webhooks, set webhooksEnabled: true
-  webhooksEnabled: false
+  webhooksEnabled: true
   # Configure webhook outputs here. The service provides these webhooks for notifying external systems of updates
   webhooks:
     # User and password to be set (using HTTP basic auth) on all webhook calls if necessary
@@ -224,11 +244,15 @@ anchoreGlobal:
       failureThreshold: 3
       successThreshold: 1
 
+
+
+
 # Configuration for the analyzer pods that perform image analysis
 # There may be many of these analyzers but best practice is to not have more than one per node since analysis
 # is very IO intensive. Use of affinity/anti-affinity rules for scheduling the analyzers is future work.
 anchoreAnalyzer:
-  replicaCount: 1
+  # NOTE: Scale this up to match your deployment size
+  replicaCount: 2
   containerPort: 8084
 
   # Set extra environment variables. These will be set only on analyzer containers.
@@ -254,6 +278,7 @@ anchoreAnalyzer:
   # Enable the ability to read a user-supplied 'hints' file to allow users to override and/or augment the software artifacts that are discovered by anchore during its image analysis process.
   # Once enabled, the analyzer services will look for a file with a specific name, location and format located within the container image - /anchore_hints.json
   # For more info see - https://docs.anchore.com/current/docs/engine/engine_installation/configuration/content_hints
+  # NOTE: Read the documentation here and decide if this is a feature you want to allow
   enableHints: false
 
   configFile:
@@ -292,26 +317,30 @@ anchoreAnalyzer:
     # This scan occurs only at analysis time when the image content itself is available, and the scan results are available via the Engine API as well as
     # for consumption in new policy gates to allow gating of image with malware findings.
     # For more detailed configuration info see - https://docs.anchore.com/current/docs/engine/general/concepts/images/analysis/malware_scanning
-    #
-    # malware:
-    #   clamav:
-    #     enabled: true
-    #     db_update_enabled: true
+
+    malware:
+      clamav:
+        enabled: true
+        db_update_enabled: true
 
 
+  # NOTE: Prod resource suggestions
   # resources:
   #  limits:
-  #    cpu: 1
-  #    memory: 4G
+  #    cpu: 3
+  #    memory: 8Gi
   #  requests:
   #    cpu: 1
-  #    memory: 1G
+  #    memory: 4Gi
 
   labels: {}
   annotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+
+
 
 
 # Pod configuration for the anchore engine api service.
@@ -324,11 +353,12 @@ anchoreApi:
     #   value: bar
 
   # kubernetes service configuration for anchore external API
-  service:
-    type: ClusterIP
-    port: 8228
-    annotations: {}
-    label: {}
+  # NOTE: Service Mesh should take care of this
+  # service:
+  #   type: ClusterIP
+  #   port: 8228
+  #   annotations: {}
+  #   label: {}
 
   # (Optional) Overrides for constructing API URLs.  All values are optional.
   # external:
@@ -336,19 +366,23 @@ anchoreApi:
   #   hostname: anchore-api.example.com
   #   port: 8443
 
+  # NOTE: Prod resource suggestions
   # resources:
   #  limits:
-  #    cpu: 1
-  #    memory: 4G
+  #    cpu: 2
+  #    memory: 6Gi
   #  requests:
-  #    cpu: 100m
-  #    memory: 1G
+  #    cpu: 1
+  #    memory: 3Gi
 
   labels: {}
   annotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+
+
 
 anchoreCatalog:
   replicaCount: 1
@@ -433,25 +467,30 @@ anchoreCatalog:
       #     create_container: false
 
   # kubernetes service configuration for anchore catalog api
-  service:
-    type: ClusterIP
-    port: 8082
-    annotations: {}
-    labels: {}
+  # NOTE: Service Mesh should take care of this
+  # service:
+  #   type: ClusterIP
+  #   port: 8082
+  #   annotations: {}
+  #   labels: {}
 
+  # NOTE: Prod resource suggestions
   # resources:
   #  limits:
-  #    cpu: 1
-  #    memory: 2G
+  #    cpu: 2
+  #    memory: 5Gi
   #  requests:
-  #    cpu: 100m
-  #    memory: 500M
+  #    cpu: 1
+  #    memory: 4Gi
 
   labels: {}
   annotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+
+
 
 # Pod configuration for the anchore engine policy service.
 anchorePolicyEngine:
@@ -470,25 +509,30 @@ anchorePolicyEngine:
     feed_sync_checker: 3600
 
   # kubernetes service configuration for anchore policy engine api
-  service:
-    type: ClusterIP
-    port: 8087
-    annotations: {}
-    labels: {}
+  # NOTE: Service Mesh should take care of this
+  # service:
+  #   type: ClusterIP
+  #   port: 8087
+  #   annotations: {}
+  #   labels: {}
 
+  # NOTE: Prod resource suggestions
   # resources:
   #  limits:
-  #    cpu: 1
-  #    memory: 4G
+  #    cpu: 3
+  #    memory: 6Gi
   #  requests:
-  #    cpu: 100m
-  #    memory: 1G
+  #    cpu: 1
+  #    memory: 3Gi
 
   labels: {}
   annotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+
+
 
 # Pod configuration for the anchore engine simplequeue service.
 anchoreSimpleQueue:
@@ -500,19 +544,21 @@ anchoreSimpleQueue:
     #   value: bar
 
   # kubernetes service configuration for anchore simplequeue api
-  service:
-    type: ClusterIP
-    port: 8083
-    annotations: {}
-    labels: {}
+  # NOTE: Service Mesh should take care of this
+  # service:
+  #   type: ClusterIP
+  #   port: 8083
+  #   annotations: {}
+  #   labels: {}
 
+  # NOTE: Prod resource suggestions
   # resources:
   #  limits:
-  #    cpu: 1
-  #    memory: 1G
+  #    cpu: 2
+  #    memory: 4Gi
   #  requests:
-  #    cpu: 100m
-  #    memory: 256M
+  #    cpu: 1
+  #    memory: 2Gi
 
   labels: {}
   annotations: {}
@@ -520,11 +566,17 @@ anchoreSimpleQueue:
   tolerations: []
   affinity: {}
 
+
+
+
 # Pod configuration for the helm post-install-hook engine upgrade Job
 anchoreEngineUpgradeJob:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+
+
 
 # This section is used for configuring anchore enterprise.
 anchoreEnterpriseGlobal:
@@ -539,25 +591,29 @@ anchoreEnterpriseGlobal:
   # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
   imagePullSecretName: registry1-read-creds
 
+
+
+
 # Configure the second postgres database instance for the enterprise feeds service.
 # Only utilized if anchoreEnterpriseGlobal.enabled: true
 anchore-feeds-db:
   # To use an external DB or Google CloudSQL, uncomment & set 'enabled: false'
   # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
-  # enabled: false
-  postgresUser: anchoreengine
-  postgresPassword: anchore-postgres,123
-  postgresDatabase: anchore-feeds
+  enabled: false
+  postgresUser: anchorefeeds
+  postgresDatabase: anchorefeeds
+  # NOTE: Set this in values.enc.yaml
+  # postgresPassword: anchore-postgres,123
 
   # Specify an external (already existing) postgres deployment for use.
   # Set to the host and port. eg. mypostgres.myserver.io:5432
-  externalEndpoint: Null
+  externalEndpoint: db.admin.dsop.io
 
   # Configure size of the persitant volume used with helm managed chart.
   # This should be commented out if using an external endpoint.
-  persistence:
-    resourcePolicy: nil
-    size: 20Gi
+  # persistence:
+  #   resourcePolicy: nil
+  #   size: 20Gi
 
   # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
@@ -576,16 +632,21 @@ anchore-feeds-db:
   # - name: PATH
   #   value: /opt/rh/rh-postgresql96/root/usr/bin:/opt/app-root/src/bin:/opt/app-root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+
+
+
 # Configure & enable the Anchore Enterprise on-prem feeds service.
 anchoreEnterpriseFeeds:
   # If enabled is set to false, set anchore-feeds-db.enabled to false to ensure that helm doesn't stand up a unneccessary postgres instance.
   enabled: true
 
+  # NOTE: Enabling github feeds provides more data
   # Enable github advisory feeds
   githubDriverEnabled: false
   # GitHub advisory feeds require a github developer personal access token with no permission scopes selected.
   githubDriverToken: null
 
+  # NOTE: Enabling microsoft feeds provides more data
   # Enable microsoft feeds
   msrcDriverEnabled: false
   # For instructions on getting API key, see the msrc section of the Feeds docs - https://docs.anchore.com/current/docs/installation/feeds/
@@ -615,19 +676,21 @@ anchoreEnterpriseFeeds:
     connectionPoolMaxOverflow: 100
 
   # kubernetes service configuration for anchore feeds service api
-  service:
-    type: ClusterIP
-    port: 8448
-    annotations: {}
-    labels: {}
+  # NOTE: Service Mesh should take care of this
+  # service:
+  #   type: ClusterIP
+  #   port: 8448
+  #   annotations: {}
+  #   labels: {}
 
+  # NOTE: Prod resource suggestions
   # resources:
   #  limits:
-  #    cpu: 1
-  #    memory: 4G
+  #    cpu: 2
+  #    memory: 6Gi
   #  requests:
   #    cpu: 1
-  #    memory: 2G
+  #    memory: 3Gi
 
   labels: {}
   annotations: {}
@@ -635,11 +698,17 @@ anchoreEnterpriseFeeds:
   tolerations: []
   affinity: {}
 
+
+
+
 # Pod configuration for the helm post-install-hook feeds upgrade Job
 anchoreEnterpriseFeedsUpgradeJob:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+
+
 
 # Configure the Anchore Enterprise role based access control component.
 # This component consists of 2 containers that run as side-cars in the anchore engine api pod.
@@ -647,9 +716,10 @@ anchoreEnterpriseRbac:
   enabled: true
 
   # Set extra environment variables. These will be set on all rbac containers.
-  extraEnv: []
-    # - name: foo
-    #   value: bar
+  # NOTE: Missing from the IronBank Dockerfile so must patch this here to work with istio.
+  extraEnv:
+  - name: AUTHLIB_INSECURE_TRANSPORT
+    value: "true"
 
   # Kubernetes service config - annotations & serviceType configs must be set in anchoreApi
   # Due to RBAC sharing a service with the general API.
@@ -657,21 +727,24 @@ anchoreEnterpriseRbac:
     apiPort: 8229
     authPort: 8089
 
-  # authResources:
-  #  limits:
-  #    cpu: 1
-  #    memory: 1G
-  #  requests:
-  #    cpu: 100m
-  #    memory: 256M
+  authResources:
+   limits:
+     cpu: 1
+     memory: 1.5Gi
+   requests:
+     cpu: 500m
+     memory: 1Gi
 
-  # managerResources:
-  #  limits:
-  #    cpu: 1
-  #    memory: 1G
-  #  requests:
-  #    cpu: 100m
-  #    memory: 256M
+  managerResources:
+   limits:
+     cpu: 1
+     memory: 1.5Gi
+   requests:
+     cpu: 500m
+     memory: 1Gi
+
+
+
 
 # Configure the Anchore Enterprise reporting component.
 anchoreEnterpriseReports:
@@ -701,19 +774,23 @@ anchoreEnterpriseReports:
   service:
     port: 8558
 
+  # NOTE: Prod resource suggestions
   # resources:
   #  limits:
   #    cpu: 1
-  #    memory: 1G
+  #    memory: 1.5Gi
   #  requests:
-  #    cpu: 100m
-  #    memory: 256M
+  #    cpu: 500m
+  #    memory: 1Gi
 
   labels: {}
   annotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+
+
 
 # Configure the Anchore Enterprise notifications component.
 anchoreEnterpriseNotifications:
@@ -735,13 +812,14 @@ anchoreEnterpriseNotifications:
   service:
     port: 8668
 
+  # NOTE: Prod resource suggestions
   # resources:
   #  limits:
   #    cpu: 1
-  #    memory: 1G
+  #    memory: 1.5Gi
   #  requests:
-  #    cpu: 100m
-  #    memory: 256M
+  #    cpu: 500m
+  #    memory: 1Gi
 
   labels: {}
   annotations: {}
@@ -749,12 +827,16 @@ anchoreEnterpriseNotifications:
   tolerations: []
   affinity: {}
 
+
+
+
 # Configure the Anchore Enterprise UI.
 anchoreEnterpriseUi:
   # If enabled is set to false, set anchore-ui-redis.enabled to false to ensure that helm doesn't stand up a unneccessary redis instance.
   enabled: true
   image: registry1.dsop.io/ironbank/anchore/enterpriseui/enterpriseui:2.4.0
   imagePullPolicy: IfNotPresent
+  imagePullSecretName: registry1-read-creds
 
   # Set extra environment variables. These will be set on all UI containers.
   extraEnv: []
@@ -837,20 +919,22 @@ anchoreEnterpriseUi:
   #   standard: True
 
   # kubernetes service configuration for anchore UI
-  service:
-    type: ClusterIP
-    port: 80
-    annotations: {}
-    labels: {}
-    sessionAffinity: ClientIP
+  # NOTE: Service Mesh should take care of this
+  # service:
+  #   type: ClusterIP
+  #   port: 80
+  #   annotations: {}
+  #   labels: {}
+  #   sessionAffinity: ClientIP
 
+  # NOTE: Prod resource suggestions
   # resources:
   #  limits:
-  #    cpu: 1
-  #    memory: 1G
+  #    cpu: 2
+  #    memory: 3Gi
   #  requests:
-  #    cpu: 100m
-  #    memory: 256M
+  #    cpu: 500m
+  #    memory: 2Gi
 
   labels: {}
   annotations: {}
@@ -858,10 +942,14 @@ anchoreEnterpriseUi:
   tolerations: []
   affinity: {}
 
+
+
+
 # Anchore Engine Enterprise UI is dependent on redis for storing sessions
 # Only utilized if 'anchoreEnterpriseUi.enabled: true'
 anchore-ui-redis:
-  password: anchore-redis,123
+  # NOTE: Set this in values.enc.yaml
+  # password: anchore-redis,123
   image:
     registry: registry1.dsop.io
     repository: ironbank/opensource/redis/redis6
@@ -885,6 +973,9 @@ anchore-ui-redis:
   # If 'enabled: false', specify an external redis endpoint -
   # eg redis://:<password>@hostname:6379
   externalEndpoint: Null
+
+
+
 
 # Pod configuration for the helm post-install-hook enterprise engine upgrade Job
 anchoreEnterpriseEngineUpgradeJob:
