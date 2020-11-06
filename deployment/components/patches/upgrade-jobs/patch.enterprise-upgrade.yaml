@@ -9,7 +9,4 @@
   path: "/metadata/annotations"
   value:
     argocd.argoproj.io/hook: Sync
-- op: add
-  path: "/metadata/annotations"
-  value:
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
