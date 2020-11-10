@@ -318,10 +318,10 @@ anchoreAnalyzer:
     # for consumption in new policy gates to allow gating of image with malware findings.
     # For more detailed configuration info see - https://docs.anchore.com/current/docs/engine/general/concepts/images/analysis/malware_scanning
 
-    malware:
-      clamav:
-        enabled: true
-        db_update_enabled: true
+    # malware:
+    #   clamav:
+    #     enabled: true
+    #     db_update_enabled: true
 
 
   # NOTE: Prod resource suggestions
