@@ -90,10 +90,10 @@ ingress:
 # Global configuration shared by all anchore-engine services.
 anchoreGlobal:
   # Image used for all anchore engine deployments (excluding enterprise components).
-  image: docker.io/anchore/anchore-engine:v0.8.1
+  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:2.4.1
   imagePullPolicy: IfNotPresent
   # Set image pull secret name if using an anchore-engine image from a private registry
-  imagePullSecretName:
+  imagePullSecretName: registry1-read-creds
 
   # Set this value to True to setup the chart for OpenShift deployment compatibility.
   openShiftDeployment: False
@@ -532,11 +532,11 @@ anchoreEnterpriseGlobal:
   # Create this secret with the following command - kubectl create secret generic anchore-license --from-file=license.yaml=<PATH TO LICENSE.YAML>
   licenseSecretName: anchore-enterprise-license
 
-  image: docker.io/anchore/enterprise:v2.4.0
+  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:2.4.1
   imagePullPolicy: IfNotPresent
   # Name of the kubernetes secret containing your dockerhub creds with access to the anchore enterprise images.
   # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
-  imagePullSecretName: anchore-enterprise-pullcreds
+  imagePullSecretName: registry1-read-creds
 
 # Configure the second postgres database instance for the enterprise feeds service.
 # Only utilized if anchoreEnterpriseGlobal.enabled: true
@@ -646,9 +646,10 @@ anchoreEnterpriseRbac:
   enabled: true
 
   # Set extra environment variables. These will be set on all rbac containers.
-  extraEnv: []
-    # - name: foo
-    #   value: bar
+  # NOTE: Missing from the IronBank Dockerfile so must patch this here to work with istio.
+  extraEnv:
+  - name: AUTHLIB_INSECURE_TRANSPORT
+    value: "true"
 
   # Kubernetes service config - annotations & serviceType configs must be set in anchoreApi
   # Due to RBAC sharing a service with the general API.
@@ -752,8 +753,9 @@ anchoreEnterpriseNotifications:
 anchoreEnterpriseUi:
   # If enabled is set to false, set anchore-ui-redis.enabled to false to ensure that helm doesn't stand up a unneccessary redis instance.
   enabled: true
-  image: docker.io/anchore/enterprise-ui:v2.4.0
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:2.4.1
   imagePullPolicy: IfNotPresent
+  imagePullSecretName: registry1-read-creds
 
   # Set extra environment variables. These will be set on all UI containers.
   extraEnv: []
