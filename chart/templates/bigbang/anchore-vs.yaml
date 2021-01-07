@@ -1,0 +1,44 @@
+---
+{{- if .Values.istio.enabled -}}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: anchore-enterprise-ui-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  gateways:
+    - main.istio-system.svc.cluster.local
+  hosts:
+    - "anchore.{{ .Values.hostname }}"
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            port:
+              number: 80
+            host: {{ .Release.Name }}-anchore-engine-enterprise-ui
+{{- end }}
+---
+{{- if .Values.istio.enabled -}}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: anchore-engine-api-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  gateways:
+    - main.istio-system.svc.cluster.local
+  hosts:
+    - "anchore-api.{{ .Values.hostname }}"
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            port:
+              number: 8228
+            host: {{ .Release.Name }}-anchore-engine-api
+{{- end }}
