@@ -3,7 +3,7 @@
 This repo contains Big Bang's implementation of Anchore. This includes the upstream Helm chart with slight modifications to support Big Bang needs, 
 Big Bang documentation, and the pipeline infrastructure (tests). This package should typically be installed via the Umbrella package as an add on.
 
-## Table Of contents
+## Other Docs
 
 - [Metrics](./metrics.md)
 
