@@ -103,7 +103,7 @@ anchoreGlobal:
   image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:2.4.1
   imagePullPolicy: IfNotPresent
   # Set image pull secret name if using an anchore-engine image from a private registry
-  imagePullSecretName: registry1-read-creds
+  imagePullSecretName: private-registry
 
   # Set this value to True to setup the chart for OpenShift deployment compatibility.
   openShiftDeployment: False
@@ -546,7 +546,7 @@ anchoreEnterpriseGlobal:
   imagePullPolicy: IfNotPresent
   # Name of the kubernetes secret containing your dockerhub creds with access to the anchore enterprise images.
   # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
-  imagePullSecretName: registry1-read-creds
+  imagePullSecretName: private-registry
 
 # Configure the second postgres database instance for the enterprise feeds service.
 # Only utilized if anchoreEnterpriseGlobal.enabled: true
@@ -765,7 +765,7 @@ anchoreEnterpriseUi:
   enabled: true
   image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:2.4.1
   imagePullPolicy: IfNotPresent
-  imagePullSecretName: registry1-read-creds
+  imagePullSecretName: private-registry
 
   # Set extra environment variables. These will be set on all UI containers.
   extraEnv: []
