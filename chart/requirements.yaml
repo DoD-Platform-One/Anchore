@@ -10,6 +10,6 @@ dependencies:
 
   - name: redis
     version: "10"
-    # repository: "https://charts.bitnami.com/bitnami"
+    repository: "https://charts.bitnami.com/bitnami"
     condition: anchore-ui-redis.enabled,anchoreEnterpriseGlobal.enabled
     alias: anchore-ui-redis
