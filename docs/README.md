@@ -29,3 +29,6 @@ The tests folder contains all tests and additional dependencies (test values, et
 
 2. The Postgres and Redis images being used are not from IronBank. There appears to be an issue using the IronBank Postgres image for Anchore - this needs 
 more investigation. In addition, the Redis image being pulled from the upstream Helm chart is several versions beyond what IronBank contains.
+
+3. Add README details about the values file - some of this could be pulled from upstream (specifically would be helpful to have details on the 
+enterprise configuration/how to enabled the UI).
