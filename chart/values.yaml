@@ -10,6 +10,9 @@ istio:
 enterpriseLicenseYaml: |
   FULL LICENSE YAML (must be indented)
 
+
+# Upstream Anchore Values
+# -----------------------
 # Anchore engine has a dependency on Postgresql, configure here
 postgresql:
   # To use an external DB or Google CloudSQL in GKE, uncomment & set 'enabled: false'
@@ -28,9 +31,6 @@ postgresql:
   persistence:
     resourcePolicy: nil
     size: 20Gi
-
-# Upstream Anchore Values
-# -----------------------
 
   # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
