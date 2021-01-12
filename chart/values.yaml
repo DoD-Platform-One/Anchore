@@ -16,8 +16,8 @@ enterpriseLicenseYaml: |
 # Anchore engine has a dependency on Postgresql, configure here
 postgresql:
   # Use Ironbank image + pull secrets
-  #image: registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.18
-  #imagePullSecrets: private-registry
+  image: registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.18
+  imagePullSecrets: private-registry
   # To use an external DB or Google CloudSQL in GKE, uncomment & set 'enabled: false'
   # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
   # enabled: false
@@ -34,7 +34,12 @@ postgresql:
   persistence:
     resourcePolicy: nil
     size: 20Gi
+    subPath: "pgdata"
+    mountPath: /var/lib/pgsql
 
+  extraEnv:
+  - name: PGDATA
+    value: "/var/lib/pgsql/pgdata"
   # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
   # imageTag: latest
@@ -558,8 +563,8 @@ anchoreEnterpriseGlobal:
 # Only utilized if anchoreEnterpriseGlobal.enabled: true
 anchore-feeds-db:
   # Use Ironbank image + pull secrets
-  #image: registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.18
-  #imagePullSecrets: private-registry
+  image: registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.18
+  imagePullSecrets: private-registry
   # To use an external DB or Google CloudSQL, uncomment & set 'enabled: false'
   # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
   # enabled: false
@@ -576,7 +581,11 @@ anchore-feeds-db:
   persistence:
     resourcePolicy: nil
     size: 20Gi
+    mountPath: /var/lib/pgsql
 
+  extraEnv:
+  - name: PGDATA
+    value: "/var/lib/pgsql/pgdata"
   # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
   # imageTag: latest
