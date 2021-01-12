@@ -12,4 +12,4 @@ dependencies:
     version: "10"
     condition: anchore-ui-redis.enabled,anchoreEnterpriseGlobal.enabled
     alias: anchore-ui-redis
-    repository: file://./charts/redis-10.9.0.tgz
+    repository: file://./charts/redis
