@@ -40,6 +40,12 @@ postgresql:
   extraEnv:
   - name: PGDATA
     value: "/var/lib/pgsql/pgdata"
+
+  postgresConfig: {"listen_addresses": "*"}
+  pgHbaConf: |-
+    local all all md5
+    host all all all md5
+
   # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
   # imageTag: latest
@@ -586,6 +592,12 @@ anchore-feeds-db:
   extraEnv:
   - name: PGDATA
     value: "/var/lib/pgsql/pgdata"
+
+  postgresConfig: {"listen_addresses": "*"}
+  pgHbaConf: |-
+    local all all md5
+    host all all all md5
+
   # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
   # imageTag: latest
