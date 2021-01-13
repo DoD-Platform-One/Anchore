@@ -17,7 +17,7 @@ enterpriseLicenseYaml: |
 postgresql:
   # Use Ironbank image + pull secrets
   image: registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.18
-  imagePullSecrets: private-registry
+  imagePullSecrets: private-registry-mil
   # To use an external DB or Google CloudSQL in GKE, uncomment & set 'enabled: false'
   # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
   # enabled: false
@@ -123,7 +123,7 @@ anchoreGlobal:
   image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:2.4.1
   imagePullPolicy: IfNotPresent
   # Set image pull secret name if using an anchore-engine image from a private registry
-  imagePullSecretName: private-registry
+  imagePullSecretName: private-registry-mil
 
   # Set this value to True to setup the chart for OpenShift deployment compatibility.
   openShiftDeployment: False
@@ -566,14 +566,14 @@ anchoreEnterpriseGlobal:
   imagePullPolicy: IfNotPresent
   # Name of the kubernetes secret containing your dockerhub creds with access to the anchore enterprise images.
   # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
-  imagePullSecretName: private-registry
+  imagePullSecretName: private-registry-mil
 
 # Configure the second postgres database instance for the enterprise feeds service.
 # Only utilized if anchoreEnterpriseGlobal.enabled: true
 anchore-feeds-db:
   # Use Ironbank image + pull secrets
   image: registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.18
-  imagePullSecrets: private-registry
+  imagePullSecrets: private-registry-mil
   # To use an external DB or Google CloudSQL, uncomment & set 'enabled: false'
   # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
   # enabled: false
@@ -801,7 +801,7 @@ anchoreEnterpriseUi:
   enabled: true
   image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:2.4.1
   imagePullPolicy: IfNotPresent
-  imagePullSecretName: private-registry
+  imagePullSecretName: private-registry-mil
 
   # Set extra environment variables. These will be set on all UI containers.
   extraEnv: []
@@ -918,7 +918,7 @@ anchore-ui-redis:
     repository: opensource/redis/redis6
     tag: 6.0.4
     pullSecrets:
-      - private-registry
+      - private-registry-mil
   # Use Ironbank start-up script
   master:
     command: "docker-entrypoint.sh"
