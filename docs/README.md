@@ -5,6 +5,7 @@ This repo contains Big Bang's implementation of Anchore. This includes the upstr
 ## Other Docs
 
 - [Metrics](./metrics.md)
+- [Big Bang Modifications](./BBCHANGES.md)
 
 # Structure
 
@@ -21,7 +22,3 @@ The docs folder provides documentation from Big Bang about usage and features of
 ## Tests
 
 The tests folder contains all tests and additional dependencies (test values, etc) needed for executing tests in the CI pipeline.
-
-# TODOs
-
-1. The Postgres and Redis images being used are not from IronBank. There appears to be an issue using the IronBank Postgres image for Anchore - this needs more investigation. In addition, the Redis image being pulled from the upstream Helm chart is several versions beyond what IronBank contains.

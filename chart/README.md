@@ -59,7 +59,7 @@ stringData:
 
 ```
 
-For a prod environment it is important to externalize the dependency on postgres. See below for values to include for externalizing this. Since some of these values are sensitive they should be added to your encrypted `secrets.enc.yaml` file. (Do not duplicate anything above "postgresql:" that is included simply for guidance on where to place these values.)
+For a prod environment it may be desired to externalize the dependency on postgres. See below for values to include for externalizing this. Since some of these values are sensitive they should be added to your encrypted `secrets.enc.yaml` file. (Do not duplicate anything above "postgresql:" that is included simply for guidance on where to place these values.)
 
 ```yaml
 stringData:
@@ -124,7 +124,7 @@ addons:
 
 At this point you can also include other values to customize your install. For a prod environment it is important to externalize your dependencies (such as postgres for feeds and redis for the UI). Also make sure that you have externalized the main postgres instance as described in the above "Install with Umbrella" section. Since these include sensitive values make sure the sensitive values are included in your `secrets.enc.yaml` rather than the unencrypted `configmap.yaml`.
 
-If you plan to make use of the Enterprise Feeds Service, externalize that postgres config as well. You should be able to use a separate database in the same instance:
+If you plan to make use of the Enterprise Feeds Service, you may wish to externalize that postgres as well. You should be able to use a separate database in the same instance:
 
 ```yaml
 stringData:
@@ -140,7 +140,7 @@ stringData:
             postgresDatabase: "databaseName"
 ```
 
-If you plan to use the UI you will also need to externalize your Redis instance:
+If you plan to use the UI you may want to externalize your Redis instance:
 
 ```yaml
 stringData:
@@ -155,7 +155,7 @@ stringData:
 
 ## Installing on OpenShift
 
-The upstream chart READMEs provide additional details on how to deploy to OpenShift. Necessary values are also included in the values file in this repo.
+The [upstream chart README](https://github.com/anchore/anchore-charts/tree/master/stable/anchore-engine#installing-on-openshift) provides additional details on how to deploy to OpenShift. Necessary values are also included in the values file in this repo.
 
 ## Upstream Chart Updates
 
