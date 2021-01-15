@@ -59,22 +59,6 @@ stringData:
 
 ```
 
-For a prod environment it may be desired to externalize the dependency on postgres. See below for values to include for externalizing this. Since some of these values are sensitive they should be added to your encrypted `secrets.enc.yaml` file. (Do not duplicate anything above "postgresql:" that is included simply for guidance on where to place these values.)
-
-```yaml
-stringData:
-  values.yaml: |-
-    addons:
-      anchore:
-        values:
-          postgresql:
-            enabled: false # This disables the built in postgres
-            externalEndpoint: "host:port" # This is your (already existing) external postgres instance
-            postgresUser: "username"
-            postgresPassword: "password" 
-            postgresDatabase: "databaseName"
-```
-
 ## Adding Enterprise Components
 
  The following features are available to Anchore Enterprise customers. Please contact the Anchore team for more information about getting a license for the enterprise features. [Anchore Enterprise Demo](https://anchore.com/demo/)
@@ -122,9 +106,27 @@ addons:
         enabled: true
 ```
 
-At this point you can also include other values to customize your install. For a prod environment it is important to externalize your dependencies (such as postgres for feeds and redis for the UI). Also make sure that you have externalized the main postgres instance as described in the above "Install with Umbrella" section. Since these include sensitive values make sure the sensitive values are included in your `secrets.enc.yaml` rather than the unencrypted `configmap.yaml`.
+## Externalizing Dependencies for Production Environments
 
-If you plan to make use of the Enterprise Feeds Service, you may wish to externalize that postgres as well. You should be able to use a separate database in the same instance:
+Anchore relies on a single Postgres instance by default, as well as an additional Postgres database and Redis server if certain Enterprise configs are enabled. For development work and non-production workflows you can use the embedded dependency charts to set these dependencies up. Big Bang does not currently provide a production solution to be utilized, so it is recommended that you connect to existing external instances. Using the embedded instances in production is AT YOUR OWN RISK.
+
+To externalize the dependency on postgres see the values below. Since some of these values are sensitive they should be added to your encrypted `secrets.enc.yaml` file.
+
+```yaml
+stringData:
+  values.yaml: |-
+    addons:
+      anchore:
+        values:
+          postgresql:
+            enabled: false # This disables the built in postgres
+            externalEndpoint: "host:port" # This is your (already existing) external postgres instance
+            postgresUser: "username"
+            postgresPassword: "password" 
+            postgresDatabase: "databaseName"
+```
+
+If you plan to make use of the Enterprise Feeds Service, you will want to externalize that postgres as well. You can use a separate database in the same instance:
 
 ```yaml
 stringData:
@@ -140,7 +142,7 @@ stringData:
             postgresDatabase: "databaseName"
 ```
 
-If you plan to use the UI you may want to externalize your Redis instance:
+If you plan to use the UI you will want to externalize your Redis instance:
 
 ```yaml
 stringData:
