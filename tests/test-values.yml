@@ -20,7 +20,7 @@ postgresql:
   imagePullSecrets: private-registry-mil
   # To use an external DB or Google CloudSQL in GKE, uncomment & set 'enabled: false'
   # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
-  # enabled: false
+  enabled: true
   postgresUser: anchoreengine
   postgresPassword: anchore-postgres,123
   postgresDatabase: anchore
