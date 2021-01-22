@@ -1,0 +1,8 @@
+{
+  "pluginsFile": false,
+  "supportFile": false,
+  "fixturesFolder": false,
+  "env": {
+    "anchore_url": "anchore-api.bigbang.dev/v1/swagger.json"
+  }
+}
