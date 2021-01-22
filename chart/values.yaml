@@ -20,7 +20,7 @@ postgresql:
   imagePullSecrets: private-registry
   # To use an external DB or Google CloudSQL in GKE, uncomment & set 'enabled: false'
   # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
-  # enabled: false
+  enabled: false
   postgresUser: anchoreengine
   postgresPassword: anchore-postgres,123
   postgresDatabase: anchore
@@ -135,7 +135,8 @@ anchoreGlobal:
 
   # Add common annotations to set on all pods. Useful expecially when inject secrets directly into pods as ENV from vault via mutation-webhook-injection method.
   # Ref: https://banzaicloud.com/docs/bank-vaults/mutating-webhook/
-  annotations: {}
+  annotations:
+    traffic.sidecar.istio.io/excludeOutboundPorts: "5432"
     # vault.security.banzaicloud.io/vault-addr: "https://vault:8200"
     # vault.security.banzaicloud.io/vault-tls-secret: "vault-tls"
 
@@ -202,7 +203,7 @@ anchoreGlobal:
   # Set this to True to enable storing user passwords only as secure hashes in the db. This can dramatically increase CPU usage if you
   # don't also use oauth and tokens for internal communications (which requires keys/secret to be configured as well)
   # WARNING: you should not change this after a system has been initialized as it may cause a mismatch in existing passwords
-  hashedPasswords: false
+  hashedPasswords: true
 
   # Configure the database connection within anchore-engine & enterprise-ui. This may get split into 2 different configurations based on service utilized.
   dbConfig:
@@ -225,7 +226,7 @@ anchoreGlobal:
     certSecretCertName: Null
 
   # To enable webhooks, set webhooksEnabled: true
-  webhooksEnabled: false
+  webhooksEnabled: true
   # Configure webhook outputs here. The service provides these webhooks for notifying external systems of updates
   webhooks:
     # User and password to be set (using HTTP basic auth) on all webhook calls if necessary
@@ -257,7 +258,7 @@ anchoreGlobal:
 # There may be many of these analyzers but best practice is to not have more than one per node since analysis
 # is very IO intensive. Use of affinity/anti-affinity rules for scheduling the analyzers is future work.
 anchoreAnalyzer:
-  replicaCount: 1
+  replicaCount: 2
   containerPort: 8084
 
   # Set extra environment variables. These will be set only on analyzer containers.
@@ -576,7 +577,7 @@ anchore-feeds-db:
   imagePullSecrets: private-registry
   # To use an external DB or Google CloudSQL, uncomment & set 'enabled: false'
   # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
-  # enabled: false
+  enabled: false
   postgresUser: anchoreengine
   postgresPassword: anchore-postgres,123
   postgresDatabase: anchore-feeds
@@ -703,21 +704,21 @@ anchoreEnterpriseRbac:
     apiPort: 8229
     authPort: 8089
 
-  # authResources:
-  #  limits:
-  #    cpu: 1
-  #    memory: 1G
-  #  requests:
-  #    cpu: 100m
-  #    memory: 256M
+  authResources:
+   limits:
+     cpu: 1
+     memory: 1.5Gi
+   requests:
+     cpu: 500m
+     memory: 1Gi
 
-  # managerResources:
-  #  limits:
-  #    cpu: 1
-  #    memory: 1G
-  #  requests:
-  #    cpu: 100m
-  #    memory: 256M
+  managerResources:
+   limits:
+     cpu: 1
+     memory: 1.5Gi
+   requests:
+     cpu: 500m
+     memory: 1Gi
 
 # Configure the Anchore Enterprise reporting component.
 anchoreEnterpriseReports:
@@ -922,6 +923,8 @@ anchore-ui-redis:
   # Use Ironbank start-up script
   master:
     command: "docker-entrypoint.sh"
+  slave:
+    command: "docker-entrypoint.sh"
   password: anchore-redis,123
   cluster:
     enabled: false
@@ -929,7 +932,7 @@ anchore-ui-redis:
     enabled: false
 
   # To use an external redis endpoint, uncomment to set 'enabled: false'
-  # enabled: false
+  enabled: false
 
   # If 'enabled: false', specify an external redis endpoint -
   # eg redis://:<password>@hostname:6379
