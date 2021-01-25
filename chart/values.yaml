@@ -577,7 +577,7 @@ anchore-feeds-db:
   imagePullSecrets: private-registry
   # To use an external DB or Google CloudSQL, uncomment & set 'enabled: false'
   # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
-  # enabled: false
+  enabled: false
   postgresUser: anchoreengine
   postgresPassword: anchore-postgres,123
   postgresDatabase: anchore-feeds
@@ -932,7 +932,7 @@ anchore-ui-redis:
     enabled: false
 
   # To use an external redis endpoint, uncomment to set 'enabled: false'
-  # enabled: false
+  enabled: false
 
   # If 'enabled: false', specify an external redis endpoint -
   # eg redis://:<password>@hostname:6379
