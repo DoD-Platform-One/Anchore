@@ -120,7 +120,7 @@ ingress:
 # Global configuration shared by all anchore-engine services.
 anchoreGlobal:
   # Image used for all anchore engine deployments (excluding enterprise components).
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:2.4.1
+  image: registry1.dso.mil/ironbank/anchore/engine/engine:0.8.1
   imagePullPolicy: IfNotPresent
   # Set image pull secret name if using an anchore-engine image from a private registry
   imagePullSecretName: private-registry
