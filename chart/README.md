@@ -52,11 +52,7 @@ stringData:
   values.yaml: |-
     addons:
       anchore:
-        values:
-          anchoreGlobal:
-            defaultAdminPassword: "password"
-            defaultAdminEmail: "email"
-
+        adminPassword: ""
 ```
 
 ## Adding Enterprise Components
@@ -79,19 +75,16 @@ Once you have decided on Enterprise services to make use of, make sure to add th
 
 Anchore Enterprise requires a license secret to be created as well as enabling the Enterprise values through Helm. Big Bang has implemented automated creation of the license secret as follows.
 
-Within an encrypted "values" file - `secrets.enc.yaml` - add the following to set the license to be added as a secret:
+Within an encrypted "values" file - `secrets.enc.yaml` - add the following to set the license to be added as a secret. Note that you only need to set one of "licenseYaml" or "b64encYaml". The base64 encoded version is included to simplify any issues you may have passing the license as a full yaml value.
 
 ```yaml
 stringData:
   values.yaml: |-
     addons:
       anchore:
-        values:
-          enterpriseLicenseYaml: |
-            The entire contents of your license.yaml 
-              file from Anchore go here,
-              ensure that the indentation of the lines here
-            matches your original license file.
+        enterprise:
+          licenseYaml: "" # This is your full license file
+          b64encYaml: "" # This is the base64 encoded license file
 ```
 
 Once you have added the license to this location make sure to re-encrypt your secret file.
@@ -101,14 +94,28 @@ In your un-encrypted values file - `configmap.yaml` add the following to enable 
 ```yaml
 addons:
   anchore:
-    values:
-      anchoreEnterpriseGlobal:
-        enabled: true
+    enterprise:
+      enabled: true
 ```
 
-## Externalizing Dependencies for Production Environments
+## Handling Dependencies
 
-Anchore relies on a single Postgres instance by default, as well as an additional Postgres database and Redis server if certain Enterprise configs are enabled. For development work and non-production workflows you can use the embedded dependency charts to set these dependencies up. Big Bang does not currently provide a production solution to be utilized, so it is recommended that you connect to existing external instances. Using the embedded instances in production is AT YOUR OWN RISK.
+Anchore relies on a single Postgres instance by default, as well as an additional Postgres database and Redis server if certain Enterprise configs are enabled. For development work and non-production workflows you can use the embedded dependency charts to set these dependencies up. In this case you will need to provide a username, password, and database name to create the postgres instance with:
+
+```yaml
+stringData:
+  values.yaml: |-
+    addons:
+      anchore:
+        postgresql:
+          enabled: true # This enables the built in postgres
+          user: "username"
+          password: "password" 
+          mainDB: "databaseName"
+          enterpriseFeedsDB: "databaseName" # Only used if you want the enterprise feeds database
+```
+
+Big Bang does not currently provide a production solution to be utilized, so it is recommended that you connect to existing external instances. Using the embedded instances in production is AT YOUR OWN RISK.
 
 To externalize the dependency on postgres see the values below. Since some of these values are sensitive they should be added to your encrypted `secrets.enc.yaml` file.
 
@@ -117,42 +124,40 @@ stringData:
   values.yaml: |-
     addons:
       anchore:
-        values:
-          postgresql:
-            enabled: false # This disables the built in postgres
-            externalEndpoint: "host:port" # This is your (already existing) external postgres instance
-            postgresUser: "username"
-            postgresPassword: "password" 
-            postgresDatabase: "databaseName"
+        postgresql:
+          enabled: false # This disables the built in postgres
+          endpoint: "host:port" # This is your (already existing) external postgres instance
+          user: "username"
+          password: "password"
+          mainDB: "databaseName"
+          enterpriseFeedsDB: "databaseName" # Only used if you want the enterprise feeds database
 ```
 
-If you plan to make use of the Enterprise Feeds Service, you will want to externalize that postgres as well. You can use a separate database in the same instance:
+If you plan to use the UI:
+
+For development, you need to set a password for the redis instance:
 
 ```yaml
 stringData:
   values.yaml: |-
     addons:
       anchore:
-        values:
-          anchore-feeds-db: # This postgres instance is used by the enterprise feeds service
-            enabled: false 
-            externalEndpoint: "host:port"
-            postgresUser: "username"
-            postgresPassword: "password" 
-            postgresDatabase: "databaseName"
+        enterpriseUiRedis:
+          enabled: true # Enable the built in redis
+          password: "password"
 ```
 
-If you plan to use the UI you will want to externalize your Redis instance:
+For production, you will want to externalize your Redis instance:
 
 ```yaml
 stringData:
   values.yaml: |-
     addons:
       anchore:
-        values:
-          anchore-ui-redis:
-            enabled: false # Disable the built in redis
-            externalEndpoint: "redis://:<password>@hostname:port"
+        enterpriseUiRedis:
+          enabled: true # Enable the built in redis
+          password: "password"
+          endpoint: "host:port" # This is your already existing external redis instance
 ```
 
 ## Installing on OpenShift

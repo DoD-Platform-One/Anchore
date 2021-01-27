@@ -7,8 +7,10 @@ hostname: bigbang.dev
 istio:
   enabled: false
 
-enterpriseLicenseYaml: |
-  FULL LICENSE YAML (must be indented)
+# Pass an enterprise license, can be encoded to avoid indentation issues
+enterpriseLicense:
+  yaml: "" # Full multiline license yaml
+  b64encYaml: "" # Base64 encoded license yaml
 
 
 # Upstream Anchore Values
