@@ -205,7 +205,7 @@ anchoreGlobal:
   # Set this to True to enable storing user passwords only as secure hashes in the db. This can dramatically increase CPU usage if you
   # don't also use oauth and tokens for internal communications (which requires keys/secret to be configured as well)
   # WARNING: you should not change this after a system has been initialized as it may cause a mismatch in existing passwords
-  hashedPasswords: true
+  hashedPasswords: false
 
   # Configure the database connection within anchore-engine & enterprise-ui. This may get split into 2 different configurations based on service utilized.
   dbConfig:
