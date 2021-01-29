@@ -1,3 +1,4 @@
+{{- if .Values.anchoreGlobal.oauthEnabled }}
 {{- $component := "certs" -}}
 apiVersion: v1
 kind: Secret
@@ -18,3 +19,4 @@ metadata:
     "helm.sh/hook-delete-policy": "before-hook-creation"
 data:
 {{ ( include "anchore.gen-certs" . ) | indent 2 }}
+{{- end }}
