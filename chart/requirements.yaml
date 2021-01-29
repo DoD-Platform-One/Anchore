@@ -2,14 +2,14 @@ dependencies:
   - name: postgresql
     version: "1.0.1"
     condition: postgresql.enabled
-
+    repository: file://./dependencies/postgresql
   - name: postgresql
     version: "1.0.1"
     condition: anchore-feeds-db.enabled,anchoreEnterpriseGlobal.enabled
     alias: anchore-feeds-db
-
+    repository: file://./dependencies/postgresql
   - name: redis
     version: "10"
-    repository: "https://charts.bitnami.com/bitnami"
     condition: anchore-ui-redis.enabled,anchoreEnterpriseGlobal.enabled
     alias: anchore-ui-redis
+    repository: file://./dependencies/redis
