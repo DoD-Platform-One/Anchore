@@ -14,7 +14,7 @@ metadata:
     {{ toYaml . | nindent 4 }}
     {{- end }}
   annotations:
-    "helm.sh/hook": "pre-install"
+    "helm.sh/hook": "pre-install,pre-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation"
 data:
 {{ ( include "anchore.gen-certs" . ) | indent 2 }}
