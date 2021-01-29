@@ -195,17 +195,17 @@ anchoreGlobal:
   saml:
     # Locations for keys used for signing and encryption. Only one of 'secret' or 'public_key_path'/'private_key_path' needs to be set. If all are set then the keys take precedence over the secret value
     # Secret is for a shared secret and if set, all components in anchore should have the exact same value in their configs.
-    secret: Null
+    secret: anchore-certs
     privateKeyName: Null
     publicKeyName: Null
 
-  oauthEnabled: false
+  oauthEnabled: true
   oauthTokenExpirationSeconds: 3600
 
   # Set this to True to enable storing user passwords only as secure hashes in the db. This can dramatically increase CPU usage if you
   # don't also use oauth and tokens for internal communications (which requires keys/secret to be configured as well)
   # WARNING: you should not change this after a system has been initialized as it may cause a mismatch in existing passwords
-  hashedPasswords: false
+  hashedPasswords: true
 
   # Configure the database connection within anchore-engine & enterprise-ui. This may get split into 2 different configurations based on service utilized.
   dbConfig:

@@ -139,3 +139,28 @@ Return Anchore Engine default admin password
     {{- randAlphaNum 32 -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Expand the name of the chart.
+*/}}
+{{- define "anchore.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "anchore.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Generate certificates for Anchore
+*/}}
+{{- define "anchore.gen-certs" -}}
+{{- $altNames := list ( printf "%s.%s" (include "anchore.name" .) .Release.Namespace ) ( printf "%s.%s.svc" (include "anchore.name" .) .Release.Namespace ) -}}
+{{- $ca := genCA "anchore-ca" 365 -}}
+{{- $cert := genSignedCert ( include "anchore.name" . ) nil $altNames 365 $ca -}}
+tls.crt: {{ $cert.Cert | b64enc }}
+tls.key: {{ $cert.Key | b64enc }}
+{{- end -}}
