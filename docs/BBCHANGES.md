@@ -26,6 +26,7 @@ All chart changes are located under the `chart/templates/bigbang` directory. In 
 
 - Creation of virtual services for the UI and API
 - Automated creation of the license secret
+- Automated creation of an OAuth cert secret if needed (and this secret name is referenced under `anchoreGlobal.saml`)
 
 As additional Big Bang changes are made they should be added in these spots and this doc updated to reflect that.
 
