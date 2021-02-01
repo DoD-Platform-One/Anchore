@@ -8,7 +8,7 @@ This provides a log of these changes to make updates from upstream faster.
 
 ## Big Bang Modifications
 
-Added at the top of the values file are changes to support Istio and automated license creation.
+Added at the top of the values file are changes to support Istio, automated license creation, and SSO.
 
 ```yaml
 # Big Bang Values
@@ -20,12 +20,26 @@ istio:
 
 enterpriseLicenseYaml: |
   FULL LICENSE YAML (must be indented)
+
+sso:
+  enabled: false
+  name: "keycloak"
+  acsHttpsPort: -1
+  spEntityId: "platform1_a8604cc9-f5e9-4656-802d-d05624370245_bb8-anchore"
+  acsUrl: "https://anchore.bigbang.dev/service/sso/auth/keycloak"
+  defaultAccount: "user"
+  defaultRole: "read-write"
+  requireSignedAssertions: false
+  requireSignedResponse: true
+  idpMetadataUrl: "https://login.dso.mil/auth/realms/baby-yoda/protocol/saml/descriptor"
 ```
 
 All chart changes are located under the `chart/templates/bigbang` directory. In summary:
 
 - Creation of virtual services for the UI and API
 - Automated creation of the license secret
+- Creation of an SSO secret with the above SSO values
+- Automation of SSO configuration through a k8s job
 - Automated creation of an OAuth cert secret if needed (and this secret name is referenced under `anchoreGlobal.saml`)
 
 As additional Big Bang changes are made they should be added in these spots and this doc updated to reflect that.
@@ -101,11 +115,20 @@ anchore-feeds-db:
     host all all all md5
 ```
 
-Finally the redis startup command must be edited to use the Ironbank entrypoint:
+The redis startup command must be edited to use the Ironbank entrypoint:
 
 ```yaml
 anchore-ui-redis:
   # Use Ironbank start-up script
   master:
     command: "docker-entrypoint.sh"
+```
+
+To support SSO + Istio the RBAC container needs an additional env set:
+
+```yaml
+anchoreEnterpriseRbac:
+  extraEnv:
+  - name: AUTHLIB_INSECURE_TRANSPORT
+    value: "true"
 ```

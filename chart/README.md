@@ -87,6 +87,8 @@ stringData:
           b64encYaml: "" # This is the base64 encoded license file
 ```
 
+P1 has a license that can be used for dev - this license is located [here](https://repo1.dso.mil/platform-one/big-bang/apps/security-tools/anchore-enterprise/-/snippets/73). To make use of it you will need to SOPS decrypt it with your AWS Coder credentials.
+
 Once you have added the license to this location make sure to re-encrypt your secret file.
 
 In your un-encrypted values file - `configmap.yaml` add the following to enable Enterprise Global:
@@ -159,6 +161,10 @@ stringData:
           password: "password"
           endpoint: "host:port" # This is your already existing external redis instance
 ```
+
+### Enable SSO
+
+Big Bang has provided an automated way to configure SSO with Keycloak via the Helm chart. To enable and configure SSO follow the instructions in the main KEYCLOAK document.
 
 ## Installing on OpenShift
 

@@ -1,0 +1,66 @@
+{{- if .Values.sso.enabled }}
+# Job to perform integration of SSO to Anchore
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: configure-sso
+spec:
+  template:
+    metadata:
+      name: configure-sso
+      annotations:
+        sidecar.istio.io/inject: 'false'
+    spec:
+      # imagePullSecrets:
+      # - name: repo1-registry-read-creds
+      containers:
+        - name: configure-sso
+          image: {{ .Values.anchoreEnterpriseGlobal.image }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -ex
+              cd "/tmp"
+
+              # Extract SAML URL and name
+              SSO_NAME=$(grep -oP '^\s*"name"\s*:\s*"\K(.*)(?=",?\s*$)' anchore-sso.json)
+              IDP_URL=$(grep -oP '^\s*"idp_metadata_url"\s*:\s*"\K(.*)(?=",?\s*$)' anchore-sso.json)
+
+              # Wait for the given SAML IdP metadata url to exist and give data back
+              while [ $(curl -sw '%{http_code}' "${IDP_URL}" -o /dev/null) -ne 200 ]; do
+                echo "Waiting for IdP metadata..."
+                sleep 10;
+              done
+
+              echo "IdP URL is live..."
+
+              # Wait for Anchore Engine API to go live
+              while [ $(curl -sw '%{http_code}' "http://{{ template "anchore-engine.api.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.apiPort }}/v1/swagger.json" -o /dev/null) -ne 200 ]; do
+                echo "Waiting for Anchore API..."
+                sleep 10;
+              done
+
+              echo "Anchore Engine is live..."
+
+              # If a SAML IdP doesn't exist with the given name, add this. Otherwise update the existing entry
+              if [ $(curl -sw '%{http_code}' -u "admin:${ANCHORE_ADMIN_PASSWORD}" "http://{{ template "anchore-engine.api.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.apiPort }}/v1/saml/idps/${SSO_NAME}" -o /dev/null) -ne 200 ]; then
+                echo "Applying SAML config to Anchore..."
+                curl -vvv --fail -u "admin:${ANCHORE_ADMIN_PASSWORD}" -d "@anchore-sso.json" -H "Content-Type: application/json" http://{{ template "anchore-engine.api.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.apiPort }}/v1/saml/idps
+              else
+                echo  "SAML config already exists, updating..."
+                curl -vvv --fail -u "admin:${ANCHORE_ADMIN_PASSWORD}" -d "@anchore-sso.json" -H "Content-Type: application/json" --request PUT "http://{{ template "anchore-engine.api.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.apiPort }}/v1/saml/idps/${SSO_NAME}"
+              fi
+          envFrom:
+            - secretRef:
+                name: {{ template "anchore-engine.fullname" . }}
+          volumeMounts:
+            - name: anchore-sso
+              mountPath: "/tmp"
+              readOnly: true
+      volumes:
+        - name: anchore-sso
+          secret:
+            secretName: anchore-sso
+      restartPolicy: OnFailure
+{{- end }}
