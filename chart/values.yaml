@@ -12,6 +12,21 @@ enterpriseLicense:
   yaml: "" # Full multiline license yaml
   b64encYaml: "" # Base64 encoded license yaml
 
+# Enable/disable Keycloak SSO integration
+# If enabled, also enable OAuth - anchoreGlobal.oauthEnabled
+sso:
+  enabled: false
+  name: "keycloak"
+  acsHttpsPort: -1
+  spEntityId: "platform1_a8604cc9-f5e9-4656-802d-d05624370245_bb8-anchore"
+  acsUrl: "https://anchore.bigbang.dev/service/sso/auth/keycloak"
+  defaultAccount: "user"
+  defaultRole: "read-write" # If roleAttribute is passed, defaultRole will be ignored
+  roleAttribute: "" # Optional, defines the Keycloak attribute to use to map roles/permissions
+  requireSignedAssertions: false
+  requireSignedResponse: true
+  idpMetadataUrl: "https://login.dso.mil/auth/realms/baby-yoda/protocol/saml/descriptor"
+
 
 # Upstream Anchore Values
 # -----------------------

@@ -6,6 +6,7 @@ This repo contains Big Bang's implementation of Anchore. This includes the upstr
 
 - [Metrics](./metrics.md)
 - [Big Bang Modifications](./BBCHANGES.md)
+- [Keycloak](./KEYCLOAK.md)
 
 # Structure
 
