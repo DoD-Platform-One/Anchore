@@ -7,10 +7,10 @@ hostname: bigbang.dev
 istio:
   enabled: false
 
-# Pass an enterprise license, can be encoded to avoid indentation issues
-enterpriseLicense:
-  yaml: "" # Full multiline license yaml
-  b64encYaml: "" # Base64 encoded license yaml
+# Enterprise license: Specify your multiline license
+# enterpriseLicenseYaml: |
+#   License YAML
+enterpriseLicenseYaml: "" # Full multiline license yaml
 
 # Enable/disable Keycloak SSO integration
 # If enabled, also enable OAuth - anchoreGlobal.oauthEnabled
