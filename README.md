@@ -21,4 +21,6 @@ helm delete anchore -n anchore
 
 ## Usage
 
-For additional details on using this chart, view the README under the `chart` folder. It provides details on installation along with values that are important to update.
+For additional information and documentation help, start with the [documents folder](./docs/README.md).
+
+Within this folder there is documentation on the chart, keycloak, metrics, and the big bang specific changes from upstream.
