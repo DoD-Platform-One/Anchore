@@ -32,9 +32,10 @@ addons:
     sso:
       enabled: true
       clientId: "platform1_a8604cc9-f5e9-4656-802d-d05624370245_bb8-anchore" # Specific client ID for Anchore
-      samlDescriptorUrl: "https://login.dso.mil/auth/realms/baby-yoda/protocol/saml/descriptor" # SAML Descriptor URL for the keycloak instance
       roleAttribute: "" # Optional, set a Keycloak attribute for role mapping - must exist and contain Anchore roles, i.e. read-write, full-control, etc
 ```
+
+Also make sure you have set up the global oidc settings (realm and host).
 
 For more details on the values being set here, view the "Anchore SSO Reference" below.
 

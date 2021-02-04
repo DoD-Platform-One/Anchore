@@ -52,7 +52,7 @@ stringData:
   values.yaml: |-
     addons:
       anchore:
-        adminPassword: ""
+        adminPassword: "my-super-secret-password"
 ```
 
 ## Adding Enterprise Components
@@ -114,7 +114,7 @@ stringData:
     addons:
       anchore:
         postgresql:
-          enabled: true # This enables the built in postgres
+          external: false
           user: "username"
           password: "password" 
 ```
@@ -129,12 +129,13 @@ stringData:
     addons:
       anchore:
         postgresql:
-          enabled: false # This disables the built in postgres
-          endpoint: "host:port" # This is your (already existing) external postgres instance
+          external: true
           user: "username"
           password: "password"
+          host: "postgres.mydomain.com"
+          port: "5432"
           mainDB: "databaseName"
-          enterpriseFeedsDB: "databaseName" # Only used if you want the enterprise feeds database
+          feedsDB: "databaseName" # Only used for enterprise deployments
 ```
 
 If you plan to use the UI:
@@ -146,8 +147,8 @@ stringData:
   values.yaml: |-
     addons:
       anchore:
-        enterpriseUiRedis:
-          enabled: true # Enable the built in redis
+        redis:
+          external: false
           password: "password"
 ```
 
@@ -158,10 +159,11 @@ stringData:
   values.yaml: |-
     addons:
       anchore:
-        enterpriseUiRedis:
-          enabled: true # Enable the built in redis
+        redis:
+          external: true
           password: "password"
-          endpoint: "host:port" # This is your already existing external redis instance
+          host: "redis.mydomain.com"
+          port: "6379"
 ```
 
 ### Enable SSO
