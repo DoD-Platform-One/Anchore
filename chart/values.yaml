@@ -597,18 +597,13 @@ anchore-feeds-db:
   # Set to the host and port. eg. mypostgres.myserver.io:5432
   externalEndpoint: Null
 
-  # Configure size of the persitant volume used with helm managed chart.
+  # Configure size of the persistent volume used with helm managed chart.
   # This should be commented out if using an external endpoint.
   persistence:
     resourcePolicy: nil
     size: 20Gi
-    mountPath: /var/lib/pgsql
-
-  # Set the PGDATA var to an allowed directory for the IB image
-  # Match this above for the mountPath and subPath
-  extraEnv:
-  - name: PGDATA
-    value: "/var/lib/pgsql/pgdata"
+    subPath: "pgdata"
+    mountPath: /var/lib/postgresql
 
   # Set the configs to allow listening and connecting from other pods
   postgresConfig: {"listen_addresses": "*"}
