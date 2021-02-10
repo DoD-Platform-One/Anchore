@@ -86,12 +86,7 @@ postgresql:
     resourcePolicy: nil
     size: 20Gi
     subPath: "pgdata"
-    mountPath: /var/lib/pgsql
-  # Set the PGDATA var to an allowed directory for the IB image
-  # Match this above for the mountPath and subPath
-  extraEnv:
-  - name: PGDATA
-    value: "/var/lib/pgsql/pgdata"
+    mountPath: /var/lib/postgresql
   # Set the configs to allow listening and connecting from other pods
   postgresConfig: {"listen_addresses": "*"}
   pgHbaConf: |-
@@ -102,12 +97,8 @@ anchore-feeds-db:
   persistence:
     resourcePolicy: nil
     size: 20Gi
-    mountPath: /var/lib/pgsql
-  # Set the PGDATA var to an allowed directory for the IB image
-  # Match this above for the mountPath and subPath
-  extraEnv:
-  - name: PGDATA
-    value: "/var/lib/pgsql/pgdata"
+    subPath: "pgdata"
+    mountPath: /var/lib/postgresql
   # Set the configs to allow listening and connecting from other pods
   postgresConfig: {"listen_addresses": "*"}
   pgHbaConf: |-
