@@ -1,0 +1,11 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+  name: chart
+upstream:
+  type: git
+  git:
+    commit: e138550a1a97f0e92f753d210276b7d08908be33
+    repo: https://github.com/anchore/anchore-charts
+    directory: /stable/anchore-engine
+    ref: anchore-engine-1.9.5
