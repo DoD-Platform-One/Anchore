@@ -64,6 +64,10 @@ data:
           ssl: false
         db_pool_size: {{ .Values.anchoreEnterpriseFeeds.dbConfig.connectionPoolSize }}
         db_pool_max_overflow: {{ .Values.anchoreEnterpriseFeeds.dbConfig.connectionPoolMaxOverflow }}
+        {{- with .Values.anchoreEnterpriseFeeds.dbConfig.engineArgs }}
+        db_engine_args:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
     services:
       feeds:
         enabled: true
@@ -71,6 +75,7 @@ data:
         endpoint_hostname: {{ template "anchore-engine.enterprise-feeds.fullname" . }}
         listen: 0.0.0.0
         port: {{ .Values.anchoreEnterpriseFeeds.service.port }}
+        max_request_threads: {{ default 50 .Values.anchoreEnterpriseFeeds.maxRequestThreads }}
         # Time delay in seconds between consecutive driver runs for processing data
         cycle_timers:
           {{- toYaml .Values.anchoreEnterpriseFeeds.cycleTimers | nindent 10 }}
