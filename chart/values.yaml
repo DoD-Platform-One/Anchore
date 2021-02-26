@@ -5,7 +5,7 @@
 hostname: bigbang.dev
 
 istio:
-  enabled: false
+  enabled: false 
 
 # Enterprise license: Specify your multiline license
 # enterpriseLicenseYaml: |
@@ -105,9 +105,12 @@ ingress:
   # uiPath: /*
   # Exposing the feeds API w/ ingress is for special cases only, uncomment feedsPath if external access to the feeds API is needed
   # feedsPath: /v1/feeds/
+  # Exposing the report API w/ ingress enables the GraphQL interface at <anchore.url>/v1/reports/graphql
+  # reportsPath: /v1/reports/
   apiPath: /v1/
   uiPath: /
   # uncomment `feedsPath` to add an ingress endpoint for the feeds api
+  # uncomment 'reportsPath' to add an ingress endpoint for the reports api
 
   # Uncomment the following lines to bind on specific hostnames
   # apiHosts:
@@ -116,6 +119,8 @@ ingress:
   #   - anchore-ui.example.com
   # feedsHosts:
   #   - anchore-feeds.example.com
+  # reportsHosts:
+  #   - anchore-api.example.com
   annotations:
     # kubernetes.io/ingress.class: gce
     kubernetes.io/ingress.class: nginx
@@ -131,10 +136,14 @@ ingress:
 # Global configuration shared by all anchore-engine services.
 anchoreGlobal:
   # Image used for all anchore engine deployments (excluding enterprise components).
-  image: registry1.dso.mil/ironbank/anchore/engine/engine:0.8.1
+  image: registry1.dso.mil/ironbank/anchore/engine/engine:0.9.0
   imagePullPolicy: IfNotPresent
+
   # Set image pull secret name if using an anchore-engine image from a private registry
   imagePullSecretName: private-registry
+
+  # Specify a service account name utilized to run all Anchore pods
+  serviceAccountName:
 
   # Set this value to True to setup the chart for OpenShift deployment compatibility.
   openShiftDeployment: False
@@ -162,6 +171,10 @@ anchoreGlobal:
   # The scratchVolume controls the mounting of an external volume for scratch space for image analysis. Generally speaking
   # you need to provision 3x the size of the largest image (uncompressed) that you want to analyze for this space.
   scratchVolume:
+    # Some k8s Volumes do not properly respect the fsGroup permissions. These volumes will get mounted as root:root
+    # regardless of the security permissions requested. The fixGroupPermissions will create an initContainer that will
+    # fixup the permissions.
+    fixGroupPermissions: false
     mountPath: /analysis_scratch
     details:
       # Specify volume configuration here
@@ -176,6 +189,7 @@ anchoreGlobal:
   securityContext:
     runAsUser: 1000
     runAsGroup: 1000
+    fsGroup: 1000
 
   ###
   # Start of General Anchore Engine Configurations (populates /config/config.yaml)
@@ -183,7 +197,6 @@ anchoreGlobal:
   # Set where default configs are placed at startup. This must be a writable location for the pod.
   serviceDir: /anchore_service
   logLevel: INFO
-  cleanupImages: true
 
   # Define timeout, in seconds, for image analysis
   imageAnalyzeTimeoutSeconds: 36000
@@ -227,6 +240,9 @@ anchoreGlobal:
     sslRootCertName: Null
     connectionPoolSize: 30
     connectionPoolMaxOverflow: 100
+    # Allows you to set custom db connection pool settings
+    engineArgs: {}
+      # pool_recycle: 600
 
   internalServicesSsl:
     # Enable to force all anchore-engine services to communicate internally using SSL
@@ -250,6 +266,27 @@ anchoreGlobal:
     # <notification_type>/<userId> are required as documented at end of URI - only hostname:port should be configured.
     general: {}
       # url: "http://somehost:9090/<notification_type>/<userId>"
+
+  # Custom policy bundles can be specified here. This values section represents a kubernetes configmap that is volume mounted
+  # to <anchore_service_dir>/bundles and made available to all anchore services. See the docs for details on how to create policy bundles
+  # https://docs.anchore.com/current/docs/engine/general/concepts/policy/bundles/
+  policyBundles:
+    # custom_policy_bundle1.json: |
+    #   {
+    #     "id": "custom1",
+    #     "version": "1_0",
+    #     "name": "My custom bundle",
+    #     "comment": "My system's custom bundle",
+    #     "whitelisted_images": [],
+    #     "blacklisted_images": [],
+    #     "mappings": [],
+    #     "whitelists": [],
+    #     "policies": []
+    #   }
+    # custom_policy_bundle2.json: |
+    #   {
+    #     ....
+    #   }
 
   # Allow configuration of Kubernetes probes
   probes:
@@ -409,12 +446,16 @@ anchoreCatalog:
     vulnerability_scan: 14400
     # Interval at which the catalog looks for new work to put on the image analysis queue.
     analyzer_queue: 1
+    # Interval at which the catalog archival tasks are triggered.
+    archive_tasks: 43200
     # Interval notifications will be processed for state changes
     notifications: 30
     # Intervals service state updates are polled for the system status
     service_watcher: 15
     # Interval between checks to repo for new tags
     repo_watcher: 60
+    # Interval for when the catalog garbage collects images marked for deletion
+    image_gc: 60
 
   # Event log configuration for webhooks
   events:
@@ -425,7 +466,55 @@ anchoreCatalog:
         - error
         # - info
 
-  archive:
+  analysis_archive:
+    compression:
+      enabled: true
+      min_size_kbytes: 100
+    storage_driver:
+      # Valid storage driver names: 'db', 's3', 'swift'
+      name: db
+      config: {}
+
+      # Example S3 Configuration:
+      # name: s3
+      # config:
+      #   # All objects are stored in a single bucket, defined here
+      #   bucket: "anchore-engine-testing"
+      #   # A prefix for keys in the bucket if desired (optional)
+      #   prefix: "internaltest"
+      #   # Create the bucket if it doesn't already exist
+      #   create_bucket: false
+          # Url only needed for non-AWS S3 implementations (e.g. minio). Otherwise, configure the region instead
+      #   #url: "https://s3.amazonaws.com"
+      #   # AWS region to connect to if 'url' not specified, if both are set, then 'url' has precedent
+      #   region: us-west-2
+      #   # For Auth can provide access/secret keys or use 'iamauto' which will use an instance profile or any credentials found in normal aws search paths/metadata service
+      #   access_key: XXXX
+      #   secret_key: YYYY
+      #   iamauto: false
+
+      # Example Minio configuration (basically same as s3 example):
+      # name: s3
+      # config:
+      #   url: http://<minio url>:9000
+      #   bucket: mybucket
+      #   access_key: xxxxxx
+      #   secret_key: yyyyyy
+      #   create_bucket: true
+
+      # Example Swift Configuration:
+      # name: swift
+      # config:
+      #     # Config for swift has a few options, just add the keys and names as used to configure a swiftclient here. All are passed directly to the client impl.
+      #     user: "test:tester"
+      #     key: "testing"
+      #     auth: "http://swift_ephemeral:8080/auth/v1.0"
+      #     # The swift container where data will be stored
+      #     container: "local_test_anchore"
+      #     # Create the container if it is not already present
+      #     create_container: false
+
+  object_store:
     compression:
       enabled: true
       min_size_kbytes: 100
@@ -563,9 +652,11 @@ anchoreSimpleQueue:
 
 # Pod configuration for the helm post-install-hook engine upgrade Job
 anchoreEngineUpgradeJob:
+  enabled: true
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  annotations: {}
 
 # This section is used for configuring anchore enterprise.
 anchoreEnterpriseGlobal:
@@ -597,7 +688,7 @@ anchore-feeds-db:
   # Set to the host and port. eg. mypostgres.myserver.io:5432
   externalEndpoint: Null
 
-  # Configure size of the persistent volume used with helm managed chart.
+  # Configure size of the persitant volume used with helm managed chart.
   # This should be commented out if using an external endpoint.
   persistence:
     resourcePolicy: nil
@@ -633,6 +724,9 @@ anchoreEnterpriseFeeds:
   # If enabled is set to false, set anchore-feeds-db.enabled to false to ensure that helm doesn't stand up a unneccessary postgres instance.
   enabled: true
 
+  # Set custom feeds URL if multiple Anchore deployments are using the same feeds service
+  url: ""
+
   # Enable github advisory feeds
   githubDriverEnabled: false
   # GitHub advisory feeds require a github developer personal access token with no permission scopes selected.
@@ -665,6 +759,9 @@ anchoreEnterpriseFeeds:
     sslRootCertName: Null
     connectionPoolSize: 30
     connectionPoolMaxOverflow: 100
+    # Allows you to set custom db connection pool settings
+    engineArgs: {}
+      # pool_recycle: 600
 
   # kubernetes service configuration for anchore feeds service api
   service:
@@ -689,9 +786,11 @@ anchoreEnterpriseFeeds:
 
 # Pod configuration for the helm post-install-hook feeds upgrade Job
 anchoreEnterpriseFeedsUpgradeJob:
+  enabled: true
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  annotations: {}
 
 # Configure the Anchore Enterprise role based access control component.
 # This component consists of 2 containers that run as side-cars in the anchore engine api pod.
@@ -699,10 +798,11 @@ anchoreEnterpriseRbac:
   enabled: true
 
   # Set extra environment variables. These will be set on all rbac containers.
-  # NOTE: Missing from the IronBank Dockerfile so must patch this here to work with istio.
   extraEnv:
   - name: AUTHLIB_INSECURE_TRANSPORT
     value: "true"
+    # - name: foo
+    #   value: bar
 
   # Kubernetes service config - annotations & serviceType configs must be set in anchoreApi
   # Due to RBAC sharing a service with the general API.
@@ -712,19 +812,19 @@ anchoreEnterpriseRbac:
 
   authResources:
    limits:
-     cpu: 1
-     memory: 1.5Gi
+     cpu: 500m
+     memory: 1G
    requests:
      cpu: 500m
-     memory: 1Gi
+     memory: 1G
 
   managerResources:
    limits:
-     cpu: 1
-     memory: 1.5Gi
+     cpu: 500m
+     memory: 1G
    requests:
      cpu: 500m
-     memory: 1Gi
+     memory: 1G
 
 # Configure the Anchore Enterprise reporting component.
 anchoreEnterpriseReports:
@@ -946,9 +1046,11 @@ anchore-ui-redis:
 
 # Pod configuration for the helm post-install-hook enterprise engine upgrade Job
 anchoreEnterpriseEngineUpgradeJob:
+  enabled: true
   nodeSelector: {}
   tolerations: []
   affinity: {}
+  annotations: {}
 
 # To inject secrets ( credentails data ) via env, rather k8s secrets please set this flag to true.
 # This feature will be useful, especially to inject secrets directly into k8s pods from hashicorp vault
