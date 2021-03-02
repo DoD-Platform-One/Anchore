@@ -30,8 +30,8 @@ data:
     global_client_read_timeout: {{ default 0 .Values.anchoreGlobal.clientReadTimeout }}
 
     metrics:
-      enabled: {{ .Values.anchoreGlobal.enableMetrics }}
-      auth_disabled: {{ .Values.anchoreGlobal.metricsAuthDisabled }}
+      enabled: {{ .Values.monitoring.enabled }}
+      auth_disabled: {{ .Values.monitoring.enabled }}
     {{ if .Values.anchoreGlobal.webhooksEnabled }}
     webhooks:
       {{- toYaml .Values.anchoreGlobal.webhooks | nindent 6 }}

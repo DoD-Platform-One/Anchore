@@ -7,7 +7,7 @@ hostname: bigbang.dev
 istio:
   enabled: true
 
-# Enable Prometheus Monitoring - requires anchoreGlobal.enableMetrics & anchoreGlobal.metricsAuthDisabled
+# Enable Prometheus Monitoring
 monitoring:
   enabled: false
   namespace: monitoring
