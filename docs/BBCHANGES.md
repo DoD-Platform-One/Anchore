@@ -8,7 +8,7 @@ This provides a log of these changes to make updates from upstream faster.
 
 ## Big Bang Modifications
 
-Added at the top of the values file are changes to support Istio, automated license creation, and SSO.
+Added at the top of the values file are changes to support Istio, automated license creation, monitoring, and SSO.
 
 ```yaml
 # Big Bang Values
@@ -18,9 +18,18 @@ hostname: bigbang.dev
 istio:
   enabled: false
 
-enterpriseLicenseYaml: |
-  FULL LICENSE YAML (must be indented)
+# Enable Prometheus Monitoring
+monitoring:
+  enabled: false
+  namespace: monitoring
 
+# Enterprise license: Specify your multiline license
+# enterpriseLicenseYaml: |
+#   License YAML
+enterpriseLicenseYaml: "" # Full multiline license yaml
+
+# Enable/disable Keycloak SSO integration
+# If enabled, also enable OAuth - anchoreGlobal.oauthEnabled
 sso:
   enabled: false
   name: "keycloak"
@@ -28,7 +37,8 @@ sso:
   spEntityId: "platform1_a8604cc9-f5e9-4656-802d-d05624370245_bb8-anchore"
   acsUrl: "https://anchore.bigbang.dev/service/sso/auth/keycloak"
   defaultAccount: "user"
-  defaultRole: "read-write"
+  defaultRole: "read-write" # If roleAttribute is passed, defaultRole will be ignored
+  roleAttribute: "" # Optional, defines the Keycloak attribute to use to map roles/permissions
   requireSignedAssertions: false
   requireSignedResponse: true
   idpMetadataUrl: "https://login.dso.mil/auth/realms/baby-yoda/protocol/saml/descriptor"
@@ -124,6 +134,7 @@ anchoreEnterpriseRbac:
     value: "true"
 ```
 
+## Other Modifications
 
 To support the BigBang wrapper to simplify SSO setup the following global saml option needs to bet set:
 ```yaml
@@ -131,7 +142,6 @@ anchoreGlobal:
   saml:
     secret: anchore-certs
 ```
-
 
 The following block needs to be added to the end of the _helpers.tpl file:
 ```yaml
@@ -159,4 +169,24 @@ Generate certificates for Anchore
 tls.crt: {{ $cert.Cert | b64enc }}
 tls.key: {{ $cert.Key | b64enc }}
 {{- end -}}
+```
+
+In `chart/templates/engine_configmap.yaml`, modify the metrics lines as such:
+```yaml
+    metrics:
+      enabled: {{ .Values.monitoring.enabled }}
+      auth_disabled: {{ .Values.monitoring.enabled }}
+```
+
+Do the same in `chart/templates/enterprise_configmap.yaml`:
+```yaml
+    metrics:
+      enabled: {{ .Values.monitoring.enabled }}
+      auth_disabled: {{ .Values.monitoring.enabled }}
+```
+
+In `chart/templates/enterprise_feeds_configmap.yaml` also modify the metrics lines:
+```yaml
+    metrics:
+      enabled: {{ .Values.monitoring.enabled }}
 ```

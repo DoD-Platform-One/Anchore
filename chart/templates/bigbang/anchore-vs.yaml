@@ -35,6 +35,19 @@ spec:
   http:
     - match:
         - uri:
+            prefix: /metrics
+      route:
+        - destination:
+            port:
+              number: 8228
+            host: {{ .Release.Name }}-anchore-engine-api
+      fault:
+        abort:
+          percentage:
+            value: 100
+          httpStatus: 403
+    - match:
+        - uri:
             prefix: /
       route:
         - destination:
