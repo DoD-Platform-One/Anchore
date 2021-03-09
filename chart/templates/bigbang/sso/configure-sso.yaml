@@ -11,8 +11,8 @@ spec:
       annotations:
         sidecar.istio.io/inject: 'false'
     spec:
-      # imagePullSecrets:
-      # - name: repo1-registry-read-creds
+      imagePullSecrets:
+        - name: {{ .Values.anchoreEnterpriseGlobal.imagePullSecretName }}
       containers:
         - name: configure-sso
           image: {{ .Values.anchoreEnterpriseGlobal.image }}

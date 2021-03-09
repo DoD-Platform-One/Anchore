@@ -4,6 +4,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.11.0-bb.3]
+## Fixed
+- Fixed an SSO bug caused by hashed passwords not being set consistently - BB Issue #135
+
+
 ## [1.11.0-bb.2]
 ## Changed
 - Modified chart to handle monitoring more cleanly
