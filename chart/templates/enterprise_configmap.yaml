@@ -41,7 +41,9 @@ data:
     # Locations for keys used for signing and encryption. Only one of 'secret' or 'public_key_path'/'private_key_path' needs to be set. If all are set then the keys take precedence over the secret value
     # Secret is for a shared secret and if set, all components in anchore should have the exact same value in their configs.
     keys:
-      secret: {{ .Values.anchoreGlobal.saml.secret }}
+      {{- if or .Values.anchoreGlobal.saml.secret .Values.anchoreGlobal.saml.useExistingSecret }}
+      secret: ${ANCHORE_SAML_SECRET}
+      {{- end }}
       {{- with .Values.anchoreGlobal.saml.publicKeyName }}
       public_key_path: /home/anchore/certs/{{- . }}
       {{- end }}
@@ -107,7 +109,7 @@ data:
       reports:
         enabled: true
         require_auth: true
-        endpoint_hostname: {{ template "anchore-engine.enterprise-reports.fullname" . }}
+        endpoint_hostname: {{ template "anchore-engine.api.fullname" . }}
         listen: '0.0.0.0'
         port: {{ .Values.anchoreEnterpriseReports.service.port }}
         max_request_threads: {{ default 50 .Values.anchoreEnterpriseReports.maxRequestThreads }}
@@ -130,7 +132,7 @@ data:
       notifications:
         enabled: true
         require_auth: true
-        endpoint_hostname: {{ template "anchore-engine.enterprise-notifications.fullname" . }}
+        endpoint_hostname: {{ template "anchore-engine.api.fullname" . }}
         listen: '0.0.0.0'
         port: {{ .Values.anchoreEnterpriseNotifications.service.port }}
         max_request_threads: {{ default 50 .Values.anchoreEnterpriseNotifications.maxRequestThreads }}
