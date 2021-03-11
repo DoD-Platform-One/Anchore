@@ -43,6 +43,33 @@ NOTE: Local development makes use of login.dsop.io and the necessary values are 
 
 If you are installing the chart without the core Big Bang application chart you will need to review the `chart/values.yaml` file for additional configuration help. Big Bang provides simplified mapping of some values.
 
+## Anchore 1.12.2-bb.0 Upgrade
+
+When upgrading from any older chart version to 1.12.2-bb.0 you will hit an issue with SSO. After keycloak authentication you will be hit with a message from Anchore: "cannot POST /v1/saml/sso/keycloak (400)".
+
+To fix this issue without requiring a clean install, you need to run commands to clean up the DB and restart the API pod.
+
+If running the internal postgres deployment on kubernetes, you should be able to run the following commands replacing the \<postgres\> values with the current auth/db name for your instance:
+
+```bash
+kubectl exec -it -n anchore deploy/anchore-postgresql -- psql postgresql://<postgres-user>:<postgres-password>@localhost/<postgres-db> -c "DELETE FROM public.oauth2_clients; COMMIT;"
+kubectl delete pods -l component=api -n anchore
+```
+
+If using an external postgres database, connect to it as the anchore user and run this PSQL command:
+
+```sql
+DELETE FROM public.oauth2_clients; COMMIT;
+```
+
+Then restart the API pod with this command:
+
+```bash
+kubectl delete pods -l component=api -n anchore
+```
+
+This issue should be fixed in the upstream Anchore 3.0.1 Enterprise release, so this is a temporary workaround.
+
 ## Additional References
 
 [Anchore SSO Reference](https://anchore.com/blog/feature-series-anchore-enterprise-2-1-sso/) - This includes the process to set up Keycloak integration manually. Our Helm chart automates this process through API calls.

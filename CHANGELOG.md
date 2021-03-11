@@ -4,13 +4,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.12.2-bb.0]
+### Changed
+- Bumped upstream chart version to 1.12.2
+- Bumped Anchore enterprise images to 3.0.0 from registry1
+- BREAKING UPDATE (SSO): When upgrading from 1.11.0-bb.3 and using SSO, manual config is required. See the note in the [Keycloak Docs](./docs/KEYCLOAK.md#anchore-1122-bb0-upgrade).
+
+### Fixed
+- Fixed an upgrade bug caused by sso job not being removed
+
 ## [1.11.0-bb.3]
-## Fixed
+### Fixed
 - Fixed an SSO bug caused by hashed passwords not being set consistently - BB Issue #135
 
-
 ## [1.11.0-bb.2]
-## Changed
+### Changed
 - Modified chart to handle monitoring more cleanly
 
 ## [1.11.0-bb.1]

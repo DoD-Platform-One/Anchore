@@ -150,8 +150,8 @@ anchoreGlobal:
   # Specify a service account name utilized to run all Anchore pods
   serviceAccountName:
 
-  # Set this value to True to setup the chart for OpenShift deployment compatibility.
-  openShiftDeployment: False
+  # Set this value to true to setup the chart for OpenShift deployment compatibility.
+  openShiftDeployment: false
 
   # Add additionnal labels to all kubernetes resources
   labels: {}
@@ -171,6 +171,10 @@ anchoreGlobal:
     #   value: bar
 
   # Specifies an existing secret to be used for admin and db passwords
+  # The secret should define the following environment vars:
+  # ANCHORE_ADMIN_PASSWORD
+  # ANCHORE_DB_PASSWORD
+  # ANCHORE_SAML_SECRET (if applicable)
   existingSecret: Null
 
   # The scratchVolume controls the mounting of an external volume for scratch space for image analysis. Generally speaking
@@ -220,9 +224,11 @@ anchoreGlobal:
   defaultAdminEmail: example@email.com
 
   saml:
-    # Locations for keys used for signing and encryption. Only one of 'secret' or 'public_key_path'/'private_key_path' needs to be set. If all are set then the keys take precedence over the secret value
+    # Locations for keys used for signing and encryption. Only one of 'secret' or 'privateKeyName'/'publicKeyName' needs to be set. If all are set then the keys take precedence over the secret value
     # Secret is for a shared secret and if set, all components in anchore should have the exact same value in their configs.
     secret: anchore-certs
+    # If set to true, use the secret specified in anchoreGlobal.existingSecret to set the ANCHORE_SAML_SECRET env variable
+    useExistingSecret: false
     privateKeyName: Null
     publicKeyName: Null
 
@@ -276,22 +282,22 @@ anchoreGlobal:
   # to <anchore_service_dir>/bundles and made available to all anchore services. See the docs for details on how to create policy bundles
   # https://docs.anchore.com/current/docs/engine/general/concepts/policy/bundles/
   policyBundles:
-    # custom_policy_bundle1.json: |
-    #   {
-    #     "id": "custom1",
-    #     "version": "1_0",
-    #     "name": "My custom bundle",
-    #     "comment": "My system's custom bundle",
-    #     "whitelisted_images": [],
-    #     "blacklisted_images": [],
-    #     "mappings": [],
-    #     "whitelists": [],
-    #     "policies": []
-    #   }
-    # custom_policy_bundle2.json: |
-    #   {
-    #     ....
-    #   }
+#     custom_policy_bundle1.json: |
+#       {
+#         "id": "custom1",
+#         "version": "1_0",
+#         "name": "My custom bundle",
+#         "comment": "My system's custom bundle",
+#         "whitelisted_images": [],
+#         "blacklisted_images": [],
+#         "mappings": [],
+#         "whitelists": [],
+#         "policies": []
+#       }
+#     custom_policy_bundle2.json: |
+#       {
+#         ....
+#       }
 
   # Allow configuration of Kubernetes probes
   probes:
@@ -667,10 +673,10 @@ anchoreEngineUpgradeJob:
 anchoreEnterpriseGlobal:
   enabled: false
   # Name of kubernetes secret containing your license.yaml file.
-  # Create this secret with the following command - kubectl create secret generic anchore-license --from-file=license.yaml=<PATH TO LICENSE.YAML>
+  # Create this secret with the following command - kubectl create secret generic anchore-enterprise-license --from-file=license.yaml=<PATH TO LICENSE.YAML>
   licenseSecretName: anchore-enterprise-license
 
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:2.4.1
+  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:3.0.0
   imagePullPolicy: IfNotPresent
   # Name of the kubernetes secret containing your dockerhub creds with access to the anchore enterprise images.
   # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
@@ -753,6 +759,14 @@ anchoreEnterpriseFeeds:
   # Time delay in seconds between consecutive driver runs for processing data
   cycleTimers:
     driver_sync: 7200
+
+  # Specifies an existing secret to be used for anchore admin and db passwords
+  # The secret should define the following environment vars:
+  # ANCHORE_ADMIN_PASSWORD
+  # ANCHORE_FEEDS_DB_PASSWORD
+  # ANCHORE_SAML_SECRET (if applicable)
+
+  existingSecret: Null
 
   # Configure the database connection within anchore-engine & enterprise-ui. This may get split into 2 different configurations based on service utilized.
   dbConfig:
@@ -911,7 +925,7 @@ anchoreEnterpriseNotifications:
 anchoreEnterpriseUi:
   # If enabled is set to false, set anchore-ui-redis.enabled to false to ensure that helm doesn't stand up a unneccessary redis instance.
   enabled: true
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:2.4.1
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:3.0.0
   imagePullPolicy: IfNotPresent
   imagePullSecretName: private-registry
 
@@ -919,6 +933,12 @@ anchoreEnterpriseUi:
   extraEnv: []
     # - name: foo
     #   value: bar
+
+  # Specifies an existing secret to be used for db and redis endpoints
+  # This secret should define the following ENV vars
+  # ANCHORE_APPDB_URI
+  # ANCHORE_REDIS_URI
+  existingSecret: Null
 
   # If using LDAPS with a custom CA certificate, add the certificate to the secret specified at anchoreGlobal.certStoreSecretName and specify the name of the cert here
   ldapsRootCaCertName: Null
@@ -941,17 +961,6 @@ anchoreEnterpriseUi:
   # user session keys and data is emptied on application startup. If the datastore
   # is flushed, any users with active sessions will be required to re-authenticate.
   redisFlushdb: true
-
-  # The (optional) `policy_hub_uri` key specifies the address of a Policy Hub
-  # service. The value must be a string containing a properly-formed 'http' or
-  # 'https' URI, and can be overridden by using the `ANCHORE_POLICY_HUB_URI`
-  # environment variable.
-  #
-  # When this value is set, the Policy Hub component is enabled within the
-  # Policy Manager view (`/policy`). Note that the availability and integrity of
-  # Policy Hub data is determined by this component at run-time when this
-  # component is accessed.
-  policyHubUri: 'http://hub.anchore.io'
 
   # The (optional) `custom_links` key allows a list of up to 10 external links to
   # be provided (additional items will be excluded). The top-level `title` key

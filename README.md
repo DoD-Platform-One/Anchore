@@ -14,6 +14,11 @@ To deploy Anchore apart from Umbrella:
 helm upgrade -i anchore chart -n anchore --create-namespace -f chart/values.yaml
 ```
 
+To get the admin password (generated if you did not specify one):
+```
+kubectl get secrets -n anchore anchore-anchore-engine -o go-template='{{.data.ANCHORE_ADMIN_PASSWORD | base64decode}}' | xargs
+```
+
 To delete Anchore when deployed this way:
 ```
 helm delete anchore -n anchore
