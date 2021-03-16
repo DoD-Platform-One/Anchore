@@ -45,7 +45,7 @@ If you are installing the chart without the core Big Bang application chart you 
 
 ## Anchore 1.12.2-bb.0 Upgrade
 
-When upgrading from any older chart version to 1.12.2-bb.0 you will hit an issue with SSO. After keycloak authentication you will be hit with a message from Anchore: "cannot POST /v1/saml/sso/keycloak (400)".
+When upgrading from any older chart version to 1.12.2-bb.0 you will hit an issue with SSO. This issue DOES NOT occur if you skip to 1.12.4-bb.0 (which is Big Bang's reccomendation). After keycloak authentication you will be hit with a message from Anchore: "cannot POST /v1/saml/sso/keycloak (400)".
 
 To fix this issue without requiring a clean install, you need to run commands to clean up the DB and restart the API pod.
 
@@ -67,8 +67,6 @@ Then restart the API pod with this command:
 ```bash
 kubectl delete pods -l component=api -n anchore
 ```
-
-This issue should be fixed in the upstream Anchore 3.0.1 Enterprise release, so this is a temporary workaround.
 
 ## Additional References
 

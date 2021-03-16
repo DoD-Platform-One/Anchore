@@ -4,10 +4,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.12.4-bb.0]
+### Changed
+- Bumped upstream chart version to 1.12.4
+- Bumped Anchore Engine image version to 0.9.2 from Registry1
+- Bumped Anchore Enterprise image versions to 3.0.1 from Registry1
+
 ## [1.12.2-bb.0]
 ### Changed
 - Bumped upstream chart version to 1.12.2
-- Bumped Anchore enterprise images to 3.0.0 from registry1
+- Bumped Anchore Enterprise image versions to 3.0.0 from Registry1
 - BREAKING UPDATE (SSO): When upgrading from 1.11.0-bb.3 and using SSO, manual config is required. See the note in the [Keycloak Docs](./docs/KEYCLOAK.md#anchore-1122-bb0-upgrade).
 
 ### Fixed
