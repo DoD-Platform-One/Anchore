@@ -4,6 +4,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.12.4-bb.1]
+### Changed
+- Replaced Bitnami redis chart with Big Bang redis chart
+- Removed Redis values in chart/values.yaml so HA Redis defaults are used for internal Redis deployments
+
 ## [1.12.4-bb.0]
 ### Changed
 - Bumped upstream chart version to 1.12.4

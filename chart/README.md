@@ -250,6 +250,7 @@ A Helm post-upgrade hook job will shut down all previously running Anchore servi
 * Anchore Enterprise images updated to v3.0.1
 * Existing secrets now work for Enterprise Feeds and Enterprise UI - see [existing secrets configuration](#-Utilize-an-Existing-Secret)
 * Anchore admin default password no longer defaults to `foobar`, if no password is specified a random string will be generated.
+* Bitnami redis helm chart replaced by Big Bang redis
 
 ## Chart version 1.10.0
 

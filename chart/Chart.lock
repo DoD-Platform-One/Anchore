@@ -6,7 +6,7 @@ dependencies:
   repository: file://./deps/postgresql
   version: 1.0.1
 - name: redis
-  repository: https://charts.bitnami.com/bitnami
-  version: "10"
-digest: sha256:c7ab83a0a5f6ecb74d55eb5351685835921684213e99b77b7b680b649b3804f6
-generated: "2021-03-03T08:04:23.320462-07:00"
+  repository: file://./deps/redis
+  version: 12.8.3-bb.0
+digest: sha256:ee26f2840524c22deb3b82377f8af573be307de5752873c9cfbfd43a592b7073
+generated: "2021-03-18T13:10:12.040027-04:00"

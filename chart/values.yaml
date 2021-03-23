@@ -1042,23 +1042,7 @@ anchoreEnterpriseUi:
 # Anchore Engine Enterprise UI is dependent on redis for storing sessions
 # Only utilized if 'anchoreEnterpriseUi.enabled: true'
 anchore-ui-redis:
-  # Use Ironbank image + pull secret
-  image:
-    registry: registry1.dso.mil/ironbank
-    repository: opensource/redis/redis6
-    tag: 6.0.4
-    pullSecrets:
-      - private-registry
-  # Use Ironbank start-up script
-  master:
-    command: "docker-entrypoint.sh"
-  slave:
-    command: "docker-entrypoint.sh"
   password: anchore-redis,123
-  cluster:
-    enabled: false
-  persistence:
-    enabled: false
 
   # To use an external redis endpoint, uncomment to set 'enabled: false'
   # enabled: false
