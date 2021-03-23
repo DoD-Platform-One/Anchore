@@ -78,14 +78,6 @@ anchore-feeds-db:
 anchoreEnterpriseUi:
   image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:2.4.1
   imagePullSecretName: private-registry
-
-anchore-ui-redis:
-  image:
-    registry: registry1.dso.mil/ironbank
-    repository: opensource/redis/redis6
-    tag: 6.0.4
-    pullSecrets:
-      - private-registry
 ```
 
 To support the Ironbank Postgres image, additional configuration has to be set in the values file:
@@ -114,15 +106,6 @@ anchore-feeds-db:
   pgHbaConf: |-
     local all all md5
     host all all all md5
-```
-
-The redis startup command must be edited to use the Ironbank entrypoint:
-
-```yaml
-anchore-ui-redis:
-  # Use Ironbank start-up script
-  master:
-    command: "docker-entrypoint.sh"
 ```
 
 To support SSO + Istio the RBAC container needs an additional env set:
