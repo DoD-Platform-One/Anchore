@@ -4,6 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.12.7-bb.0]
+### Changed
+- Bumped upstream chart version to 1.12.7
+- Bumped Anchore Engine image version to 0.9.3 from Registry1
+- Bumped Anchore Enterprise image version to 3.0.2 from Registry1 (Anchore Enterprise UI is remaining at 3.0.1)
+
 ## [1.12.4-bb.1]
 ### Changed
 - Replaced Bitnami redis chart with Big Bang redis chart
