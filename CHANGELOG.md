@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.12.7-bb.1]
+### Changed
+- Dependency Chart Syntax Fixes
+
 ## [1.12.7-bb.0]
 ### Changed
 - Bumped upstream chart version to 1.12.7
