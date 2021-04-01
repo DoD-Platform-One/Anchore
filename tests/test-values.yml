@@ -17,6 +17,6 @@ anchoreEnterpriseGlobal:
 anchore-feeds-db:
   imagePullSecrets: private-registry-mil
 anchore-ui-redis:
-  image:
-    pullSecrets:
+  global:
+    imagePullSecrets:
       - private-registry-mil

@@ -51,6 +51,8 @@ All chart changes are located under the `chart/templates/bigbang` directory. In 
 - Creation of an SSO secret with the above SSO values
 - Automation of SSO configuration through a k8s job
 - Automated creation of an OAuth cert secret if needed (and this secret name is referenced under `anchoreGlobal.saml`)
+- Creation of secrets with database credentials from postgres and anchore-feeds-db values
+- Automated creation and synchronization of the Postgres databases, database users, and passwords through k8s jobs
 
 As additional Big Bang changes are made they should be added in these spots and this doc updated to reflect that.
 
