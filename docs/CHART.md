@@ -106,41 +106,64 @@ addons:
 
 ## Handling Dependencies
 
-Anchore relies on a single Postgres instance by default, as well as an additional Postgres database and Redis server if certain Enterprise configs are enabled. For development work and non-production workflows you can use the embedded dependency charts to automatically spin these dependencies up. In this case you don't need to provide any values but may still wish to override the default user or password.
+Anchore relies on a single Postgres instance by default, as well as an additional Postgres database and Redis server if certain Enterprise configs are enabled. For development work and non-production workflows you can use the embedded dependency charts to automatically spin these dependencies up. In this case you don't need to provide any values.
 
 ```yaml
 stringData:
   values.yaml: |-
     addons:
       anchore:
-        postgresql:
-          external: false
-          user: "username"
-          password: "password" 
+        database:
+          host: ""
+          port: ""
+          username: ""
+          password: ""
+          database: "" 
+          feeds_database: ""
 ```
 
 Big Bang does not currently provide a production solution to be utilized, so it is recommended that you connect to existing external instances. Using the embedded instances in production is AT YOUR OWN RISK.
 
-To externalize the dependency on postgres see the values below. Since some of these values are sensitive they should be added to your encrypted `secrets.enc.yaml` file.
+To externalize the dependency on postgres see the values below. Since some of these values are sensitive they should be added to your encrypted `secrets.enc.yaml` file (be sure you don't name your databases with hyphens or psql will throw errors).
 
 ```yaml
 stringData:
   values.yaml: |-
     addons:
       anchore:
-        postgresql:
-          external: true
-          user: "username"
-          password: "password"
-          host: "postgres.mydomain.com"
+        database:
+          host: "testing.amazon.rds.com"
           port: "5432"
-          mainDB: "databaseName"
-          feedsDB: "databaseName" # Only used for enterprise deployments
+          username: "username"
+          password: "password"
+          database: "anchore" 
+          feeds_database: "anchorefeeds"
 ```
 
-If you plan to use the UI:
+By default, when using an external postgres setup, the `feeds_database` will use the same username, password, host, and port as the main `database`. This is for streamlined ease of use for customers. However, if you'd like to configure the `feeds_database` with separate credentials, you can do so by overriding the upstream values (be sure you don't name your databases with hyphens or psql will throw errors):
 
-You should at a minimum set a non-default password for the redis instance:
+```yaml
+stringData:
+  values.yaml: |-
+    addons:
+      anchore:
+        database:
+          host: "testing.amazon.rds.com"
+          port: "5432"
+          username: "username"
+          password: "password"
+          database: "anchore" 
+          feeds_database: ""
+        values:
+          anchore-feeds-db:
+            enabled: false
+            postgresUser: "user2"
+            postgresPassword: "password2"
+            postgresDatabase: "anchorefeeds"                                  
+            externalEndpoint: "postgres-postgresql.postgres.svc.cluster.local:5432"
+```
+
+For production, you may want to externalize your Redis instance for Anchore Enterprise UI:
 
 ```yaml
 stringData:
@@ -148,22 +171,9 @@ stringData:
     addons:
       anchore:
         redis:
-          external: false
-          password: "password"
-```
-
-For production, you may want to externalize your Redis instance:
-
-```yaml
-stringData:
-  values.yaml: |-
-    addons:
-      anchore:
-        redis:
-          external: true
-          password: "password"
           host: "redis.mydomain.com"
           port: "6379"
+          password: "password"
 ```
 
 ### Enable SSO

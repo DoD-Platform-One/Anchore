@@ -4,8 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
-## [1.12.7-bb.1]
+## [1.12.7-bb.2]
 ### Changed
+- Added secrets and jobs for automated external Postgres database creation and user/password synchronization
+
+## [1.12.7-bb.1]
+### Fixed
 - Dependency Chart Syntax Fixes
 
 ## [1.12.7-bb.0]
