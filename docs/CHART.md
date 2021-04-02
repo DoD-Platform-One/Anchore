@@ -176,6 +176,37 @@ stringData:
           password: "password"
 ```
 
+### Configuring Istio
+
+Istio can be configured to utilize your desired gateway(s) and host(s). To configure istio, pass the following options to the Anchore values:
+```yaml
+stringData:
+  values.yaml: |-
+    addons:
+      anchore:
+        values:
+          istio:
+            enabled: true
+            ui:
+              # Toggle vs creation
+              enabled: true
+              annotations: {}
+              labels: {}
+              gateways:
+                - istio-system/<INSERT_GATEWAY_HERE>
+              hosts:
+                - "<INSERT_ANCHORE_UI_HOST_HERE>.{{ .Values.hostname }}"
+            api:
+              # Toggle vs creation
+              enabled: true
+              annotations: {}
+              labels: {}
+              gateways:
+                - istio-system/<INSERT_GATEWAY_HERE>
+              hosts:
+                - "<INSERT_ANCHORE_API_HOST_HERE>.{{ .Values.hostname }}"
+```
+
 ### Enable SSO
 
 Big Bang has provided an automated way to configure SSO with Keycloak via the Helm chart. To enable and configure SSO follow the instructions in the main KEYCLOAK document.

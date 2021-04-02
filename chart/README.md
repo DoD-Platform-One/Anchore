@@ -242,21 +242,14 @@ See the anchore-engine [CHANGELOG](https://github.com/anchore/anchore-engine/blo
 
 A Helm post-upgrade hook job will shut down all previously running Anchore services and perform the Anchore DB upgrade process using a kubernetes job. The upgrade will only be considered successful when this job completes successfully. Performing an upgrade will cause the Helm client to block until the upgrade job completes and the new Anchore service pods are started. To view progress of the upgrade process, tail the logs of the upgrade jobs `anchore-engine-upgrade` and `anchore-enterprise-upgrade`. These job resources will be removed upon a successful helm upgrade.
 
-## Chart version 1.12.7
-
-* Anchore Engine image updated to v0.9.3
-* Anchore Enterprise image updated to v3.0.2 (Anchore Enterprise UI image remains at v3.0.1)
-* An [issue](https://github.com/anchore/anchore-engine/issues/950) was found that effects users of Anchore Engine 0.9.0 - 0.9.2 scanning certain Java images. A new version of anchore-engine 0.9.3 fixes the issue.  Anchore Enterprise customers using Anchore Enterprise 3.0.0 or 3.0.1 should upgrade to 3.0.2.
-
-## Chart version 1.12.4
+## Chart version 1.12.0
 
 ---
 
-* Anchore Engine image updated to v0.9.2
-* Anchore Enterprise images updated to v3.0.1
+* Anchore Engine image updated to v0.9.1
+* Anchore Enterprise images updated to v3.0.0
 * Existing secrets now work for Enterprise Feeds and Enterprise UI - see [existing secrets configuration](#-Utilize-an-Existing-Secret)
 * Anchore admin default password no longer defaults to `foobar`, if no password is specified a random string will be generated.
-* Bitnami redis helm chart replaced by Big Bang redis
 
 ## Chart version 1.10.0
 
