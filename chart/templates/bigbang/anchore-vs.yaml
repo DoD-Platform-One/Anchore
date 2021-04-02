@@ -1,15 +1,27 @@
 ---
-{{- if and .Values.istio.enabled .Values.anchoreEnterpriseGlobal.enabled .Values.anchoreEnterpriseUi.enabled }}
+{{- if and .Values.istio.enabled .Values.istio.ui.enabled .Values.anchoreEnterpriseGlobal.enabled .Values.anchoreEnterpriseUi.enabled }}
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: anchore-enterprise-ui-service
   namespace: {{ .Release.Namespace }}
+  {{- if .Values.istio.ui.labels }}
+  labels:
+{{ toYaml .Values.istio.ui.labels | indent 4 }}
+  {{- end }}
+  {{- if .Values.istio.ui.annotations }}
+  annotations:
+{{ toYaml .Values.istio.ui.annotations | indent 4 }}
+  {{- end }}
 spec:
   gateways:
-    - istio-system/main
+  {{- range .Values.istio.ui.gateways }}
+    - {{ . }}
+  {{- end }}
   hosts:
-    - "anchore.{{ .Values.hostname }}"
+  {{- range .Values.istio.ui.hosts }}
+    - {{ tpl . $ }}
+  {{- end }}
   http:
     - match:
         - uri:
@@ -21,17 +33,29 @@ spec:
             host: {{ .Release.Name }}-anchore-engine-enterprise-ui
 {{- end }}
 ---
-{{- if .Values.istio.enabled }}
+{{- if and .Values.istio.enabled .Values.istio.api.enabled }}
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: anchore-engine-api-service
   namespace: {{ .Release.Namespace }}
+  {{- if .Values.istio.api.labels }}
+  labels:
+{{ toYaml .Values.istio.api.labels | indent 4 }}
+  {{- end }}
+  {{- if .Values.istio.api.annotations }}
+  annotations:
+{{ toYaml .Values.istio.api.annotations | indent 4 }}
+  {{- end }}
 spec:
   gateways:
-    - istio-system/main
+  {{- range .Values.istio.api.gateways }}
+    - {{ . }}
+  {{- end }}
   hosts:
-    - "anchore-api.{{ .Values.hostname }}"
+  {{- range .Values.istio.api.hosts }}
+    - {{ tpl . $ }}
+  {{- end }}
   http:
     - match:
         - uri:

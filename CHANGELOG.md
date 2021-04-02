@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [1.12.7-bb.2]
 ### Changed
 - Added secrets and jobs for automated external Postgres database creation and user/password synchronization
+- Updated virtual services and values.yaml to allow for customizable gateways and hosts
+- Updated docs around dependencies
 
 ## [1.12.7-bb.1]
 ### Fixed

@@ -16,7 +16,26 @@ Added at the top of the values file are changes to support Istio, automated lice
 hostname: bigbang.dev
 
 istio:
+  # Toggle istio integration
   enabled: false
+  ui:
+    # Toggle vs creation
+    enabled: true
+    annotations: {}
+    labels: {}
+    gateways:
+      - istio-system/main
+    hosts:
+      - "anchore.{{ .Values.hostname }}"
+  api:
+    # Toggle vs creation
+    enabled: true
+    annotations: {}
+    labels: {}
+    gateways:
+      - istio-system/main
+    hosts:
+      - "anchore-api.{{ .Values.hostname }}"
 
 # Enable Prometheus Monitoring
 monitoring:
