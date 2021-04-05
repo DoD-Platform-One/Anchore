@@ -8,6 +8,7 @@ This repo contains Big Bang's implementation of Anchore. This includes the upstr
 - [Big Bang Modifications](./BBCHANGES.md)
 - [Keycloak](./KEYCLOAK.md)
 - [Chart](./CHART.md)
+- [Affinity](./Affinity.md)
 
 # Structure
 
