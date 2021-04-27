@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.12.7-bb.3]
+### Fixed
+- Updated delete policies to db secrets to handle helm errors
+
 ## [1.12.7-bb.2]
 ### Changed
 - Added secrets and jobs for automated external Postgres database creation and user/password synchronization
