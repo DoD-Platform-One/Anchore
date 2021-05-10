@@ -38,7 +38,7 @@ pipeline with a [Jenkins Plugin](https://plugins.jenkins.io/anchore-container-sc
   
 ### More Topics
 
-- [Security]()
-- [Troubleshooting]()
+- [Security](https://repo1.dso.mil/platform-one/big-bang/apps/security-tools/anchore-enterprise/-/blob/documentation-standard/docs/security.md)
+- [Troubleshooting](https://repo1.dso.mil/platform-one/big-bang/apps/security-tools/anchore-enterprise/-/blob/documentation-standard/docs/troubleshooting.md)
 
 Find more information on Anchore Enterprise [here](https://docs.anchore.com/current/docs/overview/).
