@@ -6,7 +6,7 @@ This document summarizes helm values and manual steps that are required to integ
 
 ## Configuration Steps
 
-These are the items you need to do to configure Keycloak and Anchore for SSO in your Big Bang installation. 
+These are the items you need to do to configure Keycloak and Anchore for SSO in your Big Bang installation.
 
 ### Keycloak Configuration
 

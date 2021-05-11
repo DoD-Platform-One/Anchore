@@ -7,8 +7,4 @@ In this troubleshooting guide, we'll walk through several best-practice techniqu
 - Explore the event logs
 - Remove Repositories or Images
 
-
 For more Anchore Enterprise troubleshooting information click [here](https://docs.anchore.com/current/docs/troubleshooting/).
-
-
-
