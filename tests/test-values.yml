@@ -1,22 +1,30 @@
 istio:
   enabled: true
 
+bbtests:
+  scripts:
+    image: registry1.dso.mil/ironbank/anchore/cli/cli:0.9.1
+    envs:
+      ANCHORE_CLI_URL: "http://{{ template \"anchore-engine.api.fullname\" . }}:{{ .Values.anchoreApi.service.port }}/v1"
+      ANCHORE_CLI_USER: admin
+    secretEnvs:
+      - name: ANCHORE_CLI_PASS
+        valueFrom:
+          secretKeyRef:
+            name: "{{ template \"anchore-engine.fullname\" . }}-admin-pass"
+            key: ANCHORE_ADMIN_PASSWORD
+
 postgresql:
-  imagePullSecrets: private-registry-mil
   enabled: true
 
-anchoreGlobal:
-  imagePullSecretName: private-registry-mil
+# anchoreGlobal:
 
 anchoreAnalyzer:
   replicaCount: 1
 
-anchoreEnterpriseGlobal:
-  imagePullSecretName: private-registry-mil
+# anchoreEnterpriseGlobal:
 
-anchore-feeds-db:
-  imagePullSecrets: private-registry-mil
-anchore-ui-redis:
-  global:
-    imagePullSecrets:
-      - private-registry-mil
+# anchore-feeds-db:
+
+# anchore-ui-redis:
+#   global:

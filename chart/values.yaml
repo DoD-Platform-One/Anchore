@@ -114,7 +114,7 @@ cloudsql:
   image:
     # set repo and image tag of gce-proxy
     repository: gcr.io/cloudsql-docker/gce-proxy
-    tag: 1.12
+    tag: 1.22.0
     pullPolicy: IfNotPresent
 
 # Create an ingress resource for all external anchore engine services (API & Enterprise UI).
@@ -953,7 +953,7 @@ anchoreEnterpriseNotifications:
 anchoreEnterpriseUi:
   # If enabled is set to false, set anchore-ui-redis.enabled to false to ensure that helm doesn't stand up a unneccessary redis instance.
   enabled: true
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:3.0.1
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:3.0.2
   imagePullPolicy: IfNotPresent
   imagePullSecretName: private-registry
 
@@ -1067,7 +1067,7 @@ anchore-ui-redis:
   # enabled: false
 
   # If 'enabled: false', specify an external redis endpoint -
-  # eg redis://:<password>@hostname:6379
+  # eg redis://nouser:<password>@hostname:6379
   externalEndpoint: Null
 
 # Pod configuration for the helm post-install-hook enterprise engine upgrade Job
