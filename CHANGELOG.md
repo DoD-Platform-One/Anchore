@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.12.7-bb.4]
+### Changed
+- Added Helm bash testing for API using approved Iron Bank image
+- Bumped upstream chart version to 1.12.13
+- Bumped Anchore Enterprise UI image version to 3.0.2 from Registry1
 
 ## [1.12.7-bb.3]
 ### Fixed
