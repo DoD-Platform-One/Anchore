@@ -10,7 +10,7 @@ This repo contains Big Bang's implementation of Anchore. This includes the upstr
 - [Chart](./CHART.md)
 - [Affinity](./Affinity.md)
 
-# Structure
+## Structure
 
 This repo contains 3 main sections. The main chart is provided under the `chart` folder. Documentation is provided under the `docs` folder. Test and CI files are under the `tests` folder.
 

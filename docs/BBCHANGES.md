@@ -1,7 +1,7 @@
 # Changes needed for Big Bang and Ironbank Images
 
 Due to how Big Bang is making use of Anchore (from within Umbrella) there were values and chart changes that needed to be made.
-Additionally, the Ironbank images function in slightly different ways than upstream Dockerhub images, so additional 
+Additionally, the Ironbank images function in slightly different ways than upstream Dockerhub images, so additional
 modifications were made to support their use.
 
 This provides a log of these changes to make updates from upstream faster.
@@ -141,6 +141,7 @@ anchoreEnterpriseRbac:
 ## Other Modifications
 
 To support the BigBang wrapper to simplify SSO setup the following global saml option needs to bet set:
+
 ```yaml
 anchoreGlobal:
   saml:
@@ -148,6 +149,7 @@ anchoreGlobal:
 ```
 
 The following block needs to be added to the end of the _helpers.tpl file:
+
 ```yaml
 {{/*
 Expand the name of the chart.
@@ -176,6 +178,7 @@ tls.key: {{ $cert.Key | b64enc }}
 ```
 
 In `chart/templates/engine_configmap.yaml`, modify the metrics lines as such:
+
 ```yaml
     metrics:
       enabled: {{ .Values.monitoring.enabled }}
@@ -183,6 +186,7 @@ In `chart/templates/engine_configmap.yaml`, modify the metrics lines as such:
 ```
 
 Do the same in `chart/templates/enterprise_configmap.yaml`:
+
 ```yaml
     metrics:
       enabled: {{ .Values.monitoring.enabled }}
@@ -190,6 +194,7 @@ Do the same in `chart/templates/enterprise_configmap.yaml`:
 ```
 
 In `chart/templates/enterprise_feeds_configmap.yaml` also modify the metrics lines:
+
 ```yaml
     metrics:
       enabled: {{ .Values.monitoring.enabled }}

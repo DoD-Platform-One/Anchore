@@ -8,16 +8,16 @@ Each of these services can be scaled and configured independently.
 
 See [Anchore Engine](https://github.com/anchore/anchore-engine) for more project details.
 
-NOTE: Big Bang's implementation is designed to be enabled and consumed from within a customer implementation of the Big Bang release. It is fully functional as a standalone Helm install, but Big Bang will enable best integration for Big Bang "extras" and ease of use. 
+NOTE: Big Bang's implementation is designed to be enabled and consumed from within a customer implementation of the Big Bang release. It is fully functional as a standalone Helm install, but Big Bang will enable best integration for Big Bang "extras" and ease of use.
 
 ## Chart Details
 
 The chart is split into global and service specific configurations for the OSS Anchore Engine, as well as global and services specific configurations for the Enterprise components. Additionally included are Big Bang specific configs.
 
-  * The top section provides customizable Big Bang values for SSO, Istio, and automating the license secret creation for enterprise.
-  * The `anchoreGlobal` section is for configuration values required by all Anchore Engine components.
-  * The `anchoreEnterpriseGlobal` section is for configuration values required by all Anchore Engine Enterprise components.
-  * Service specific configuration values allow customization for each individual service.
+* The top section provides customizable Big Bang values for SSO, Istio, and automating the license secret creation for enterprise.
+* The `anchoreGlobal` section is for configuration values required by all Anchore Engine components.
+* The `anchoreEnterpriseGlobal` section is for configuration values required by all Anchore Engine Enterprise components.
+* Service specific configuration values allow customization for each individual service.
 
 For a description of each component, view the official documentation at: [Anchore Enterprise Service Overview](https://docs.anchore.com/current/docs/overview/architecture/)
 
@@ -59,15 +59,15 @@ stringData:
 
  The following features are available to Anchore Enterprise customers. Please contact the Anchore team for more information about getting a license for the enterprise features. [Anchore Enterprise Demo](https://anchore.com/demo/)
 
-    * Role based access control
-    * LDAP integration
-    * Graphical user interface
-    * Customizable UI dashboards
-    * On-premises feeds service
-    * Proprietary vulnerability data feed (vulnDB, MSRC)
-    * Anchore reporting API
-    * Notifications - Slack, GitHub, Jira, etc
-    * Microsoft image vulnerability scanning
+* Role based access control
+* LDAP integration
+* Graphical user interface
+* Customizable UI dashboards
+* On-premises feeds service
+* Proprietary vulnerability data feed (vulnDB, MSRC)
+* Anchore reporting API
+* Notifications - Slack, GitHub, Jira, etc
+* Microsoft image vulnerability scanning
 
 ### Enabling Enterprise Services
 
@@ -179,6 +179,7 @@ stringData:
 ### Configuring Istio
 
 Istio can be configured to utilize your desired gateway(s) and host(s). To configure istio, pass the following options to the Anchore values:
+
 ```yaml
 stringData:
   values.yaml: |-
