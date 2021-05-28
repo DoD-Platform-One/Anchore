@@ -8,7 +8,7 @@ This provides a log of these changes to make updates from upstream faster.
 
 ## Big Bang Modifications
 
-Added at the top of the values file are changes to support Istio, automated license creation, monitoring, and SSO.
+Added at the top of the values file are changes to support Istio, optional network policies, automated license creation, monitoring, and SSO.
 
 ```yaml
 # Big Bang Values
@@ -37,6 +37,12 @@ istio:
     hosts:
       - "anchore-api.{{ .Values.hostname }}"
 
+networkPolicies:
+  enabled: false
+  ingressLabels:
+    app: istio-ingressgateway
+    istio: ingressgateway
+    
 # Enable Prometheus Monitoring
 monitoring:
   enabled: false
