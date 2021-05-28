@@ -1,6 +1,12 @@
 istio:
   enabled: true
 
+networkPolicies:
+  enabled: true
+#   ingressLabels:
+#     app: istio-ingressgateway
+#     istio: ingressgateway
+
 bbtests:
   scripts:
     image: registry1.dso.mil/ironbank/anchore/cli/cli:0.9.1

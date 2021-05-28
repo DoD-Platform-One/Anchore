@@ -1,2 +1,2 @@
-registry1.dso.mil/ironbank/anchore/enterprise/enterprise:3.0.2
-registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:3.0.1
+registry1.dso.mil/ironbank/anchore/enterprise/enterprise:3.0.3
+registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:3.0.3
