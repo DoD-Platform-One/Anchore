@@ -1067,7 +1067,8 @@ anchoreEnterpriseUi:
 # Anchore Engine Enterprise UI is dependent on redis for storing sessions
 # Only utilized if 'anchoreEnterpriseUi.enabled: true'
 anchore-ui-redis:
-  password: anchore-redis,123
+  auth:
+    password: anchore-redis,123
 
   # To use an external redis endpoint, uncomment to set 'enabled: false'
   # enabled: false

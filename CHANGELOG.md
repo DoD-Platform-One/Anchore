@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.12.15-bb.1]
+### Changed
+- Updated Redis dependency to 14.1.0-bb.0
+### UPGRADE NOTICE
+- A clean upgrade job will run which requires complete deletion of the previous redis instance, which means downtime can be expected for Anchore Enterprise UI users. Multiple values were changed and shifted around - most importantly `anchore-ui-redis.password` is now `anchore-ui-redis.auth.password`. By default your old password (whatever is in the secret) will be used and will override any values specified
+
 ## [1.12.15-bb.0]
 ### Changed
 - Updated docs for BB documentation standards
