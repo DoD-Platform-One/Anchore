@@ -7,9 +7,9 @@ dependencies:
   version: 1.0.1
 - name: redis
   repository: file://./deps/redis
-  version: 12.8.3-bb.0
+  version: 14.1.0-bb.0
 - name: bb-test-lib
   repository: oci://registry.dso.mil/platform-one/big-bang/pipeline-templates/pipeline-templates
   version: 0.4.0
-digest: sha256:cdf6e2694ba10c26845caffc96343262185f697595fdcb658c1c6e9796ddb029
-generated: "2021-05-11T11:23:19.071211-04:00"
+digest: sha256:95fc02eb4c73428f58530043f2ccea983eb2de36c3e2bed6566deaff6552285c
+generated: "2021-06-11T14:51:29.578969-04:00"
