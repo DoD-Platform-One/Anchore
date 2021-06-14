@@ -29,7 +29,7 @@ spec:
       route:
         - destination:
             port:
-              number: 80
+              number: {{ .Values.anchoreEnterpriseUi.service.port }}
             host: {{ .Release.Name }}-anchore-engine-enterprise-ui
 {{- end }}
 ---
@@ -63,7 +63,7 @@ spec:
       route:
         - destination:
             port:
-              number: 8228
+              number: {{ .Values.anchoreApi.service.port }} 
             host: {{ .Release.Name }}-anchore-engine-api
       fault:
         abort:
@@ -76,6 +76,6 @@ spec:
       route:
         - destination:
             port:
-              number: 8228
+              number: {{ .Values.anchoreApi.service.port }} 
             host: {{ .Release.Name }}-anchore-engine-api
 {{- end }}

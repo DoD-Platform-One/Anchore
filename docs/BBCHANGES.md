@@ -146,14 +146,6 @@ anchoreEnterpriseRbac:
 
 ## Other Modifications
 
-To support the BigBang wrapper to simplify SSO setup the following global saml option needs to bet set:
-
-```yaml
-anchoreGlobal:
-  saml:
-    secret: anchore-certs
-```
-
 The following block needs to be added to the end of the _helpers.tpl file:
 
 ```yaml
@@ -169,17 +161,6 @@ Create chart name and version as used by the chart label.
 */}}
 {{- define "anchore.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Generate certificates for Anchore
-*/}}
-{{- define "anchore.gen-certs" -}}
-{{- $altNames := list ( printf "%s.%s" (include "anchore.name" .) .Release.Namespace ) ( printf "%s.%s.svc" (include "anchore.name" .) .Release.Namespace ) -}}
-{{- $ca := genCA "anchore-ca" 365 -}}
-{{- $cert := genSignedCert ( include "anchore.name" . ) nil $altNames 365 $ca -}}
-tls.crt: {{ $cert.Cert | b64enc }}
-tls.key: {{ $cert.Key | b64enc }}
 {{- end -}}
 ```
 

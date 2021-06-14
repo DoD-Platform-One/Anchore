@@ -10,6 +10,6 @@ dependencies:
   version: 14.1.0-bb.0
 - name: bb-test-lib
   repository: oci://registry.dso.mil/platform-one/big-bang/pipeline-templates/pipeline-templates
-  version: 0.4.0
-digest: sha256:95fc02eb4c73428f58530043f2ccea983eb2de36c3e2bed6566deaff6552285c
-generated: "2021-06-11T14:51:29.578969-04:00"
+  version: 0.5.2
+digest: sha256:4b0f80a6ef5cabb741367909dc3f5c970844b55aeead2f7ce5fee46d515416b4
+generated: "2021-06-12T15:47:28.997659-04:00"
