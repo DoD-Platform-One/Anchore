@@ -1,6 +1,6 @@
 apiVersion: v2
 name: anchore-engine
-version: 1.12.15-bb.1
+version: 1.12.16-bb.0
 appVersion: 0.9.4
 description: Anchore container analysis and policy evaluation engine service
 keywords:
@@ -38,5 +38,5 @@ dependencies:
    condition: anchore-ui-redis.enabled,anchoreEnterpriseGlobal.enabled
    alias: anchore-ui-redis
  - name: bb-test-lib
-   version: "0.4.0"
+   version: "0.5.2"
    repository: "oci://registry.dso.mil/platform-one/big-bang/pipeline-templates/pipeline-templates"

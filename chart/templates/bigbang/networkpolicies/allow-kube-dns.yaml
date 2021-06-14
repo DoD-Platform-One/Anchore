@@ -16,4 +16,7 @@ spec:
     - namespaceSelector: {} # all namespaces
     ports:
     - port: 53 # dns port
+      protocol: UDP
+    - port: 443
+      protocol: TCP
 {{- end }}
