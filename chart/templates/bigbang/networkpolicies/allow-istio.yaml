@@ -20,52 +20,9 @@ spec:
     ports:
     - port: {{ .Values.anchoreApi.service.port }} # anchore engine api (default: 8228)
       protocol: TCP
-    - port: {{ .Values.anchoreCatalog.service.port }} # anchore catalog api (default: 8082)
-      protocol: TCP
-    - port: {{ .Values.anchorePolicyEngine.service.port }} # anchore policy engine api (default: 8087)
-      protocol: TCP
-    - port: {{ .Values.anchoreSimpleQueue.service.port }} # anchore simplequeue api (default: 8083)
-      protocol: TCP
-    {{- if not (hasKey .Values.postgresql "enabled") }}
-    - port: 5432 # in-cluster postgresql anchore db
-      protocol: TCP
-    {{- end }}
-    {{- if hasKey .Values.postgresql "enabled" }}
-    {{- if (not .Values.postgresql.enabled) }}
-    - port: "{{$v := .Values.postgresql.externalEndpoint | split ":"}}{{$v._1}}" # in-cluster postgresql anchore db (default: 5432)
-      protocol: TCP
-    {{- end }}
-    {{- end }}
-    {{- if .Values.anchoreEnterpriseGlobal.enabled }}
-    - port: {{ .Values.anchoreEnterpriseFeeds.service.port }} # anchore enterprise feeds api (default: 8448)
-      protocol: TCP
-    - port: {{ .Values.anchoreEnterpriseRbac.service.apiPort }} # anchore enterprise rbac manager api (default: 8229)
-      protocol: TCP
-    - port: {{ .Values.anchoreEnterpriseReports.service.port }} # anchore enterprise reports api (default: 8558)
-      protocol: TCP
-    - port: {{ .Values.anchoreEnterpriseNotifications.service.port }} # anchore enterprise notifications api (default: 8668)
-      protocol: TCP
+    {{- if and .Values.anchoreEnterpriseGlobal.enabled .Values.anchoreEnterpriseUi.enabled }}
     - port: 3000 # anchore enterprise UI (default: 3000; note: Big Bang has configured Istio to use port 80)
       protocol: TCP
-    {{- if not (hasKey (index .Values "anchore-ui-redis") "enabled") }}
-    - port: 6379 # in-cluster redis anchore enterprise UI dependency
-      protocol: TCP
-    {{- end }}
-    {{- if hasKey (index .Values "anchore-ui-redis") "enabled" }}
-    {{- if (not (index .Values "anchore-ui-redis" "enabled")) }}
-    - port: "{{$v := (index .Values "anchore-ui-redis" "externalEndpoint") | split ":"}}{{$v._3}}" # in-cluster redis anchore enterprise UI dependency (default: 6379)
-      protocol: TCP
-    {{- end }}
-    {{- end }}
-    {{- if not (and (hasKey (index .Values "anchore-feeds-db") "enabled")) }}
-    - port: 5432 # in-cluster postgresql anchore enterprise feeds db
-    {{- end }}
-    {{- if and (hasKey (index .Values "anchore-feeds-db") "enabled") }}
-    {{- if (not (index .Values "anchore-feeds-db" "enabled")) }}
-    - port: "{{$v := (index .Values "anchore-feeds-db" "externalEndpoint") | split ":"}}{{$v._1}}" # in-cluster postgresql anchore enterprise feeds db (default: 5432)
-      protocol: TCP
-    {{- end }}
-    {{- end }}
     {{- end }}
   egress:
   - to:
