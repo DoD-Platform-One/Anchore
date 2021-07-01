@@ -22,6 +22,12 @@ monitoring:
 # REQUIRED for Chart v14 upgrade
 cleanUpgrade:
   enabled: true
+  image: "registry1.dso.mil/ironbank/gitlab/gitlab/kubectl:13.9.0"
+
+# NOTE: We default this to true in case packages consuming Redis forget to turn it on and have API traffic blocked
+networkPolicies:
+  enabled: true
+  controlPlaneCidr: 0.0.0.0/0
 
 ## Global Docker image parameters
 ## Please, note that this will override the image parameters, including dependencies, configured to use the global value

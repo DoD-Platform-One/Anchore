@@ -1,0 +1,135 @@
+{{- if .Values.networkPolicies.enabled }}
+# if external db is enabled, allow egress from ensure db job, engine upgrade job, and enterprise engine upgrade job
+{{- if (hasKey .Values.postgresql "enabled") }}
+{{- if (not .Values.postgresql.enabled) }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-ensure-db-job
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      job-name: ensure-anchore-db
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+{{- if .Values.anchoreEngineUpgradeJob.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-engine-upgrade-job
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      job-name: anchore-engine-upgrade
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+{{- end }}
+{{- if and .Values.anchoreEnterpriseEngineUpgradeJob.enabled .Values.anchoreEnterpriseGlobal.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-enterprise-engine-upgrade-job
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      job-name: anchore-engine-upgrade
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+{{- end }}
+{{- end }}
+{{- end }}
+# if external feeds db is enabled, allow egress from ensure feeds db job and enterprise feeds upgrade job
+{{- if and (hasKey (index .Values "anchore-feeds-db") "enabled")  }}
+{{- if and (not (index .Values "anchore-feeds-db" "enabled")) .Values.anchoreEnterpriseGlobal.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-ensure-feeds-db-job
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      job-name: ensure-feeds-db
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+{{- if .Values.anchoreEnterpriseFeedsUpgradeJob.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-enterprise-feeds-upgrade-job
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      job-name: anchore-enterprise-feeds-upgrade
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+{{- end }}
+{{- end }}
+{{- end }}
+# if sso is enabled, allow egress from configure sso job
+{{- if and .Values.sso.enabled .Values.anchoreEnterpriseGlobal.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-sso-job
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      job-name: configure-sso
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+{{- end }}
+{{- end }}
