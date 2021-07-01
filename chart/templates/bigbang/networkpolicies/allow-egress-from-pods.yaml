@@ -1,0 +1,159 @@
+{{- if .Values.networkPolicies.enabled }}
+# the api pod requires egress for:
+# - reaching out to SSO services
+# - sending out alerts/notifications
+# - optionally, communicating with an external db
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-api
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      component: api
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+---
+# the catalog and analyzer pods requires egress for:
+# - making connections with registries
+# - optionally, communicating with an external db
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-catalog
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      component: catalog
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-analyzers
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      component: analyzer
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+{{- if or (hasKey .Values.postgresql "enabled") (not .Values.anchoreEnterpriseGlobal.enabled) }}
+{{- if or (not .Values.postgresql.enabled) (not .Values.anchoreEnterpriseGlobal.enabled) }}
+---
+# if an external db is enabled OR anchore enterprise is disabled, the policy engine pods will require egress to communicate with the db OR pull opensource feed data
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-policy-engine
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      component: policy
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+{{- end }}
+{{- end }}
+{{- if hasKey .Values.postgresql "enabled" }}
+{{- if (not .Values.postgresql.enabled) }}
+---
+# if an external db is enabled, the simplequeue pod will require egress to communicate with the db
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-simplequeue
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      component: simplequeue
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+{{- end }}
+{{- end }}
+{{- if .Values.anchoreEnterpriseGlobal.enabled }}
+---
+# if anchore enterprise is enabled, the enterprise feeds pod will require egress to pull enterprise feed data
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-feeds-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      component: enterprise-feeds
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+{{- end }}
+{{- if and (hasKey (index .Values "anchore-ui-redis") "enabled") }}
+{{- if and (not (index .Values "anchore-ui-redis" "enabled")) .Values.anchoreEnterpriseGlobal.enabled }}
+---
+# if external redis is enabled, the ui pod will require egress as it depends on redis
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-to-external-redis
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      component: enterprise-ui
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+{{- end }}
+{{- end }}
+{{- end }}

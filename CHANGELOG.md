@@ -4,6 +4,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.12.16-bb.2]
+### Changed
+- Separated network policies for required egress
+- Updated Redis dependency to 14.1.0-bb.1
+
 ## [1.12.16-bb.1]
 ### Fixed
 - allow-istio network policy fixed to remove duplicate ports

@@ -25,6 +25,8 @@ spec:
       protocol: TCP
     - port: {{ .Values.anchoreSimpleQueue.service.port }} # anchore simplequeue api (default: 8083)
       protocol: TCP
+    - port: {{ .Values.anchoreAnalyzer.containerPort }} # anchore analyzer (default: 8084)
+      protocol: TCP
     {{- if .Values.anchoreEnterpriseGlobal.enabled }}
     - port: {{ .Values.anchoreEnterpriseFeeds.service.port }} # anchore enterprise feeds api (default: 8448)
       protocol: TCP

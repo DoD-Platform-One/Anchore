@@ -3,11 +3,9 @@ istio:
 
 networkPolicies:
   enabled: true
-#   ingressLabels:
-#     app: istio-ingressgateway
-#     istio: ingressgateway
 
 bbtests:
+  enabled: true
   scripts:
     image: registry1.dso.mil/ironbank/anchore/cli/cli:0.9.1
     envs:
@@ -20,19 +18,9 @@ bbtests:
             name: "{{ template \"anchore-engine.fullname\" . }}-admin-pass"
             key: ANCHORE_ADMIN_PASSWORD
 
-postgresql:
-  enabled: true
-
 anchoreGlobal:
   saml:
     secret: ci-testing-only
 
 anchoreAnalyzer:
   replicaCount: 1
-
-# anchoreEnterpriseGlobal:
-
-# anchore-feeds-db:
-
-# anchore-ui-redis:
-#   global:

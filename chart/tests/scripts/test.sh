@@ -11,7 +11,8 @@ status=$(anchore-cli --debug system status 2>&1)
 
 # IF status code is 200 AND all services are up
 if [[ ${status} =~ "httpcode from response: 200" && ${status} =~ "analyzer:8084): up" && ${status} =~ "simplequeue:8083): up" && ${status} =~ "policy:8087): up" && ${status} =~ "api:8228): up" && ${status} =~ "catalog:8082): up" ]]; then
-  echo "200 OK - all services up!"
+  echo ${status}
+  echo "***** 200 OK - all services up! *****"
 else
   echo ${status}
   sleep 10
@@ -23,7 +24,8 @@ add=$(anchore-cli --debug image add docker.io/library/centos:latest 2>&1)
 
 # IF status code is 200
 if [[ ${add} =~ "httpcode from response: 200" ]]; then
-  echo "200 OK - image analysis initiated!"
+  echo ${add}
+  echo "***** 200 OK - image analysis initiated! *****"
 else
   echo ${add}
   sleep 10
@@ -35,7 +37,8 @@ wait=$(anchore-cli --debug image wait docker.io/library/centos:latest 2>&1)
 
 # IF status code is 200
 if [[ ${wait} =~ "httpcode from response: 200" ]]; then
-  echo "200 OK - image analysis completed!"
+  echo ${wait}
+  echo "***** 200 OK - image analysis completed! *****"
 else
   echo ${wait}
   sleep 10
@@ -48,7 +51,8 @@ list=$(anchore-cli --debug image list 2>&1)
 
 # IF status code is 200
 if [[ ${list} =~ "httpcode from response: 200" ]]; then
-  echo "200 OK - image analysis stored!"
+  echo ${list}
+  echo "***** 200 OK - image analysis stored! *****"
 else
   echo ${list}
   sleep 10
