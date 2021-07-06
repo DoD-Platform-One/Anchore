@@ -186,3 +186,11 @@ In `chart/templates/enterprise_feeds_configmap.yaml` also modify the metrics lin
     metrics:
       enabled: {{ .Values.monitoring.enabled }}
 ```
+
+To resolve a race condition in Big Bang CI pipelines, an additional sleep argument was added in `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml`:
+
+```yaml
+- |
+  sleep 60
+  anchore-manager db --db-connect postgresql://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_HOST}/${ANCHORE_DB_NAME} upgrade --dontask;
+```

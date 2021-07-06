@@ -4,6 +4,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.13.0-bb.0]
+### Changed
+- Bumped appVersion and Anchore Engine image tag to 0.10.0
+- Bumped Anchore Enterprise & Anchore Enterprise UI image tags to 3.1.0
+### Fixed
+- conditional in network policy for enterprise-ui component
+- intermittent issue with upgrade jobs for in-cluster anchore dbs
+
 ## [1.12.16-bb.2]
 ### Changed
 - Separated network policies for required egress
