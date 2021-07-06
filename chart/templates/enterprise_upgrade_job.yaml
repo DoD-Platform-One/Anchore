@@ -63,6 +63,7 @@ spec:
             anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_HOST}/${ANCHORE_DB_NAME}?sslmode={{ .Values.anchoreGlobal.dbConfig.sslMode }}\\&sslrootcert=/home/anchore/certs/{{ .Values.anchoreGlobal.dbConfig.sslRootCertName }} upgrade --dontask;
         {{- else }}
           - |
+            sleep 60
             anchore-enterprise-manager db --db-connect postgresql://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_HOST}/${ANCHORE_DB_NAME} upgrade --dontask;
         {{- end }}
         {{- if .Values.cloudsql.enabled }}
