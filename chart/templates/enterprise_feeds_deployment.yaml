@@ -113,6 +113,10 @@ spec:
         {{- with .Values.anchoreEnterpriseFeeds.extraEnv }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        - name: ANCHORE_ENABLE_METRICS
+          value: {{ .Values.monitoring.enabled | quote }}
+        - name: ANCHORE_DISABLE_METRICS_AUTH
+          value: {{ .Values.monitoring.enabled | quote }}
         - name: ANCHORE_POD_NAME
           valueFrom:
             fieldRef:

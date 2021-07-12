@@ -4,7 +4,7 @@ kind: ServiceMonitor
 metadata:
   labels:
     prometheus: k8s
-  name: anchore-metrics
+  name: anchore-service-monitor
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
@@ -22,7 +22,16 @@ spec:
       port: anchore-external-api
       scheme: http
       #jobLabel: anchore-metrics-external-api
-
+    
+    - interval: 30s
+      path: /metrics
+      params:
+        format:
+          - prometheus
+      port: anchore-rbac-manager
+      scheme: http
+      #jobLabel: anchore-metrics-rbac-manager
+    
     - interval: 30s
       path: /metrics
       params:
@@ -49,4 +58,37 @@ spec:
       port: anchore-simplequeue-api
       scheme: http
       #jobLabel: anchore-metrics-simplequeue-api
+
+    - interval: 30s
+      path: /metrics
+      params:
+        format:
+          - prometheus
+      port: feeds-api
+      scheme: http
+      #jobLabel: anchore-metrics-feeds-api
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    prometheus: k8s
+  name: anchore-pod-monitor
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "anchore-engine.fullname" . }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  podMetricsEndpoints:
+  - interval: 30s
+    path: /metrics
+    params:
+      format:
+        - prometheus
+    port: analyzer-api
+    scheme: http
+    #jobLabel: anchore-metrics-analyzer-api
 {{- end }}

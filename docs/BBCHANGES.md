@@ -180,11 +180,21 @@ Do the same in `chart/templates/enterprise_configmap.yaml`:
       auth_disabled: {{ .Values.monitoring.enabled }}
 ```
 
-In `chart/templates/enterprise_feeds_configmap.yaml` also modify the metrics lines:
+Do the same in `chart/templates/enterprise_feeds_configmap.yaml`:
 
 ```yaml
     metrics:
       enabled: {{ .Values.monitoring.enabled }}
+      auth_disabled: {{ .Values.monitoring.enabled }}
+```
+
+And set required environment variables in `chart/templates/enterprise_feed_deployment.yaml`:
+
+```yaml
+    - name: ANCHORE_ENABLE_METRICS
+      value: {{ .Values.monitoring.enabled | quote }}
+    - name: ANCHORE_DISABLE_METRICS_AUTH
+      value: {{ .Values.monitoring.enabled | quote }}
 ```
 
 To resolve a race condition in Big Bang CI pipelines, an additional sleep argument was added in `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml`:
