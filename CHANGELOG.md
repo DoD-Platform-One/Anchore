@@ -4,6 +4,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.13.0-bb.1]
+### Changed
+- updated Service Monitor and added Pod Monitor for scraping metrics from Anchore components
+- updated chart templates to automatically enable metrics for the Anchore Enterprise feeds service (until patched upstream)
+ 
 ## [1.13.0-bb.0]
 ### Changed
 - Bumped appVersion and Anchore Engine image tag to 0.10.0
