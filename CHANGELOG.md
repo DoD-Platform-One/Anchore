@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.13.0-bb.2]
+### Changed
+- updated Redis dependency to `14.1.0-bb.2` to utilize `big-bang/base` image for upgrade jobs
+
 ## [1.13.0-bb.1]
 ### Changed
 - updated Service Monitor and added Pod Monitor for scraping metrics from Anchore components
