@@ -52,7 +52,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      job-name: anchore-engine-upgrade
+      job-name: anchore-enterprise-upgrade
   policyTypes:
   - Egress
   egress:
