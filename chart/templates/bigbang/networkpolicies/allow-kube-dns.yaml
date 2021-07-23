@@ -19,4 +19,8 @@ spec:
       protocol: UDP
     - port: 443
       protocol: TCP
+    {{- if .Values.anchoreGlobal.openShiftDeployment }}  
+    - port: 5353
+      protocol: UDP
+    {{- end }}
 {{- end }}

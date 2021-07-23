@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.13.0-bb.4]
+### Fixed
+- update allow-kube-dns NP to conditionally add port 5353 egress when `.Values.anchoreGlobal.openShiftDeployment` is `true`
+
 ## [1.13.0-bb.3]
 ### Fixed
 - incorrect label on `allow-egress-enterprise-engine-upgrade-job` network policy
