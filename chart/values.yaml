@@ -32,6 +32,11 @@ networkPolicies:
     app: istio-ingressgateway
     istio: ingressgateway
 
+# Use Database instance Superuser to create postgresql.postgresDatabase, postgresql.postgresUser, anchore-feeds-db.postgresDatabase, and anchore-feeds-db.postgresUser
+postgresqlSuperUser:
+  postgresUsername: ""
+  postgresPassword: ""
+
 # Enable Prometheus Monitoring
 monitoring:
   enabled: false
@@ -249,7 +254,7 @@ anchoreGlobal:
   metricsAuthDisabled: false
 
   # Sets the password & email address for the default anchore-engine admin user.
-  defaultAdminPassword: 
+  defaultAdminPassword:
   defaultAdminEmail: example@email.com
 
   saml:

@@ -21,17 +21,46 @@ spec:
       containers:
         - name: psql
           image: {{ (index .Values "anchore-feeds-db" "image") }}
+          {{- if and .Values.postgresqlSuperUser.postgresUsername .Values.postgresqlSuperUser.postgresPassword }}
           command:
             - /bin/bash
             - -exc
-            - |   
+            - |
               echo "Ensure Anchore Feeds DB..."
-              
+              psql -tc "SELECT 1 FROM pg_database WHERE datname = '$FEEDS_DB'" | grep -q 1 || psql -c "CREATE DATABASE $FEEDS_DB"
+              psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$FEEDS_USER'" | grep -q 1 && psql -c "ALTER USER $FEEDS_USER WITH PASSWORD '$FEEDS_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $FEEDS_DB TO $FEEDS_USER;" | grep -q GRANT || psql -c "CREATE USER   $FEEDS_USER WITH PASSWORD '$FEEDS_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $FEEDS_DB TO $FEEDS_USER;"
+          env:
+            - name: FEEDS_USER
+              valueFrom:
+                secretKeyRef:
+                  name: feeds-db-credentials
+                  key: PGUSER
+            - name: FEEDS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: feeds-db-credentials
+                  key: PGPASSWORD
+            - name: FEEDS_DB
+              valueFrom:
+                secretKeyRef:
+                  name: feeds-db-credentials
+                  key: FEEDS_DB
+          envFrom:
+            - secretRef:
+                name: superuser-db-credentials
+          {{- else }}
+          command:
+            - /bin/bash
+            - -exc
+            - |
+              echo "Ensure Anchore Feeds DB..."
+
               psql -tc "SELECT 1 FROM pg_database WHERE datname = '$FEEDS_DB'" | grep -q 1 || psql -c "CREATE DATABASE $FEEDS_DB"
               psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$PGUSER'" | grep -q 1 && psql -c "ALTER USER $PGUSER WITH PASSWORD '$PGPASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $FEEDS_DB TO $PGUSER;" | grep -q GRANT || psql -c "CREATE USER $PGUSER WITH PASSWORD '$PGPASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $FEEDS_DB TO $PGUSER;"
           envFrom:
             - secretRef:
                 name: feeds-db-credentials
+          {{- end }}
       restartPolicy: OnFailure
 {{- end }}
 {{- end }}

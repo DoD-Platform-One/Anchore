@@ -4,6 +4,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.13.0-bb.5]
+## Added
+- `.Values.postgresqlSuperUser.postgresUsername` and `.Values.postgresqlSuperUser.postgresPassword` for conditionally changing the commands in the ensure db jobs to allow for finer-grain postgres user permissions
+- `chart/templates/bigbang/db/superuser-db-secret.yaml` secret to populate fields in the ensure db jobs
+
 ## [1.13.0-bb.4]
 ### Fixed
 - update allow-kube-dns NP to conditionally add port 5353 egress when `.Values.anchoreGlobal.openShiftDeployment` is `true`
