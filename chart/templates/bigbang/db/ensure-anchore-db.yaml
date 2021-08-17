@@ -21,17 +21,46 @@ spec:
       containers:
         - name: psql
           image: {{ .Values.postgresql.image }}
+          {{- if and .Values.postgresqlSuperUser.postgresUsername .Values.postgresqlSuperUser.postgresPassword }}
           command:
             - /bin/bash
             - -exc
-            - |   
+            - |
               echo "Ensure Anchore DB..."
-              
+              psql -tc "SELECT 1 FROM pg_database WHERE datname = '$ANCHORE_DB'" | grep -q 1 || psql -c "CREATE DATABASE $ANCHORE_DB"
+              psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$ANCHORE_USER'" | grep -q 1 && psql -c "ALTER USER $ANCHORE_USER WITH PASSWORD '$ANCHORE_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB TO $ANCHORE_USER;" | grep -q GRANT || psql -c "CREATE USER $ANCHORE_USER WITH PASSWORD '$ANCHORE_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB TO $ANCHORE_USER;"
+          env:
+            - name: ANCHORE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: anchore-db-credentials
+                  key: PGUSER
+            - name: ANCHORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: anchore-db-credentials
+                  key: PGPASSWORD
+            - name: ANCHORE_DB
+              valueFrom:
+                secretKeyRef:
+                  name: anchore-db-credentials
+                  key: ANCHORE_DB
+          envFrom:
+            - secretRef:
+                name: superuser-db-credentials
+          {{- else }}
+          command:
+            - /bin/bash
+            - -exc
+            - |
+              echo "Ensure Anchore DB..."
+
               psql -tc "SELECT 1 FROM pg_database WHERE datname = '$ANCHORE_DB'" | grep -q 1 || psql -c "CREATE DATABASE $ANCHORE_DB"
               psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$PGUSER'" | grep -q 1 && psql -c "ALTER USER $PGUSER WITH PASSWORD '$PGPASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB TO $PGUSER;" | grep -q GRANT || psql -c "CREATE USER $PGUSER WITH PASSWORD '$PGPASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB TO $PGUSER;"
           envFrom:
             - secretRef:
                 name: anchore-db-credentials
+          {{- end }}
       restartPolicy: OnFailure
 {{- end }}
 {{- end }}
