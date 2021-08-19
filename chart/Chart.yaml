@@ -1,6 +1,6 @@
 apiVersion: v2
 name: anchore-engine
-version: 1.13.0-bb.5
+version: 1.13.0-bb.6
 appVersion: 0.10.0
 description: Anchore container analysis and policy evaluation engine service
 keywords:
@@ -33,10 +33,10 @@ dependencies:
    condition: anchore-feeds-db.enabled,anchoreEnterpriseGlobal.enabled
    alias: anchore-feeds-db
  - name: redis
-   version: "14.1.0-bb.2"
+   version: "14.1.0-bb.3"
    repository: "file://./deps/redis"
    condition: anchore-ui-redis.enabled,anchoreEnterpriseGlobal.enabled
    alias: anchore-ui-redis
- - name: bb-test-lib
-   version: "0.5.2"
-   repository: "oci://registry.dso.mil/platform-one/big-bang/pipeline-templates/pipeline-templates"
+ - name: gluon
+   version: "0.2.3"
+   repository: oci://registry.dso.mil/platform-one/big-bang/apps/library-charts/gluon

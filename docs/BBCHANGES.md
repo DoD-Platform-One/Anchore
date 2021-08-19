@@ -204,3 +204,10 @@ To resolve a race condition in Big Bang CI pipelines, an additional sleep argume
   sleep 60
   anchore-manager db --db-connect postgresql://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_HOST}/${ANCHORE_DB_NAME} upgrade --dontask;
 ```
+
+Additionally, a field was added to `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml` to allow users to specify container resource requests and limits for the jobs. This was done to resolve OPA Gatekeeper violations around container resources and ratios:
+
+```yaml
+resources:
+  {{ toYaml .Values.anchoreEngineUpgradeJob.resources | nindent 10 }}
+```

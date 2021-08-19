@@ -37,6 +37,16 @@ postgresqlSuperUser:
   postgresUsername: ""
   postgresPassword: ""
 
+# Configure resource requests and limits in ./chart/templates/bigbang/db/ensure-anchore-db.yaml and ./chart/templates/bigbang/db/ensure-feeds-db.yaml
+ensureDbJobs:
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
 # Enable Prometheus Monitoring
 monitoring:
   enabled: false
@@ -61,7 +71,14 @@ sso:
   requireSignedAssertions: false
   requireSignedResponse: true
   idpMetadataUrl: "https://login.dso.mil/auth/realms/baby-yoda/protocol/saml/descriptor"
-
+  # Configure resource requests and limits in the ./chart/templates/bigbang/sso/configure-sso.yaml job
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
 
 # Upstream Anchore Values
 # -----------------------
@@ -88,6 +105,25 @@ postgresql:
     size: 20Gi
     subPath: "pgdata"
     mountPath: /var/lib/postgresql
+  
+  # Configure resource limits and requests for the postgresql deployment
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  
+  # Configure resource limits and requests for postgresql metrics (disabled by default)
+  metrics:
+    resources:
+      limits:
+        cpu: 100m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
 
   # Set the configs to allow listening and connecting from other pods
   postgresConfig: {"listen_addresses": "*"}
@@ -427,13 +463,13 @@ anchoreAnalyzer:
     #     db_update_enabled: true
 
 
-  # resources:
-  #  limits:
-  #    cpu: 1
-  #    memory: 4G
-  #  requests:
-  #    cpu: 1
-  #    memory: 1G
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1000Mi
+    requests:
+      cpu: 500m
+      memory: 1000Mi
 
   labels: {}
   annotations: {}
@@ -464,13 +500,13 @@ anchoreApi:
   #   hostname: anchore-api.example.com
   #   port: 8443
 
-  # resources:
-  #  limits:
-  #    cpu: 1
-  #    memory: 4G
-  #  requests:
-  #    cpu: 100m
-  #    memory: 1G
+  resources:
+    limits:
+      cpu: 500m
+      memory: 4G
+    requests:
+      cpu: 500m
+      memory: 4G
 
   labels: {}
   annotations: {}
@@ -622,13 +658,13 @@ anchoreCatalog:
     annotations: {}
     labels: {}
 
-  # resources:
-  #  limits:
-  #    cpu: 1
-  #    memory: 2G
-  #  requests:
-  #    cpu: 100m
-  #    memory: 500M
+  resources:
+    limits:
+      cpu: 500m
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 2Gi
 
   labels: {}
   annotations: {}
@@ -694,13 +730,13 @@ anchorePolicyEngine:
     annotations: {}
     labels: {}
 
-  # resources:
-  #  limits:
-  #    cpu: 1
-  #    memory: 4G
-  #  requests:
-  #    cpu: 100m
-  #    memory: 1G
+  resources:
+    limits:
+      cpu: 500m
+      memory: 3Gi
+    requests:
+      cpu: 500m
+      memory: 3Gi
 
   labels: {}
   annotations: {}
@@ -724,13 +760,13 @@ anchoreSimpleQueue:
     annotations: {}
     labels: {}
 
-  # resources:
-  #  limits:
-  #    cpu: 1
-  #    memory: 1G
-  #  requests:
-  #    cpu: 100m
-  #    memory: 256M
+  resources:
+    limits:
+      cpu: 500m
+      memory: 4G
+    requests:
+      cpu: 500m
+      memory: 4G
 
   labels: {}
   annotations: {}
@@ -741,6 +777,15 @@ anchoreSimpleQueue:
 # Pod configuration for the helm post-install-hook engine upgrade Job
 anchoreEngineUpgradeJob:
   enabled: true
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1.5Gi
+    requests:
+      cpu: 500m
+      memory: 1.5Gi
+
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -783,6 +828,25 @@ anchore-feeds-db:
     size: 20Gi
     subPath: "pgdata"
     mountPath: /var/lib/postgresql
+
+  # Configure resource limits and requests for the postgresql deployment
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+  
+  # Configure resource limits and requests for postgresql metrics (disabled by default)
+  metrics:
+    resources:
+      limits:
+        cpu: 100m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
 
   # Set the configs to allow listening and connecting from other pods
   postgresConfig: {"listen_addresses": "*"}
@@ -866,13 +930,13 @@ anchoreEnterpriseFeeds:
     annotations: {}
     labels: {}
 
-  # resources:
-  #  limits:
-  #    cpu: 1
-  #    memory: 4G
-  #  requests:
-  #    cpu: 1
-  #    memory: 2G
+  resources:
+    limits:
+      cpu: 1
+      memory: 4G
+    requests:
+      cpu: 1
+      memory: 4G
 
   labels: {}
   annotations: {}
@@ -883,6 +947,15 @@ anchoreEnterpriseFeeds:
 # Pod configuration for the helm post-install-hook feeds upgrade Job
 anchoreEnterpriseFeedsUpgradeJob:
   enabled: true
+  
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1.5Gi
+    requests:
+      cpu: 500m
+      memory: 1.5Gi
+  
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -907,20 +980,20 @@ anchoreEnterpriseRbac:
     authPort: 8089
 
   authResources:
-   limits:
-     cpu: 500m
-     memory: 1G
-   requests:
-     cpu: 500m
-     memory: 1G
+    limits:
+      cpu: 500m
+      memory: 1G
+    requests:
+      cpu: 500m
+      memory: 1G
 
   managerResources:
-   limits:
-     cpu: 500m
-     memory: 1G
-   requests:
-     cpu: 500m
-     memory: 1G
+    limits:
+      cpu: 1
+      memory: 4G
+    requests:
+      cpu: 1
+      memory: 4G
 
 # Configure the Anchore Enterprise reporting component.
 anchoreEnterpriseReports:
@@ -950,13 +1023,13 @@ anchoreEnterpriseReports:
   service:
     port: 8558
 
-  # resources:
-  #  limits:
-  #    cpu: 1
-  #    memory: 1G
-  #  requests:
-  #    cpu: 100m
-  #    memory: 256M
+  resources:
+    limits:
+      cpu: 500m
+      memory: 3Gi
+    requests:
+      cpu: 500m
+      memory: 3Gi
 
   labels: {}
   annotations: {}
@@ -984,13 +1057,13 @@ anchoreEnterpriseNotifications:
   service:
     port: 8668
 
-  # resources:
-  #  limits:
-  #    cpu: 1
-  #    memory: 1G
-  #  requests:
-  #    cpu: 100m
-  #    memory: 256M
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1.5Gi
+    requests:
+      cpu: 500m
+      memory: 1.5Gi
 
   labels: {}
   annotations: {}
@@ -1093,13 +1166,13 @@ anchoreEnterpriseUi:
     labels: {}
     sessionAffinity: ClientIP
 
-  # resources:
-  #  limits:
-  #    cpu: 1
-  #    memory: 1G
-  #  requests:
-  #    cpu: 100m
-  #    memory: 256M
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1.5Gi
+    requests:
+      cpu: 500m
+      memory: 1.5Gi
 
   labels: {}
   annotations: {}
@@ -1123,6 +1196,15 @@ anchore-ui-redis:
 # Pod configuration for the helm post-install-hook enterprise engine upgrade Job
 anchoreEnterpriseEngineUpgradeJob:
   enabled: true
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1.5Gi
+    requests:
+      cpu: 500m
+      memory: 1.5Gi
+
   nodeSelector: {}
   tolerations: []
   affinity: {}
