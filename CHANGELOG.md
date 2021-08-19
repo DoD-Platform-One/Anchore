@@ -4,6 +4,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.13.0-bb.6]
+## Changed
+- updated bb-test-lib dependency to gluon `0.2.3` to resolve OPA Gatekeeper violations
+- updated Redis dependency to `14.1.0-bb.3` to resolve OPA Gatekeeper violations
+- set resource requests and limits for all containers to resolve OPA Gatekeeper violations
+- set resource requests and limits equal to eachother to resolve OPA Gatekeeper violations
+
 ## [1.13.0-bb.5]
 ## Added
 - `.Values.postgresqlSuperUser.postgresUsername` and `.Values.postgresqlSuperUser.postgresPassword` for conditionally changing the commands in the ensure db jobs to allow for finer-grain postgres user permissions

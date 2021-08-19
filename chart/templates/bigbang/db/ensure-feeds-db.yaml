@@ -61,6 +61,8 @@ spec:
             - secretRef:
                 name: feeds-db-credentials
           {{- end }}
+          resources:
+            {{ toYaml .Values.ensureDbJobs.resources | nindent 12 }}
       restartPolicy: OnFailure
 {{- end }}
 {{- end }}

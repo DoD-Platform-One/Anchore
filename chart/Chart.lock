@@ -7,9 +7,9 @@ dependencies:
   version: 1.0.1
 - name: redis
   repository: file://./deps/redis
-  version: 14.1.0-bb.2
-- name: bb-test-lib
-  repository: oci://registry.dso.mil/platform-one/big-bang/pipeline-templates/pipeline-templates
-  version: 0.5.2
-digest: sha256:b6031a1579e20adfbd8f708ede7fc9665a21a5c030ca7304af18acdff3b56150
-generated: "2021-07-13T16:37:10.13824-04:00"
+  version: 14.1.0-bb.3
+- name: gluon
+  repository: oci://registry.dso.mil/platform-one/big-bang/apps/library-charts/gluon
+  version: 0.2.3
+digest: sha256:18e2ebc2abf59245eb530874f5c9aab50f3041a4959aa6534b6411810191d078
+generated: "2021-08-18T14:00:09.786881-04:00"

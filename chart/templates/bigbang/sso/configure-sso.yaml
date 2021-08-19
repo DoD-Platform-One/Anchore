@@ -61,6 +61,8 @@ spec:
             - name: anchore-sso
               mountPath: "/tmp"
               readOnly: true
+          resources:
+            {{ toYaml .Values.sso.resources | nindent 12 }}
       volumes:
         - name: anchore-sso
           secret:

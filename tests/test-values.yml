@@ -17,6 +17,13 @@ bbtests:
           secretKeyRef:
             name: "{{ template \"anchore-engine.fullname\" . }}-admin-pass"
             key: ANCHORE_ADMIN_PASSWORD
+    resources:
+      requests:
+        cpu: "1"
+        memory: "1Gi"
+      limits:
+        cpu: "1"
+        memory: "1Gi"
 
 anchoreGlobal:
   saml:
