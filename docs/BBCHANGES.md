@@ -164,6 +164,8 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 ```
 
+---
+
 In `chart/templates/engine_configmap.yaml`, modify the metrics lines as such:
 
 ```yaml
@@ -197,6 +199,8 @@ And set required environment variables in `chart/templates/enterprise_feed_deplo
       value: {{ .Values.monitoring.enabled | quote }}
 ```
 
+---
+
 To resolve a race condition in Big Bang CI pipelines, an additional sleep argument was added in `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml`:
 
 ```yaml
@@ -205,9 +209,36 @@ To resolve a race condition in Big Bang CI pipelines, an additional sleep argume
   anchore-manager db --db-connect postgresql://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_HOST}/${ANCHORE_DB_NAME} upgrade --dontask;
 ```
 
-Additionally, a field was added to `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml` to allow users to specify container resource requests and limits for the jobs. This was done to resolve OPA Gatekeeper violations around container resources and ratios:
+---
+
+To resolve OPA Gatekeeper violations around container resources and ratios, a field was added to `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml` to allow users to specify container resource requests and limits for the jobs:
 
 ```yaml
 resources:
   {{ toYaml .Values.anchoreEngineUpgradeJob.resources | nindent 10 }}
+```
+
+---
+
+To resolve an issue where Anchore would redeploy after every update, `./chart/templates/engine_secret.yaml` and `./chart/templates/enterprise_feeds_secret.yaml` were modified to set `ANCHORE_SAML_SECRET` to a randomly generated value if not set and the previous secret does not exist:
+
+```yaml
+{{- $anchorefullname := include "anchore-engine.fullname" . -}}
+{{- $old_secret := lookup "v1" "Secret" .Release.Namespace $anchorefullname }}
+{{- if .Values.anchoreGlobal.saml.secret }}
+ANCHORE_SAML_SECRET: {{ .Values.anchoreGlobal.saml.secret }}
+{{- else if or (not $old_secret) (not $old_secret.data) }}
+ANCHORE_SAML_SECRET: {{ (randAlphaNum 12) | quote }}
+{{ else }}
+ANCHORE_SAML_SECRET: {{ b64dec (index $old_secret.data "ANCHORE_SAML_SECRET") }}
+{{- end }}
+```
+
+Additionally, `./chart/templates/engine_configmap.yaml`, `./chart/templates/enterprise_configmap.yaml`, and `./chart/templates/enterprise_feeds_confimap.yaml` were modified to set appropriate saml secret credentials when the saml secret has been randomly generated but left `Null` by the user at `.Values.anchoreGlobal.saml.secret`:
+
+```yaml
+keys:
+  {{- if or .Values.anchoreGlobal.saml.secret .Values.anchoreGlobal.saml.useExistingSecret .Values.anchoreGlobal.oauthEnabled }}
+  secret: ${ANCHORE_SAML_SECRET}
+  {{- end }}
 ```

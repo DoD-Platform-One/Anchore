@@ -4,8 +4,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.13.0-bb.7]
+### Fixed
+- to resolve an issue where Anchore would redeploy after every update, `./chart/templates/engine_secret.yaml` and `./chart/templates/enterprise_feeds_secret.yaml` were modified to set `ANCHORE_SAML_SECRET` to a randomly generated value if not set and the previous secret does not exist
+### Changed
+- `./chart/templates/engine_configmap.yaml`, `./chart/templates/enterprise_configmap.yaml`, and `./chart/templates/enterprise_feeds_confimap.yaml` were modified to set appropriate saml secret credentials when a saml secret has been randomly generated but left `Null` by the user at `.Values.anchoreGlobal.saml.secret`
+
 ## [1.13.0-bb.6]
-## Changed
+### Changed
 - updated bb-test-lib dependency to gluon `0.2.3` to resolve OPA Gatekeeper violations
 - updated Redis dependency to `14.1.0-bb.3` to resolve OPA Gatekeeper violations
 - set resource requests and limits for all containers to resolve OPA Gatekeeper violations
