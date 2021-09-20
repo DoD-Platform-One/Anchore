@@ -220,6 +220,17 @@ resources:
 
 ---
 
+To resolve OPA Gatekeeper violations around istio sidecar injection, a curl command was added to `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml` to allow the istio sidecar container to cleanly terminate after jobs complete.
+
+```yaml
+{{- if .Values.istio.enabled }}
+    echo "Terminating istio sidecar container..."
+    curl -X POST http://localhost:15020/quitquitquit
+{{- end }}
+```
+
+---
+
 To resolve an issue where Anchore would redeploy after every update, `./chart/templates/engine_secret.yaml` and `./chart/templates/enterprise_feeds_secret.yaml` were modified to set `ANCHORE_SAML_SECRET` to a randomly generated value if not set and the previous secret does not exist:
 
 ```yaml

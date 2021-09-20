@@ -465,11 +465,11 @@ anchoreAnalyzer:
 
   resources:
     limits:
-      cpu: 500m
-      memory: 1000Mi
+      cpu: 1
+      memory: 4G
     requests:
-      cpu: 500m
-      memory: 1000Mi
+      cpu: 1
+      memory: 4G
 
   labels: {}
   annotations: {}
@@ -502,10 +502,10 @@ anchoreApi:
 
   resources:
     limits:
-      cpu: 500m
+      cpu: 1
       memory: 4G
     requests:
-      cpu: 500m
+      cpu: 1
       memory: 4G
 
   labels: {}
@@ -660,11 +660,11 @@ anchoreCatalog:
 
   resources:
     limits:
-      cpu: 500m
-      memory: 2Gi
+      cpu: 1
+      memory: 2G
     requests:
-      cpu: 500m
-      memory: 2Gi
+      cpu: 1
+      memory: 2G
 
   labels: {}
   annotations: {}
@@ -732,11 +732,11 @@ anchorePolicyEngine:
 
   resources:
     limits:
-      cpu: 500m
-      memory: 3Gi
+      cpu: 1
+      memory: 4G
     requests:
-      cpu: 500m
-      memory: 3Gi
+      cpu: 1
+      memory: 4G
 
   labels: {}
   annotations: {}
@@ -762,11 +762,11 @@ anchoreSimpleQueue:
 
   resources:
     limits:
-      cpu: 500m
-      memory: 4G
+      cpu: 1
+      memory: 1G
     requests:
-      cpu: 500m
-      memory: 4G
+      cpu: 1
+      memory: 1G
 
   labels: {}
   annotations: {}
@@ -780,11 +780,11 @@ anchoreEngineUpgradeJob:
 
   resources:
     limits:
-      cpu: 500m
-      memory: 1.5Gi
+      cpu: 1
+      memory: 1G
     requests:
-      cpu: 500m
-      memory: 1.5Gi
+      cpu: 1
+      memory: 1G
 
   nodeSelector: {}
   tolerations: []
@@ -950,11 +950,11 @@ anchoreEnterpriseFeedsUpgradeJob:
   
   resources:
     limits:
-      cpu: 500m
-      memory: 1.5Gi
+      cpu: 1
+      memory: 1G
     requests:
-      cpu: 500m
-      memory: 1.5Gi
+      cpu: 1
+      memory: 1G
   
   nodeSelector: {}
   tolerations: []
@@ -981,10 +981,10 @@ anchoreEnterpriseRbac:
 
   authResources:
     limits:
-      cpu: 500m
+      cpu: 1
       memory: 1G
     requests:
-      cpu: 500m
+      cpu: 1
       memory: 1G
 
   managerResources:
@@ -1025,11 +1025,11 @@ anchoreEnterpriseReports:
 
   resources:
     limits:
-      cpu: 500m
-      memory: 3Gi
+      cpu: 1
+      memory: 1G
     requests:
-      cpu: 500m
-      memory: 3Gi
+      cpu: 1
+      memory: 1G
 
   labels: {}
   annotations: {}
@@ -1059,11 +1059,11 @@ anchoreEnterpriseNotifications:
 
   resources:
     limits:
-      cpu: 500m
-      memory: 1.5Gi
+      cpu: 1
+      memory: 1G
     requests:
-      cpu: 500m
-      memory: 1.5Gi
+      cpu: 1
+      memory: 1G
 
   labels: {}
   annotations: {}
@@ -1168,11 +1168,11 @@ anchoreEnterpriseUi:
 
   resources:
     limits:
-      cpu: 500m
-      memory: 1.5Gi
+      cpu: 1
+      memory: 1G
     requests:
-      cpu: 500m
-      memory: 1.5Gi
+      cpu: 1
+      memory: 1G
 
   labels: {}
   annotations: {}
@@ -1183,6 +1183,9 @@ anchoreEnterpriseUi:
 # Anchore Engine Enterprise UI is dependent on redis for storing sessions
 # Only utilized if 'anchoreEnterpriseUi.enabled: true'
 anchore-ui-redis:
+  istio:
+    enabled: "{{ .Values.istio.enabled }}"
+  
   auth:
     password: anchore-redis,123
 
@@ -1199,11 +1202,11 @@ anchoreEnterpriseEngineUpgradeJob:
 
   resources:
     limits:
-      cpu: 500m
-      memory: 1.5Gi
+      cpu: 1
+      memory: 1G
     requests:
-      cpu: 500m
-      memory: 1.5Gi
+      cpu: 1
+      memory: 1G
 
   nodeSelector: {}
   tolerations: []

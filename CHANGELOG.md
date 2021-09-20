@@ -4,6 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.13.0-bb.8]
+### Changed
+- updated Redis dependency to `14.1.0-bb.4`
+- added `curl -X POST http://localhost:15020/quitquitquit` to cleanly terminate the istio sidecar container when jobs complete. This was done to resolve OPA Gatekeeper violations 
+- updated resource requests and limits to better-align with vendor's suggestions
+
 ## [1.13.0-bb.7]
 ### Fixed
 - to resolve an issue where Anchore would redeploy after every update, `./chart/templates/engine_secret.yaml` and `./chart/templates/enterprise_feeds_secret.yaml` were modified to set `ANCHORE_SAML_SECRET` to a randomly generated value if not set and the previous secret does not exist
