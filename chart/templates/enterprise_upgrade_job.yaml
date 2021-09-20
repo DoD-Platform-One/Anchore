@@ -66,6 +66,10 @@ spec:
             sleep 60
             anchore-enterprise-manager db --db-connect postgresql://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_HOST}/${ANCHORE_DB_NAME} upgrade --dontask;
         {{- end }}
+        {{- if .Values.istio.enabled }}
+            echo "Terminating istio sidecar container..."
+            curl -X POST http://localhost:15020/quitquitquit
+        {{- end }}
         {{- if .Values.cloudsql.enabled }}
             sql_proxy_pid=$(pgrep cloud_sql_proxy) && kill -INT $sql_proxy_pid;
         securityContext:

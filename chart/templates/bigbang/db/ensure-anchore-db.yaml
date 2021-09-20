@@ -13,8 +13,6 @@ spec:
   template:
     metadata:
       name: ensure-anchore-db
-      annotations:
-        sidecar.istio.io/inject: 'false'
     spec:
       imagePullSecrets:
         - name: {{ .Values.postgresql.imagePullSecrets }}
@@ -29,6 +27,10 @@ spec:
               echo "Ensure Anchore DB..."
               psql -tc "SELECT 1 FROM pg_database WHERE datname = '$ANCHORE_DB'" | grep -q 1 || psql -c "CREATE DATABASE $ANCHORE_DB"
               psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$ANCHORE_USER'" | grep -q 1 && psql -c "ALTER USER $ANCHORE_USER WITH PASSWORD '$ANCHORE_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB TO $ANCHORE_USER;" | grep -q GRANT || psql -c "CREATE USER $ANCHORE_USER WITH PASSWORD '$ANCHORE_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB TO $ANCHORE_USER;"
+              {{- if .Values.istio.enabled }}
+              echo "Terminating istio sidecar container..."
+              curl -X POST http://localhost:15020/quitquitquit
+              {{- end }}
           env:
             - name: ANCHORE_USER
               valueFrom:
@@ -57,6 +59,10 @@ spec:
 
               psql -tc "SELECT 1 FROM pg_database WHERE datname = '$ANCHORE_DB'" | grep -q 1 || psql -c "CREATE DATABASE $ANCHORE_DB"
               psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$PGUSER'" | grep -q 1 && psql -c "ALTER USER $PGUSER WITH PASSWORD '$PGPASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB TO $PGUSER;" | grep -q GRANT || psql -c "CREATE USER $PGUSER WITH PASSWORD '$PGPASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB TO $PGUSER;"
+              {{- if .Values.istio.enabled }}
+              echo "Terminating istio sidecar container..."
+              curl -X POST http://localhost:15020/quitquitquit
+              {{- end }}
           envFrom:
             - secretRef:
                 name: anchore-db-credentials

@@ -11,8 +11,6 @@ spec:
   template:
     metadata:
       name: configure-sso
-      annotations:
-        sidecar.istio.io/inject: 'false'
     spec:
       imagePullSecrets:
         - name: {{ .Values.anchoreEnterpriseGlobal.imagePullSecretName }}
@@ -54,6 +52,11 @@ spec:
                 echo  "SAML config already exists, updating..."
                 curl -vvv --fail -u "admin:${ANCHORE_ADMIN_PASSWORD}" -d "@anchore-sso.json" -H "Content-Type: application/json" --request PUT "http://{{ template "anchore-engine.api.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.apiPort }}/v1/saml/idps/${SSO_NAME}"
               fi
+
+              {{- if .Values.istio.enabled }}
+              echo "Terminating istio sidecar container..."
+              curl -X POST http://localhost:15020/quitquitquit
+              {{- end }}
           envFrom:
             - secretRef:
                 name: {{ template "anchore-engine.fullname" . }}-admin-pass
