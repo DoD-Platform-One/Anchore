@@ -1,0 +1,65 @@
+{
+  "baseBranches": ["main"],
+  "dependencyDashboard": "true",
+  "dependencyDashboardAutoclose": "true",
+  "dependencyDashboardHeader": "- [ ] Sync upstream helm chart version with updated dependencies.",
+  "dependencyDashboardTitle": "Upgrade Anchore Enterprise Package Dependencies",
+  "draftPR": "true",
+  "labels": ["anchore","Big Bang Add-Ons","Package Sustainment","kind::chore"],
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "groupName": "Anchore"    
+    }
+  ],
+  "separateMajorMinor": "false",
+  "ignoreDeps": ["docker.io/bitnami/redis-sentinel", "registry1.dso.mil/ironbank/bitnami/redis", "registry1.dso.mil/ironbank/bitnami/analytics/redis-exporter", "docker.io/bitnami/redis-sentinel-exporter", "docker.io/bitnami/bitnami-shell", "gcr.io/cloudsql-docker/gce-proxy"],
+  "ignorePaths": ["**/chart/deps/**"],
+  "regexManagers": [
+    {
+      "fileMatch": ["^chart/values\\.yaml$"],
+      "matchStrings": [
+        "image:\\s+registry1.dso.mil/ironbank/anchore/engine/engine:(?<currentValue>.+)"
+      ],
+      "depNameTemplate": "ironbank/anchore/engine/engine",
+      "datasourceTemplate": "docker",
+      "registryUrlTemplate": "https://registry1.dso.mil"
+    },
+    {
+      "fileMatch": ["^chart/values\\.yaml$"],
+      "matchStrings": [
+        "image:\\s+registry1.dso.mil/ironbank/anchore/enterprise/enterprise:(?<currentValue>.+)"      
+      ],
+      "depNameTemplate": "ironbank/anchore/enterprise/enterprise",
+      "datasourceTemplate": "docker",
+      "registryUrlTemplate": "https://registry1.dso.mil"
+    },
+    {
+      "fileMatch": ["^chart/values\\.yaml$"],
+      "matchStrings": [
+        "image:\\s+registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:(?<currentValue>.+)"      
+      ],
+      "depNameTemplate": "ironbank/anchore/enterpriseui/enterpriseui",
+      "datasourceTemplate": "docker",
+      "registryUrlTemplate": "https://registry1.dso.mil"
+    },
+    {
+      "fileMatch": ["^tests/images\\.txt$"],
+      "matchStrings": [
+        "registry1.dso.mil/ironbank/anchore/enterprise/enterprise:(?<currentValue>.+)"      
+      ],
+      "depNameTemplate": "ironbank/anchore/enterprise/enterprise",
+      "datasourceTemplate": "docker",
+      "registryUrlTemplate": "https://registry1.dso.mil"
+    },
+    {
+      "fileMatch": ["^tests/images\\.txt$"],
+      "matchStrings": [
+        "registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:(?<currentValue>.+)"      
+      ],
+      "depNameTemplate": "ironbank/anchore/enterpriseui/enterpriseui",
+      "datasourceTemplate": "docker",
+      "registryUrlTemplate": "https://registry1.dso.mil"
+    }
+  ]
+}
