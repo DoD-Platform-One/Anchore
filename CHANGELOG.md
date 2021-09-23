@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.13.0-bb.9]
+### Added
+- Renovate support for Iron Bank image updates
+
 ## [1.13.0-bb.8]
 ### Changed
 - updated Redis dependency to `14.1.0-bb.4`
@@ -24,7 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - set resource requests and limits equal to eachother to resolve OPA Gatekeeper violations
 
 ## [1.13.0-bb.5]
-## Added
+### Added
 - `.Values.postgresqlSuperUser.postgresUsername` and `.Values.postgresqlSuperUser.postgresPassword` for conditionally changing the commands in the ensure db jobs to allow for finer-grain postgres user permissions
 - `chart/templates/bigbang/db/superuser-db-secret.yaml` secret to populate fields in the ensure db jobs
 
