@@ -4,6 +4,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.14.7-bb.1]
+### Changed
+- Added readOnlyRootFileSystem securityContext to PostgreSQL deployment
+
 ## [1.14.7-bb.0]
 ### Changed
 - bumped Anchore Engine image tag to `0.10.2`

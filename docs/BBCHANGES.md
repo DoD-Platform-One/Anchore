@@ -253,3 +253,22 @@ keys:
   secret: ${ANCHORE_SAML_SECRET}
   {{- end }}
 ```
+
+### PostgreSQL Modifications
+
+To prevent the postgresql container from writing to local disk, volumes, volume mounts, and a security context were added to the postgresql deployment:
+
+```yaml
+        volumeMounts:
+        - name: init
+          mountPath: /var/run/postgresql
+        - name: tmp
+          mountPath: /tmp
+        securityContext:
+          readOnlyRootFilesystem: true
+      volumes:
+      - name: init
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
+```
