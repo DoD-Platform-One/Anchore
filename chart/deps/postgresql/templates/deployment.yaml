@@ -127,6 +127,14 @@ spec:
           mountPath: /pg_hba
           readOnly: true
         {{- end }}
+        # Added by Big Bang to allow container to startup with readOnlyRootFilesystem securityContext
+        - name: init
+          mountPath: /var/run/postgresql 
+        - name: tmp
+          mountPath: /tmp
+        # Added by Big Bang to prevent container from writing to local disk
+        securityContext:
+          readOnlyRootFilesystem: true
 {{- if .Values.metrics.enabled }}
       - name: metrics
         image: "{{ .Values.metrics.image }}:{{ .Values.metrics.imageTag }}"
@@ -190,6 +198,11 @@ spec:
             - key: pg_hba.conf
               path: pg_hba.conf
       {{- end }}
+      # Added by Big Bang to allow container to startup with readOnlyRootFilesystem securityContext
+      - name: init
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
       {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets }}
