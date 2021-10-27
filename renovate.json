@@ -3,7 +3,7 @@
   "dependencyDashboard": "true",
   "dependencyDashboardAutoclose": "true",
   "dependencyDashboardHeader": "- [ ] Sync upstream helm chart version with updated dependencies.",
-  "dependencyDashboardTitle": "Upgrade Anchore Enterprise Package Dependencies",
+  "dependencyDashboardTitle": "Renovate: Upgrade Anchore Enterprise Package Dependencies",
   "draftPR": "true",
   "labels": ["anchore","Big Bang Add-Ons","Package Sustainment","kind::chore"],
   "packageRules": [
