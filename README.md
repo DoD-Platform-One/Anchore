@@ -1,31 +1,438 @@
-# Anchore Package Chart
+# anchore-engine
 
-This is a modified upstream chart. Custom templates and values are added to support SSO, VirtualServices, Ironbank images, and other Big Bang features.
+![Version: 1.14.7-bb.2](https://img.shields.io/badge/Version-1.14.7--bb.2-informational?style=flat-square) ![AppVersion: 0.10.2](https://img.shields.io/badge/AppVersion-0.10.2-informational?style=flat-square)
 
-Temporarily the subchart dependencies for postgres and redis are downloaded under the `dependencies` folder. These should be replaced by Big Bang packages in the future.
+Anchore container analysis and policy evaluation engine service
 
-To update the dependency tgz(s) under the `chart/charts` folder:
+## Upstream References
+* <https://anchore.com>
+
+* <https://github.com/anchore/anchore-engine>
+
+## Learn More
+* [Application Overview](docs/overview.md)
+* [Other Documentation](docs/)
+
+## Pre-Requisites
+
+* Kubernetes Cluster deployed
+* Kubernetes config installed in `~/.kube/config`
+* Helm installed
+
+Install Helm
+
+https://helm.sh/docs/intro/install/
+
+## Deployment
+
+* Clone down the repository
+* cd into directory
+```bash
+helm install anchore-engine chart/
 ```
-helm dependency update chart
-```
 
-To deploy Anchore apart from Umbrella:
-```
-helm upgrade -i anchore chart -n anchore --create-namespace -f chart/values.yaml
-```
+## Values
 
-To get the admin password (generated if you did not specify one):
-```
-kubectl get secrets -n anchore anchore-anchore-engine-admin-pass -o go-template='{{.data.ANCHORE_ADMIN_PASSWORD | base64decode}}' | xargs
-```
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| hostname | string | `"bigbang.dev"` |  |
+| istio.enabled | bool | `false` |  |
+| istio.ui.enabled | bool | `true` |  |
+| istio.ui.annotations | object | `{}` |  |
+| istio.ui.labels | object | `{}` |  |
+| istio.ui.gateways[0] | string | `"istio-system/main"` |  |
+| istio.ui.hosts[0] | string | `"anchore.{{ .Values.hostname }}"` |  |
+| istio.api.enabled | bool | `true` |  |
+| istio.api.annotations | object | `{}` |  |
+| istio.api.labels | object | `{}` |  |
+| istio.api.gateways[0] | string | `"istio-system/main"` |  |
+| istio.api.hosts[0] | string | `"anchore-api.{{ .Values.hostname }}"` |  |
+| networkPolicies.enabled | bool | `false` |  |
+| networkPolicies.ingressLabels.app | string | `"istio-ingressgateway"` |  |
+| networkPolicies.ingressLabels.istio | string | `"ingressgateway"` |  |
+| postgresqlSuperUser.postgresUsername | string | `""` |  |
+| postgresqlSuperUser.postgresPassword | string | `""` |  |
+| ensureDbJobs.resources.limits.cpu | string | `"100m"` |  |
+| ensureDbJobs.resources.limits.memory | string | `"256Mi"` |  |
+| ensureDbJobs.resources.requests.cpu | string | `"100m"` |  |
+| ensureDbJobs.resources.requests.memory | string | `"256Mi"` |  |
+| monitoring.enabled | bool | `false` |  |
+| monitoring.namespace | string | `"monitoring"` |  |
+| enterpriseLicenseYaml | string | `""` |  |
+| sso.enabled | bool | `false` |  |
+| sso.name | string | `"keycloak"` |  |
+| sso.acsHttpsPort | int | `-1` |  |
+| sso.spEntityId | string | `"platform1_a8604cc9-f5e9-4656-802d-d05624370245_bb8-anchore"` |  |
+| sso.acsUrl | string | `"https://anchore.bigbang.dev/service/sso/auth/keycloak"` |  |
+| sso.defaultAccount | string | `"user"` |  |
+| sso.defaultRole | string | `"read-write"` |  |
+| sso.roleAttribute | string | `""` |  |
+| sso.requireSignedAssertions | bool | `false` |  |
+| sso.requireSignedResponse | bool | `true` |  |
+| sso.idpMetadataUrl | string | `"https://login.dso.mil/auth/realms/baby-yoda/protocol/saml/descriptor"` |  |
+| sso.resources.limits.cpu | string | `"100m"` |  |
+| sso.resources.limits.memory | string | `"256Mi"` |  |
+| sso.resources.requests.cpu | string | `"100m"` |  |
+| sso.resources.requests.memory | string | `"256Mi"` |  |
+| postgresql.image | string | `"registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.18"` |  |
+| postgresql.imagePullSecrets | string | `"private-registry"` |  |
+| postgresql.postgresUser | string | `"anchoreengine"` |  |
+| postgresql.postgresPassword | string | `"anchore-postgres,123"` |  |
+| postgresql.postgresDatabase | string | `"anchore"` |  |
+| postgresql.externalEndpoint | string | `nil` |  |
+| postgresql.persistence.resourcePolicy | string | `"nil"` |  |
+| postgresql.persistence.size | string | `"20Gi"` |  |
+| postgresql.persistence.subPath | string | `"pgdata"` |  |
+| postgresql.persistence.mountPath | string | `"/var/lib/postgresql"` |  |
+| postgresql.resources.limits.cpu | string | `"100m"` |  |
+| postgresql.resources.limits.memory | string | `"256Mi"` |  |
+| postgresql.resources.requests.cpu | string | `"100m"` |  |
+| postgresql.resources.requests.memory | string | `"256Mi"` |  |
+| postgresql.metrics.resources.limits.cpu | string | `"100m"` |  |
+| postgresql.metrics.resources.limits.memory | string | `"256Mi"` |  |
+| postgresql.metrics.resources.requests.cpu | string | `"100m"` |  |
+| postgresql.metrics.resources.requests.memory | string | `"256Mi"` |  |
+| postgresql.postgresConfig.listen_addresses | string | `"*"` |  |
+| postgresql.pgHbaConf | string | `"local all all md5\nhost all all all md5"` |  |
+| cloudsql.enabled | bool | `false` |  |
+| cloudsql.instance | string | `""` |  |
+| cloudsql.image.repository | string | `"gcr.io/cloudsql-docker/gce-proxy"` |  |
+| cloudsql.image.tag | string | `"1.22.0"` |  |
+| cloudsql.image.pullPolicy | string | `"IfNotPresent"` |  |
+| ingress.enabled | bool | `false` |  |
+| ingress.labels | object | `{}` |  |
+| ingress.apiPath | string | `"/v1/"` |  |
+| ingress.uiPath | string | `"/"` |  |
+| ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
+| ingress.tls | list | `[]` |  |
+| anchoreGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/engine/engine:0.10.2"` |  |
+| anchoreGlobal.imagePullPolicy | string | `"IfNotPresent"` |  |
+| anchoreGlobal.imagePullSecretName | string | `"private-registry"` |  |
+| anchoreGlobal.serviceAccountName | string | `nil` |  |
+| anchoreGlobal.openShiftDeployment | bool | `false` |  |
+| anchoreGlobal.labels | object | `{}` |  |
+| anchoreGlobal.annotations | object | `{}` |  |
+| anchoreGlobal.extraEnv | list | `[]` |  |
+| anchoreGlobal.existingSecret | string | `nil` |  |
+| anchoreGlobal.scratchVolume.fixGroupPermissions | bool | `false` |  |
+| anchoreGlobal.scratchVolume.mountPath | string | `"/analysis_scratch"` |  |
+| anchoreGlobal.scratchVolume.details.emptyDir | object | `{}` |  |
+| anchoreGlobal.certStoreSecretName | string | `nil` |  |
+| anchoreGlobal.securityContext.runAsUser | int | `1000` |  |
+| anchoreGlobal.securityContext.runAsGroup | int | `1000` |  |
+| anchoreGlobal.securityContext.fsGroup | int | `1000` |  |
+| anchoreGlobal.serviceDir | string | `"/anchore_service"` |  |
+| anchoreGlobal.logLevel | string | `"INFO"` |  |
+| anchoreGlobal.imageAnalyzeTimeoutSeconds | int | `36000` |  |
+| anchoreGlobal.allowECRUseIAMRole | bool | `false` |  |
+| anchoreGlobal.serverRequestTimeout | int | `60` |  |
+| anchoreGlobal.enableMetrics | bool | `false` |  |
+| anchoreGlobal.metricsAuthDisabled | bool | `false` |  |
+| anchoreGlobal.defaultAdminPassword | string | `nil` |  |
+| anchoreGlobal.defaultAdminEmail | string | `"example@email.com"` |  |
+| anchoreGlobal.saml.secret | string | `nil` |  |
+| anchoreGlobal.saml.useExistingSecret | bool | `false` |  |
+| anchoreGlobal.saml.privateKeyName | string | `nil` |  |
+| anchoreGlobal.saml.publicKeyName | string | `nil` |  |
+| anchoreGlobal.oauthEnabled | bool | `true` |  |
+| anchoreGlobal.oauthTokenExpirationSeconds | int | `3600` |  |
+| anchoreGlobal.hashedPasswords | bool | `true` |  |
+| anchoreGlobal.dbConfig.timeout | int | `120` |  |
+| anchoreGlobal.dbConfig.ssl | bool | `false` |  |
+| anchoreGlobal.dbConfig.sslMode | string | `"verify-full"` |  |
+| anchoreGlobal.dbConfig.sslRootCertName | string | `nil` |  |
+| anchoreGlobal.dbConfig.connectionPoolSize | int | `30` |  |
+| anchoreGlobal.dbConfig.connectionPoolMaxOverflow | int | `100` |  |
+| anchoreGlobal.dbConfig.engineArgs | object | `{}` |  |
+| anchoreGlobal.internalServicesSsl.enabled | bool | `false` |  |
+| anchoreGlobal.internalServicesSsl.verifyCerts | bool | `false` |  |
+| anchoreGlobal.internalServicesSsl.certSecretKeyName | string | `nil` |  |
+| anchoreGlobal.internalServicesSsl.certSecretCertName | string | `nil` |  |
+| anchoreGlobal.webhooksEnabled | bool | `true` |  |
+| anchoreGlobal.webhooks.webhook_user | string | `nil` |  |
+| anchoreGlobal.webhooks.webhook_pass | string | `nil` |  |
+| anchoreGlobal.webhooks.ssl_verify | bool | `true` |  |
+| anchoreGlobal.webhooks.general | object | `{}` |  |
+| anchoreGlobal.policyBundles | string | `nil` |  |
+| anchoreGlobal.probes.liveness.initialDelaySeconds | int | `120` |  |
+| anchoreGlobal.probes.liveness.timeoutSeconds | int | `10` |  |
+| anchoreGlobal.probes.liveness.periodSeconds | int | `10` |  |
+| anchoreGlobal.probes.liveness.failureThreshold | int | `6` |  |
+| anchoreGlobal.probes.liveness.successThreshold | int | `1` |  |
+| anchoreGlobal.probes.readiness.timeoutSeconds | int | `10` |  |
+| anchoreGlobal.probes.readiness.periodSeconds | int | `10` |  |
+| anchoreGlobal.probes.readiness.failureThreshold | int | `3` |  |
+| anchoreGlobal.probes.readiness.successThreshold | int | `1` |  |
+| anchoreAnalyzer.replicaCount | int | `2` |  |
+| anchoreAnalyzer.containerPort | int | `8084` |  |
+| anchoreAnalyzer.extraEnv | list | `[]` |  |
+| anchoreAnalyzer.cycleTimers.image_analyzer | int | `5` |  |
+| anchoreAnalyzer.concurrentTasksPerWorker | int | `1` |  |
+| anchoreAnalyzer.layerCacheMaxGigabytes | int | `0` |  |
+| anchoreAnalyzer.enableHints | bool | `false` |  |
+| anchoreAnalyzer.enableOwnedPackageFiltering | bool | `true` |  |
+| anchoreAnalyzer.configFile.retrieve_files.file_list[0] | string | `"/etc/passwd"` |  |
+| anchoreAnalyzer.configFile.secret_search.match_params[0] | string | `"MAXFILESIZE=10000"` |  |
+| anchoreAnalyzer.configFile.secret_search.match_params[1] | string | `"STOREONMATCH=n"` |  |
+| anchoreAnalyzer.configFile.secret_search.regexp_match[0] | string | `"AWS_ACCESS_KEY=(?i).*aws_access_key_id( *=+ *).*(?<![A-Z0-9])[A-Z0-9]{20}(?![A-Z0-9]).*"` |  |
+| anchoreAnalyzer.configFile.secret_search.regexp_match[1] | string | `"AWS_SECRET_KEY=(?i).*aws_secret_access_key( *=+ *).*(?<![A-Za-z0-9/+=])[A-Za-z0-9/+=]{40}(?![A-Za-z0-9/+=]).*"` |  |
+| anchoreAnalyzer.configFile.secret_search.regexp_match[2] | string | `"PRIV_KEY=(?i)-+BEGIN(.*)PRIVATE KEY-+"` |  |
+| anchoreAnalyzer.configFile.secret_search.regexp_match[3] | string | `"DOCKER_AUTH=(?i).*\"auth\": *\".+\""` |  |
+| anchoreAnalyzer.configFile.secret_search.regexp_match[4] | string | `"API_KEY=(?i).*api(-|_)key( *=+ *).*(?<![A-Z0-9])[A-Z0-9]{20,60}(?![A-Z0-9]).*"` |  |
+| anchoreAnalyzer.resources.limits.cpu | int | `1` |  |
+| anchoreAnalyzer.resources.limits.memory | string | `"4G"` |  |
+| anchoreAnalyzer.resources.requests.cpu | int | `1` |  |
+| anchoreAnalyzer.resources.requests.memory | string | `"4G"` |  |
+| anchoreAnalyzer.labels | object | `{}` |  |
+| anchoreAnalyzer.annotations | object | `{}` |  |
+| anchoreAnalyzer.nodeSelector | object | `{}` |  |
+| anchoreAnalyzer.tolerations | list | `[]` |  |
+| anchoreAnalyzer.affinity | object | `{}` |  |
+| anchoreApi.replicaCount | int | `1` |  |
+| anchoreApi.extraEnv | list | `[]` |  |
+| anchoreApi.service.type | string | `"ClusterIP"` |  |
+| anchoreApi.service.port | int | `8228` |  |
+| anchoreApi.service.annotations | object | `{}` |  |
+| anchoreApi.service.label | object | `{}` |  |
+| anchoreApi.resources.limits.cpu | int | `1` |  |
+| anchoreApi.resources.limits.memory | string | `"4G"` |  |
+| anchoreApi.resources.requests.cpu | int | `1` |  |
+| anchoreApi.resources.requests.memory | string | `"4G"` |  |
+| anchoreApi.labels | object | `{}` |  |
+| anchoreApi.annotations | object | `{}` |  |
+| anchoreApi.nodeSelector | object | `{}` |  |
+| anchoreApi.tolerations | list | `[]` |  |
+| anchoreApi.affinity | object | `{}` |  |
+| anchoreCatalog.replicaCount | int | `1` |  |
+| anchoreCatalog.extraEnv | list | `[]` |  |
+| anchoreCatalog.cycleTimers.image_watcher | int | `3600` |  |
+| anchoreCatalog.cycleTimers.policy_eval | int | `3600` |  |
+| anchoreCatalog.cycleTimers.vulnerability_scan | int | `14400` |  |
+| anchoreCatalog.cycleTimers.analyzer_queue | int | `1` |  |
+| anchoreCatalog.cycleTimers.archive_tasks | int | `43200` |  |
+| anchoreCatalog.cycleTimers.notifications | int | `30` |  |
+| anchoreCatalog.cycleTimers.service_watcher | int | `15` |  |
+| anchoreCatalog.cycleTimers.repo_watcher | int | `60` |  |
+| anchoreCatalog.cycleTimers.image_gc | int | `60` |  |
+| anchoreCatalog.cycleTimers.k8s_watcher | int | `300` |  |
+| anchoreCatalog.cycleTimers.k8s_image_watcher | int | `150` |  |
+| anchoreCatalog.events.notification.enabled | bool | `false` |  |
+| anchoreCatalog.events.notification.level[0] | string | `"error"` |  |
+| anchoreCatalog.analysis_archive.compression.enabled | bool | `true` |  |
+| anchoreCatalog.analysis_archive.compression.min_size_kbytes | int | `100` |  |
+| anchoreCatalog.analysis_archive.storage_driver.name | string | `"db"` |  |
+| anchoreCatalog.analysis_archive.storage_driver.config | object | `{}` |  |
+| anchoreCatalog.object_store.compression.enabled | bool | `true` |  |
+| anchoreCatalog.object_store.compression.min_size_kbytes | int | `100` |  |
+| anchoreCatalog.object_store.storage_driver.name | string | `"db"` |  |
+| anchoreCatalog.object_store.storage_driver.config | object | `{}` |  |
+| anchoreCatalog.service.type | string | `"ClusterIP"` |  |
+| anchoreCatalog.service.port | int | `8082` |  |
+| anchoreCatalog.service.annotations | object | `{}` |  |
+| anchoreCatalog.service.labels | object | `{}` |  |
+| anchoreCatalog.resources.limits.cpu | int | `1` |  |
+| anchoreCatalog.resources.limits.memory | string | `"2G"` |  |
+| anchoreCatalog.resources.requests.cpu | int | `1` |  |
+| anchoreCatalog.resources.requests.memory | string | `"2G"` |  |
+| anchoreCatalog.labels | object | `{}` |  |
+| anchoreCatalog.annotations | object | `{}` |  |
+| anchoreCatalog.nodeSelector | object | `{}` |  |
+| anchoreCatalog.tolerations | list | `[]` |  |
+| anchoreCatalog.affinity | object | `{}` |  |
+| anchoreCatalog.createServiceAccount | bool | `false` |  |
+| anchoreCatalog.runtimeInventory.imageTTLDays | int | `1` |  |
+| anchoreCatalog.runtimeInventory.reportAnchoreCluster.enabled | bool | `true` |  |
+| anchoreCatalog.runtimeInventory.reportAnchoreCluster.clusterName | string | `"anchore-k8s"` |  |
+| anchoreCatalog.runtimeInventory.reportAnchoreCluster.namespaces[0] | string | `"all"` |  |
+| anchorePolicyEngine.replicaCount | int | `1` |  |
+| anchorePolicyEngine.extraEnv | list | `[]` |  |
+| anchorePolicyEngine.cycleTimers.feed_sync | int | `14400` |  |
+| anchorePolicyEngine.cycleTimers.feed_sync_checker | int | `3600` |  |
+| anchorePolicyEngine.cycleTimers.grypedb_sync | int | `60` |  |
+| anchorePolicyEngine.vulnerabilityProvider | string | `"legacy"` |  |
+| anchorePolicyEngine.service.type | string | `"ClusterIP"` |  |
+| anchorePolicyEngine.service.port | int | `8087` |  |
+| anchorePolicyEngine.service.annotations | object | `{}` |  |
+| anchorePolicyEngine.service.labels | object | `{}` |  |
+| anchorePolicyEngine.resources.limits.cpu | int | `1` |  |
+| anchorePolicyEngine.resources.limits.memory | string | `"4G"` |  |
+| anchorePolicyEngine.resources.requests.cpu | int | `1` |  |
+| anchorePolicyEngine.resources.requests.memory | string | `"4G"` |  |
+| anchorePolicyEngine.labels | object | `{}` |  |
+| anchorePolicyEngine.annotations | object | `{}` |  |
+| anchorePolicyEngine.nodeSelector | object | `{}` |  |
+| anchorePolicyEngine.tolerations | list | `[]` |  |
+| anchorePolicyEngine.affinity | object | `{}` |  |
+| anchoreSimpleQueue.replicaCount | int | `1` |  |
+| anchoreSimpleQueue.extraEnv | list | `[]` |  |
+| anchoreSimpleQueue.service.type | string | `"ClusterIP"` |  |
+| anchoreSimpleQueue.service.port | int | `8083` |  |
+| anchoreSimpleQueue.service.annotations | object | `{}` |  |
+| anchoreSimpleQueue.service.labels | object | `{}` |  |
+| anchoreSimpleQueue.resources.limits.cpu | int | `1` |  |
+| anchoreSimpleQueue.resources.limits.memory | string | `"1G"` |  |
+| anchoreSimpleQueue.resources.requests.cpu | int | `1` |  |
+| anchoreSimpleQueue.resources.requests.memory | string | `"1G"` |  |
+| anchoreSimpleQueue.labels | object | `{}` |  |
+| anchoreSimpleQueue.annotations | object | `{}` |  |
+| anchoreSimpleQueue.nodeSelector | object | `{}` |  |
+| anchoreSimpleQueue.tolerations | list | `[]` |  |
+| anchoreSimpleQueue.affinity | object | `{}` |  |
+| anchoreEngineUpgradeJob.enabled | bool | `true` |  |
+| anchoreEngineUpgradeJob.resources.limits.cpu | int | `1` |  |
+| anchoreEngineUpgradeJob.resources.limits.memory | string | `"1G"` |  |
+| anchoreEngineUpgradeJob.resources.requests.cpu | int | `1` |  |
+| anchoreEngineUpgradeJob.resources.requests.memory | string | `"1G"` |  |
+| anchoreEngineUpgradeJob.nodeSelector | object | `{}` |  |
+| anchoreEngineUpgradeJob.tolerations | list | `[]` |  |
+| anchoreEngineUpgradeJob.affinity | object | `{}` |  |
+| anchoreEngineUpgradeJob.annotations | object | `{}` |  |
+| anchoreEnterpriseGlobal.enabled | bool | `false` |  |
+| anchoreEnterpriseGlobal.licenseSecretName | string | `"anchore-enterprise-license"` |  |
+| anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:3.1.2"` |  |
+| anchoreEnterpriseGlobal.imagePullPolicy | string | `"IfNotPresent"` |  |
+| anchoreEnterpriseGlobal.imagePullSecretName | string | `"private-registry"` |  |
+| anchore-feeds-db.image | string | `"registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.18"` |  |
+| anchore-feeds-db.imagePullSecrets | string | `"private-registry"` |  |
+| anchore-feeds-db.postgresUser | string | `"anchoreengine"` |  |
+| anchore-feeds-db.postgresPassword | string | `"anchore-postgres,123"` |  |
+| anchore-feeds-db.postgresDatabase | string | `"anchore-feeds"` |  |
+| anchore-feeds-db.externalEndpoint | string | `nil` |  |
+| anchore-feeds-db.persistence.resourcePolicy | string | `"nil"` |  |
+| anchore-feeds-db.persistence.size | string | `"20Gi"` |  |
+| anchore-feeds-db.persistence.subPath | string | `"pgdata"` |  |
+| anchore-feeds-db.persistence.mountPath | string | `"/var/lib/postgresql"` |  |
+| anchore-feeds-db.resources.limits.cpu | string | `"100m"` |  |
+| anchore-feeds-db.resources.limits.memory | string | `"256Mi"` |  |
+| anchore-feeds-db.resources.requests.cpu | string | `"100m"` |  |
+| anchore-feeds-db.resources.requests.memory | string | `"256Mi"` |  |
+| anchore-feeds-db.metrics.resources.limits.cpu | string | `"100m"` |  |
+| anchore-feeds-db.metrics.resources.limits.memory | string | `"256Mi"` |  |
+| anchore-feeds-db.metrics.resources.requests.cpu | string | `"100m"` |  |
+| anchore-feeds-db.metrics.resources.requests.memory | string | `"256Mi"` |  |
+| anchore-feeds-db.postgresConfig.listen_addresses | string | `"*"` |  |
+| anchore-feeds-db.pgHbaConf | string | `"local all all md5\nhost all all all md5"` |  |
+| anchoreEnterpriseFeeds.enabled | bool | `true` |  |
+| anchoreEnterpriseFeeds.url | string | `""` |  |
+| anchoreEnterpriseFeeds.githubDriverEnabled | bool | `false` |  |
+| anchoreEnterpriseFeeds.githubDriverToken | string | `nil` |  |
+| anchoreEnterpriseFeeds.msrcDriverEnabled | bool | `false` |  |
+| anchoreEnterpriseFeeds.extraEnv | list | `[]` |  |
+| anchoreEnterpriseFeeds.cycleTimers.driver_sync | int | `7200` |  |
+| anchoreEnterpriseFeeds.existingSecret | string | `nil` |  |
+| anchoreEnterpriseFeeds.dbConfig.timeout | int | `120` |  |
+| anchoreEnterpriseFeeds.dbConfig.ssl | bool | `false` |  |
+| anchoreEnterpriseFeeds.dbConfig.sslMode | string | `"verify-full"` |  |
+| anchoreEnterpriseFeeds.dbConfig.sslRootCertName | string | `nil` |  |
+| anchoreEnterpriseFeeds.dbConfig.connectionPoolSize | int | `30` |  |
+| anchoreEnterpriseFeeds.dbConfig.connectionPoolMaxOverflow | int | `100` |  |
+| anchoreEnterpriseFeeds.dbConfig.engineArgs | object | `{}` |  |
+| anchoreEnterpriseFeeds.service.type | string | `"ClusterIP"` |  |
+| anchoreEnterpriseFeeds.service.port | int | `8448` |  |
+| anchoreEnterpriseFeeds.service.annotations | object | `{}` |  |
+| anchoreEnterpriseFeeds.service.labels | object | `{}` |  |
+| anchoreEnterpriseFeeds.resources.limits.cpu | int | `1` |  |
+| anchoreEnterpriseFeeds.resources.limits.memory | string | `"4G"` |  |
+| anchoreEnterpriseFeeds.resources.requests.cpu | int | `1` |  |
+| anchoreEnterpriseFeeds.resources.requests.memory | string | `"4G"` |  |
+| anchoreEnterpriseFeeds.labels | object | `{}` |  |
+| anchoreEnterpriseFeeds.annotations | object | `{}` |  |
+| anchoreEnterpriseFeeds.nodeSelector | object | `{}` |  |
+| anchoreEnterpriseFeeds.tolerations | list | `[]` |  |
+| anchoreEnterpriseFeeds.affinity | object | `{}` |  |
+| anchoreEnterpriseFeedsUpgradeJob.enabled | bool | `true` |  |
+| anchoreEnterpriseFeedsUpgradeJob.resources.limits.cpu | int | `1` |  |
+| anchoreEnterpriseFeedsUpgradeJob.resources.limits.memory | string | `"1G"` |  |
+| anchoreEnterpriseFeedsUpgradeJob.resources.requests.cpu | int | `1` |  |
+| anchoreEnterpriseFeedsUpgradeJob.resources.requests.memory | string | `"1G"` |  |
+| anchoreEnterpriseFeedsUpgradeJob.nodeSelector | object | `{}` |  |
+| anchoreEnterpriseFeedsUpgradeJob.tolerations | list | `[]` |  |
+| anchoreEnterpriseFeedsUpgradeJob.affinity | object | `{}` |  |
+| anchoreEnterpriseFeedsUpgradeJob.annotations | object | `{}` |  |
+| anchoreEnterpriseRbac.enabled | bool | `true` |  |
+| anchoreEnterpriseRbac.extraEnv[0].name | string | `"AUTHLIB_INSECURE_TRANSPORT"` |  |
+| anchoreEnterpriseRbac.extraEnv[0].value | string | `"true"` |  |
+| anchoreEnterpriseRbac.service.apiPort | int | `8229` |  |
+| anchoreEnterpriseRbac.service.authPort | int | `8089` |  |
+| anchoreEnterpriseRbac.authResources.limits.cpu | int | `1` |  |
+| anchoreEnterpriseRbac.authResources.limits.memory | string | `"1G"` |  |
+| anchoreEnterpriseRbac.authResources.requests.cpu | int | `1` |  |
+| anchoreEnterpriseRbac.authResources.requests.memory | string | `"1G"` |  |
+| anchoreEnterpriseRbac.managerResources.limits.cpu | int | `1` |  |
+| anchoreEnterpriseRbac.managerResources.limits.memory | string | `"4G"` |  |
+| anchoreEnterpriseRbac.managerResources.requests.cpu | int | `1` |  |
+| anchoreEnterpriseRbac.managerResources.requests.memory | string | `"4G"` |  |
+| anchoreEnterpriseReports.enabled | bool | `true` |  |
+| anchoreEnterpriseReports.extraEnv | list | `[]` |  |
+| anchoreEnterpriseReports.enableGraphql | bool | `true` |  |
+| anchoreEnterpriseReports.enableDataIngress | bool | `true` |  |
+| anchoreEnterpriseReports.cycleTimers.reports_data_load | int | `600` |  |
+| anchoreEnterpriseReports.cycleTimers.reports_data_refresh | int | `7200` |  |
+| anchoreEnterpriseReports.cycleTimers.reports_metrics | int | `3600` |  |
+| anchoreEnterpriseReports.service.port | int | `8558` |  |
+| anchoreEnterpriseReports.resources.limits.cpu | int | `1` |  |
+| anchoreEnterpriseReports.resources.limits.memory | string | `"1G"` |  |
+| anchoreEnterpriseReports.resources.requests.cpu | int | `1` |  |
+| anchoreEnterpriseReports.resources.requests.memory | string | `"1G"` |  |
+| anchoreEnterpriseReports.labels | object | `{}` |  |
+| anchoreEnterpriseReports.annotations | object | `{}` |  |
+| anchoreEnterpriseReports.nodeSelector | object | `{}` |  |
+| anchoreEnterpriseReports.tolerations | list | `[]` |  |
+| anchoreEnterpriseReports.affinity | object | `{}` |  |
+| anchoreEnterpriseNotifications.enabled | bool | `true` |  |
+| anchoreEnterpriseNotifications.extraEnv | list | `[]` |  |
+| anchoreEnterpriseNotifications.cycleTimers.notifications | int | `30` |  |
+| anchoreEnterpriseNotifications.service.port | int | `8668` |  |
+| anchoreEnterpriseNotifications.resources.limits.cpu | int | `1` |  |
+| anchoreEnterpriseNotifications.resources.limits.memory | string | `"1G"` |  |
+| anchoreEnterpriseNotifications.resources.requests.cpu | int | `1` |  |
+| anchoreEnterpriseNotifications.resources.requests.memory | string | `"1G"` |  |
+| anchoreEnterpriseNotifications.labels | object | `{}` |  |
+| anchoreEnterpriseNotifications.annotations | object | `{}` |  |
+| anchoreEnterpriseNotifications.nodeSelector | object | `{}` |  |
+| anchoreEnterpriseNotifications.tolerations | list | `[]` |  |
+| anchoreEnterpriseNotifications.affinity | object | `{}` |  |
+| anchoreEnterpriseUi.enabled | bool | `true` |  |
+| anchoreEnterpriseUi.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:3.1.1"` |  |
+| anchoreEnterpriseUi.imagePullPolicy | string | `"IfNotPresent"` |  |
+| anchoreEnterpriseUi.imagePullSecretName | string | `"private-registry"` |  |
+| anchoreEnterpriseUi.extraEnv | list | `[]` |  |
+| anchoreEnterpriseUi.existingSecret | string | `nil` |  |
+| anchoreEnterpriseUi.ldapsRootCaCertName | string | `nil` |  |
+| anchoreEnterpriseUi.enableProxy | bool | `false` |  |
+| anchoreEnterpriseUi.enableSsl | bool | `false` |  |
+| anchoreEnterpriseUi.enableSharedLogin | bool | `true` |  |
+| anchoreEnterpriseUi.redisFlushdb | bool | `true` |  |
+| anchoreEnterpriseUi.forceWebsocket | bool | `false` |  |
+| anchoreEnterpriseUi.authenticationLock.count | int | `5` |  |
+| anchoreEnterpriseUi.authenticationLock.expires | int | `300` |  |
+| anchoreEnterpriseUi.service.type | string | `"ClusterIP"` |  |
+| anchoreEnterpriseUi.service.port | int | `80` |  |
+| anchoreEnterpriseUi.service.annotations | object | `{}` |  |
+| anchoreEnterpriseUi.service.labels | object | `{}` |  |
+| anchoreEnterpriseUi.service.sessionAffinity | string | `"ClientIP"` |  |
+| anchoreEnterpriseUi.resources.limits.cpu | int | `1` |  |
+| anchoreEnterpriseUi.resources.limits.memory | string | `"1G"` |  |
+| anchoreEnterpriseUi.resources.requests.cpu | int | `1` |  |
+| anchoreEnterpriseUi.resources.requests.memory | string | `"1G"` |  |
+| anchoreEnterpriseUi.labels | object | `{}` |  |
+| anchoreEnterpriseUi.annotations | object | `{}` |  |
+| anchoreEnterpriseUi.nodeSelector | object | `{}` |  |
+| anchoreEnterpriseUi.tolerations | list | `[]` |  |
+| anchoreEnterpriseUi.affinity | object | `{}` |  |
+| anchore-ui-redis.istio.enabled | string | `"{{ .Values.istio.enabled }}"` |  |
+| anchore-ui-redis.auth.password | string | `"anchore-redis,123"` |  |
+| anchore-ui-redis.externalEndpoint | string | `nil` |  |
+| anchoreEnterpriseEngineUpgradeJob.enabled | bool | `true` |  |
+| anchoreEnterpriseEngineUpgradeJob.resources.limits.cpu | int | `1` |  |
+| anchoreEnterpriseEngineUpgradeJob.resources.limits.memory | string | `"1G"` |  |
+| anchoreEnterpriseEngineUpgradeJob.resources.requests.cpu | int | `1` |  |
+| anchoreEnterpriseEngineUpgradeJob.resources.requests.memory | string | `"1G"` |  |
+| anchoreEnterpriseEngineUpgradeJob.nodeSelector | object | `{}` |  |
+| anchoreEnterpriseEngineUpgradeJob.tolerations | list | `[]` |  |
+| anchoreEnterpriseEngineUpgradeJob.affinity | object | `{}` |  |
+| anchoreEnterpriseEngineUpgradeJob.annotations | object | `{}` |  |
 
-To delete Anchore when deployed this way:
-```
-helm delete anchore -n anchore
-```
+## Contributing
 
-## Usage
-
-For additional information and documentation help, start with the [documents folder](./docs/README.md).
-
-Within this folder there is documentation on the chart, keycloak, metrics, and the big bang specific changes from upstream.
+Please see the [contributing guide](./CONTRIBUTING.md) if you are interested in contributing.
