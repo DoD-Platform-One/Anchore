@@ -3,6 +3,9 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.14.7-bb.2]
+### Added
+- Update README with gluon template
 
 ## [1.14.7-bb.1]
 ### Changed
@@ -25,7 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [1.13.0-bb.8]
 ### Changed
 - updated Redis dependency to `14.1.0-bb.4`
-- added `curl -X POST http://localhost:15020/quitquitquit` to cleanly terminate the istio sidecar container when jobs complete. This was done to resolve OPA Gatekeeper violations 
+- added `curl -X POST http://localhost:15020/quitquitquit` to cleanly terminate the istio sidecar container when jobs complete. This was done to resolve OPA Gatekeeper violations
 - updated resource requests and limits to better-align with vendor's suggestions
 
 ## [1.13.0-bb.7]
@@ -62,7 +65,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 - updated Service Monitor and added Pod Monitor for scraping metrics from Anchore components
 - updated chart templates to automatically enable metrics for the Anchore Enterprise feeds service (until patched upstream)
- 
+
 ## [1.13.0-bb.0]
 ### Changed
 - Bumped appVersion and Anchore Engine image tag to 0.10.0
