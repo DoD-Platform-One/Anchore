@@ -1,7 +1,6 @@
 {
   "baseBranches": ["main"],
   "dependencyDashboard": "true",
-  "dependencyDashboardAutoclose": "true",
   "dependencyDashboardHeader": "- [ ] Sync upstream helm chart version with updated dependencies.",
   "dependencyDashboardTitle": "Renovate: Upgrade Anchore Enterprise Package Dependencies",
   "draftPR": "true",
