@@ -5,7 +5,7 @@ metadata:
 upstream:
   type: git
   git:
-    commit: 161159a9383847935c221cfa3fb11070ca3601fd
+    commit: 482e737ad1e3a3e054bbcb2c4b406163c71da954
     repo: https://github.com/anchore/anchore-charts
     directory: /stable/anchore-engine
-    ref: anchore-engine-1.14.7
+    ref: anchore-engine-1.15.0
