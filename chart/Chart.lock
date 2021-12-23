@@ -5,6 +5,9 @@ dependencies:
 - name: postgresql
   repository: file://./deps/postgresql
   version: 1.0.1
+- name: postgresql
+  repository: file://./deps/postgresql
+  version: 1.0.1
 - name: redis
   repository: file://./deps/redis
   version: 14.1.0-bb.4
