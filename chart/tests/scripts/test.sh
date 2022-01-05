@@ -20,7 +20,7 @@ else
 fi
 
 echo "Initiating image analysis..."
-add=$(anchore-cli --debug image add docker.io/library/centos:latest 2>&1)
+add=$(anchore-cli --debug image add $ANCHORE_SCAN_IMAGE 2>&1)
 
 # IF status code is 200
 if [[ ${add} =~ "httpcode from response: 200" ]]; then
@@ -33,7 +33,7 @@ else
 fi
 
 echo "Waiting for image analysis to complete..."
-wait=$(anchore-cli --debug image wait docker.io/library/centos:latest 2>&1)
+wait=$(anchore-cli --debug image wait $ANCHORE_SCAN_IMAGE 2>&1)
 
 # IF status code is 200
 if [[ ${wait} =~ "httpcode from response: 200" ]]; then
