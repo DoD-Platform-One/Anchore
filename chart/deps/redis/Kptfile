@@ -1,11 +1,11 @@
 apiVersion: kpt.dev/v1alpha1
 kind: Kptfile
 metadata:
-    name: chart
+  name: chart
 upstream:
-    type: git
-    git:
-        commit: d3024aa04cd8411bbd9e7ec93835d87a7602f4d6
-        repo: https://repo1.dso.mil/platform-one/big-bang/apps/application-utilities/redis
-        directory: /chart
-        ref: 14.1.0-bb.4
+  type: git
+  git:
+    commit: c562f1682925b8aad0fb7d62e449e726ce1e4d71
+    repo: https://repo1.dso.mil/platform-one/big-bang/apps/application-utilities/redis
+    directory: /chart
+    ref: redis-prom-rules-fix
