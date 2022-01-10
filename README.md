@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.15.0-bb.3](https://img.shields.io/badge/Version-1.15.0--bb.3-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.15.0-bb.4](https://img.shields.io/badge/Version-1.15.0--bb.4-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -436,6 +436,7 @@ helm install anchore-engine chart/
 | anchore-ui-redis.istio.enabled | string | `"{{ .Values.istio.enabled }}"` |  |
 | anchore-ui-redis.auth.password | string | `"anchore-redis,123"` |  |
 | anchore-ui-redis.externalEndpoint | string | `nil` |  |
+| anchore-ui-redis.commonConfiguration | string | `"maxmemory 200mb\nsave \"\""` |  |
 | anchoreEnterpriseEngineUpgradeJob.enabled | bool | `true` |  |
 | anchoreEnterpriseEngineUpgradeJob.resources.limits.cpu | int | `1` |  |
 | anchoreEnterpriseEngineUpgradeJob.resources.limits.memory | string | `"1G"` |  |

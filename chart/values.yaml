@@ -1277,6 +1277,10 @@ anchore-ui-redis:
   # eg redis://nouser:<password>@hostname:6379
   externalEndpoint: Null
 
+  commonConfiguration: |-
+    maxmemory 200mb
+    save ""
+
 # Pod configuration for the helm post-install-hook enterprise engine upgrade Job
 anchoreEnterpriseEngineUpgradeJob:
   enabled: true
