@@ -10,9 +10,9 @@ dependencies:
   version: 1.0.1
 - name: redis
   repository: file://./deps/redis
-  version: 14.1.0-bb.4
+  version: 14.1.0-bb.7
 - name: gluon
   repository: oci://registry.dso.mil/platform-one/big-bang/apps/library-charts/gluon
   version: 0.2.3
-digest: sha256:4d1ad7036bcb6ae9ca9f0f5866930a615c1bf539f0354f6fb2c8a5da39c47062
-generated: "2021-09-17T10:22:19.030334-04:00"
+digest: sha256:39f8c185b2e064a09e4d903e76ea5b79941d2d7f74c2be286b17742bca68b1b3
+generated: "2022-01-10T08:39:36.968558-06:00"
