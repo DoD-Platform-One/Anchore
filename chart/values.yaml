@@ -1301,3 +1301,25 @@ anchoreEnterpriseEngineUpgradeJob:
 # To inject secrets ( credentails data ) via env, rather k8s secrets please set this flag to true.
 # This feature will be useful, especially to inject secrets directly into k8s pods from hashicorp vault
 # inject_secrets_via_env: false
+
+bbtests:
+  enabled: false
+  scripts:
+    image: registry1.dso.mil/ironbank/anchore/cli/cli:0.9.1
+    envs:
+      ANCHORE_CLI_URL: "http://{{ template \"anchore-engine.api.fullname\" . }}:{{ .Values.anchoreApi.service.port }}/v1"
+      ANCHORE_CLI_USER: admin
+      ANCHORE_SCAN_IMAGE: registry.dso.mil/platform-one/big-bang/apps/security-tools/anchore-enterprise/centos:latest
+    secretEnvs:
+      - name: ANCHORE_CLI_PASS
+        valueFrom:
+          secretKeyRef:
+            name: "{{ template \"anchore-engine.fullname\" . }}-admin-pass"
+            key: ANCHORE_ADMIN_PASSWORD
+    resources:
+      requests:
+        cpu: "1"
+        memory: "1Gi"
+      limits:
+        cpu: "1"
+        memory: "1Gi"

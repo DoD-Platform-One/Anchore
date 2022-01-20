@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.15.0-bb.4](https://img.shields.io/badge/Version-1.15.0--bb.4-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.15.0-bb.5](https://img.shields.io/badge/Version-1.15.0--bb.5-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -446,6 +446,18 @@ helm install anchore-engine chart/
 | anchoreEnterpriseEngineUpgradeJob.tolerations | list | `[]` |  |
 | anchoreEnterpriseEngineUpgradeJob.affinity | object | `{}` |  |
 | anchoreEnterpriseEngineUpgradeJob.annotations | object | `{}` |  |
+| bbtests.enabled | bool | `false` |  |
+| bbtests.scripts.image | string | `"registry1.dso.mil/ironbank/anchore/cli/cli:0.9.1"` |  |
+| bbtests.scripts.envs.ANCHORE_CLI_URL | string | `"http://{{ template \"anchore-engine.api.fullname\" . }}:{{ .Values.anchoreApi.service.port }}/v1"` |  |
+| bbtests.scripts.envs.ANCHORE_CLI_USER | string | `"admin"` |  |
+| bbtests.scripts.envs.ANCHORE_SCAN_IMAGE | string | `"registry.dso.mil/platform-one/big-bang/apps/security-tools/anchore-enterprise/centos:latest"` |  |
+| bbtests.scripts.secretEnvs[0].name | string | `"ANCHORE_CLI_PASS"` |  |
+| bbtests.scripts.secretEnvs[0].valueFrom.secretKeyRef.name | string | `"{{ template \"anchore-engine.fullname\" . }}-admin-pass"` |  |
+| bbtests.scripts.secretEnvs[0].valueFrom.secretKeyRef.key | string | `"ANCHORE_ADMIN_PASSWORD"` |  |
+| bbtests.scripts.resources.requests.cpu | string | `"1"` |  |
+| bbtests.scripts.resources.requests.memory | string | `"1Gi"` |  |
+| bbtests.scripts.resources.limits.cpu | string | `"1"` |  |
+| bbtests.scripts.resources.limits.memory | string | `"1Gi"` |  |
 
 ## Contributing
 
