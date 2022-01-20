@@ -1,0 +1,12 @@
+networkPolicies:
+  enabled: true
+
+bbtests:
+  enabled: true
+
+anchoreGlobal:
+  saml:
+    secret: ci-testing-only
+
+anchoreAnalyzer:
+  replicaCount: 1
