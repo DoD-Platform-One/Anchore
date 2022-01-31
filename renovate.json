@@ -8,12 +8,12 @@
   "packageRules": [
     {
       "matchDatasources": ["docker"],
-      "groupName": "Anchore"    
+      "groupName": "Anchore"
     }
   ],
   "separateMajorMinor": "false",
-  "ignoreDeps": ["docker.io/bitnami/redis-sentinel", "registry1.dso.mil/ironbank/bitnami/redis", "registry1.dso.mil/ironbank/bitnami/analytics/redis-exporter", "docker.io/bitnami/redis-sentinel-exporter", "docker.io/bitnami/bitnami-shell", "gcr.io/cloudsql-docker/gce-proxy"],
-  "ignorePaths": ["**/chart/deps/**"],
+  "ignoreDeps": ["docker.io/bitnami/redis-sentinel", "docker.io/bitnami/redis-sentinel-exporter", "docker.io/bitnami/bitnami-shell", "gcr.io/cloudsql-docker/gce-proxy"],
+  "ignorePaths": ["**/chart/deps/postgresql", "**/chart/deps/redis/values\\.yaml"],
   "regexManagers": [
     {
       "fileMatch": ["^chart/values\\.yaml$"],
@@ -27,7 +27,7 @@
     {
       "fileMatch": ["^chart/values\\.yaml$"],
       "matchStrings": [
-        "image:\\s+registry1.dso.mil/ironbank/anchore/enterprise/enterprise:(?<currentValue>.+)"      
+        "image:\\s+registry1.dso.mil/ironbank/anchore/enterprise/enterprise:(?<currentValue>.+)"
       ],
       "depNameTemplate": "ironbank/anchore/enterprise/enterprise",
       "datasourceTemplate": "docker",
@@ -36,16 +36,33 @@
     {
       "fileMatch": ["^chart/values\\.yaml$"],
       "matchStrings": [
-        "image:\\s+registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:(?<currentValue>.+)"      
+        "image:\\s+registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:(?<currentValue>.+)"
       ],
       "depNameTemplate": "ironbank/anchore/enterpriseui/enterpriseui",
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://registry1.dso.mil"
     },
     {
+      "fileMatch": ["^chart/values\\.yaml$"],
+      "matchStrings": [
+        "image:\\s+registry1.dso.mil/ironbank/opensource/postgres/*:(?<currentValue>.+)"
+      ],
+      "depNameTemplate": "ironbank/opensource/postgres",
+      "datasourceTemplate": "docker",
+      "registryUrlTemplate": "https://registry1.dso.mil"
+    },
+    {
+      "fileMatch": ["^chart/deps/redis/Chart\\.yaml$"],
+      "matchStrings": [
+        "version:\\s+(?<currentValue>.+)"
+      ],
+      "depNameTemplate": "https://repo1.dso.mil/platform-one/big-bang/apps/application-utilities/redis.git",
+      "datasourceTemplate": "git-tags"
+    },
+    {
       "fileMatch": ["^tests/images\\.txt$"],
       "matchStrings": [
-        "registry1.dso.mil/ironbank/anchore/enterprise/enterprise:(?<currentValue>.+)"      
+        "registry1.dso.mil/ironbank/anchore/enterprise/enterprise:(?<currentValue>.+)"
       ],
       "depNameTemplate": "ironbank/anchore/enterprise/enterprise",
       "datasourceTemplate": "docker",
@@ -54,7 +71,7 @@
     {
       "fileMatch": ["^tests/images\\.txt$"],
       "matchStrings": [
-        "registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:(?<currentValue>.+)"      
+        "registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:(?<currentValue>.+)"
       ],
       "depNameTemplate": "ironbank/anchore/enterpriseui/enterpriseui",
       "datasourceTemplate": "docker",

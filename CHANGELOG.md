@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.15.0-bb.6]
+### Changed
+- Add test images to be monitored with renovate 
+
 ## [1.15.0-bb.5]
 ### Changed
 - Relocated bbtests from `test-values.yaml` to `values.yaml`
