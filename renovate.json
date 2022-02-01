@@ -76,6 +76,24 @@
       "depNameTemplate": "ironbank/anchore/enterpriseui/enterpriseui",
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://registry1.dso.mil"
+    },
+    {
+      "fileMatch": ["^chart/Chart\\.yaml$"],
+      "matchStrings": [
+        "- Engine:\\s+(?<currentValue>.+)"
+      ],
+      "registryUrlTemplate": "https://registry1.dso.mil",
+      "depNameTemplate": "ironbank/anchore/engine/engine",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "fileMatch": ["^chart/Chart\\.yaml$"],
+      "matchStrings": [
+        "- Enterprise:\\s+(?<currentValue>.+)"
+      ],
+      "registryUrlTemplate": "https://registry1.dso.mil",
+      "depNameTemplate": "ironbank/anchore/enterprise/enterprise",
+      "datasourceTemplate": "docker"
     }
   ]
 }
