@@ -1,8 +1,8 @@
 # Default values for anchore_engine chart.
 
 # Big Bang Values
-# ---------------
-hostname: bigbang.dev
+#
+domain: bigbang.dev
 
 istio:
   # Toggle istio integration
@@ -15,7 +15,7 @@ istio:
     gateways:
       - istio-system/main
     hosts:
-      - "anchore.{{ .Values.hostname }}"
+      - "anchore.{{ .Values.domain }}"
   api:
     # Toggle vs creation
     enabled: true
@@ -24,7 +24,7 @@ istio:
     gateways:
       - istio-system/main
     hosts:
-      - "anchore-api.{{ .Values.hostname }}"
+      - "anchore-api.{{ .Values.domain }}"
 
 networkPolicies:
   enabled: false
@@ -81,7 +81,7 @@ sso:
       memory: 256Mi
 
 # Upstream Anchore Values
-# -----------------------
+#
 # Anchore engine has a dependency on Postgresql, configure here
 postgresql:
   # Use Ironbank image + pull secrets

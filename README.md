@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.15.0-bb.7](https://img.shields.io/badge/Version-1.15.0--bb.7-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.15.0-bb.8](https://img.shields.io/badge/Version-1.15.0--bb.8-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -35,18 +35,18 @@ helm install anchore-engine chart/
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| hostname | string | `"bigbang.dev"` |  |
+| domain | string | `"bigbang.dev"` |  |
 | istio.enabled | bool | `false` |  |
 | istio.ui.enabled | bool | `true` |  |
 | istio.ui.annotations | object | `{}` |  |
 | istio.ui.labels | object | `{}` |  |
 | istio.ui.gateways[0] | string | `"istio-system/main"` |  |
-| istio.ui.hosts[0] | string | `"anchore.{{ .Values.hostname }}"` |  |
+| istio.ui.hosts[0] | string | `"anchore.{{ .Values.domain }}"` |  |
 | istio.api.enabled | bool | `true` |  |
 | istio.api.annotations | object | `{}` |  |
 | istio.api.labels | object | `{}` |  |
 | istio.api.gateways[0] | string | `"istio-system/main"` |  |
-| istio.api.hosts[0] | string | `"anchore-api.{{ .Values.hostname }}"` |  |
+| istio.api.hosts[0] | string | `"anchore-api.{{ .Values.domain }}"` |  |
 | networkPolicies.enabled | bool | `false` |  |
 | networkPolicies.ingressLabels.app | string | `"istio-ingressgateway"` |  |
 | networkPolicies.ingressLabels.istio | string | `"ingressgateway"` |  |
@@ -178,7 +178,7 @@ helm install anchore-engine chart/
 | anchoreAnalyzer.configFile.secret_search.regexp_match[1] | string | `"AWS_SECRET_KEY=(?i).*aws_secret_access_key( *=+ *).*(?<![A-Za-z0-9/+=])[A-Za-z0-9/+=]{40}(?![A-Za-z0-9/+=]).*"` |  |
 | anchoreAnalyzer.configFile.secret_search.regexp_match[2] | string | `"PRIV_KEY=(?i)-+BEGIN(.*)PRIVATE KEY-+"` |  |
 | anchoreAnalyzer.configFile.secret_search.regexp_match[3] | string | `"DOCKER_AUTH=(?i).*\"auth\": *\".+\""` |  |
-| anchoreAnalyzer.configFile.secret_search.regexp_match[4] | string | `"API_KEY=(?i).*api(-|_)key( *=+ *).*(?<![A-Z0-9])[A-Z0-9]{20,60}(?![A-Z0-9]).*"` |  |
+| anchoreAnalyzer.configFile.secret_search.regexp_match[4] | string | `"API_KEY=(?i).*api(-\|_)key( *=+ *).*(?<![A-Z0-9])[A-Z0-9]{20,60}(?![A-Z0-9]).*"` |  |
 | anchoreAnalyzer.resources.limits.cpu | int | `1` |  |
 | anchoreAnalyzer.resources.limits.memory | string | `"4G"` |  |
 | anchoreAnalyzer.resources.requests.cpu | int | `1` |  |
