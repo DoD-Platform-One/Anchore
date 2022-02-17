@@ -60,24 +60,6 @@
       "datasourceTemplate": "git-tags"
     },
     {
-      "fileMatch": ["^tests/images\\.txt$"],
-      "matchStrings": [
-        "registry1.dso.mil/ironbank/anchore/enterprise/enterprise:(?<currentValue>.+)"
-      ],
-      "depNameTemplate": "ironbank/anchore/enterprise/enterprise",
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://registry1.dso.mil"
-    },
-    {
-      "fileMatch": ["^tests/images\\.txt$"],
-      "matchStrings": [
-        "registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:(?<currentValue>.+)"
-      ],
-      "depNameTemplate": "ironbank/anchore/enterpriseui/enterpriseui",
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://registry1.dso.mil"
-    },
-    {
       "fileMatch": ["^chart/Chart\\.yaml$"],
       "matchStrings": [
         "- Engine:\\s+(?<currentValue>.+)"
@@ -93,6 +75,13 @@
       ],
       "registryUrlTemplate": "https://registry1.dso.mil",
       "depNameTemplate": "ironbank/anchore/enterprise/enterprise",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "fileMatch": ["^tests/images\\.txt$"],
+      "matchStrings": [
+        "s*(?<depName>.+):(?<currentValue>.+)"
+      ],
       "datasourceTemplate": "docker"
     }
   ]
