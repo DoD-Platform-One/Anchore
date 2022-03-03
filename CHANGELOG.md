@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.15.0-bb.9]
+### Changed
+- Check for istio proxy connectivity before call `/quitquitquit` on job resources
+- Addition of `istio.injection` value to delineate between istio injection vs other istio resources
+
 ## [1.15.0-bb.8]
 ### Changed
 - Rename hostname to domain

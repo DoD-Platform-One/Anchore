@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.15.0-bb.8](https://img.shields.io/badge/Version-1.15.0--bb.8-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.15.0-bb.9](https://img.shields.io/badge/Version-1.15.0--bb.9-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -37,6 +37,7 @@ helm install anchore-engine chart/
 |-----|------|---------|-------------|
 | domain | string | `"bigbang.dev"` |  |
 | istio.enabled | bool | `false` |  |
+| istio.injection | bool | `false` |  |
 | istio.ui.enabled | bool | `true` |  |
 | istio.ui.annotations | object | `{}` |  |
 | istio.ui.labels | object | `{}` |  |
