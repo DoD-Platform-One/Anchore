@@ -71,8 +71,13 @@ spec:
             sleep 60
             anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_DB_USER}":"${ANCHORE_DB_PASSWORD}"@"${ANCHORE_DB_HOST}"/"${ANCHORE_DB_NAME}"?sslmode={{- .Values.anchoreGlobal.dbConfig.sslMode -}}\&sslrootcert=/home/anchore/certs/{{- .Values.anchoreGlobal.dbConfig.sslRootCertName }} upgrade --dontask;
         {{- end }}
-        {{- if .Values.istio.enabled }}
-            echo "Terminating istio sidecar container..."
+        {{- if .Values.istio.injection }}
+            until curl -fsI http://localhost:15021/healthz/ready; do
+              echo "Waiting for Istio sidecar proxy..."
+              sleep 3
+            done
+            sleep 5
+            echo "Stopping the istio proxy..."
             curl -X POST http://localhost:15020/quitquitquit
         {{- end }}
         {{- if .Values.cloudsql.enabled }}
