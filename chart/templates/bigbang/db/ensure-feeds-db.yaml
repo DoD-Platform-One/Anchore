@@ -27,7 +27,7 @@ spec:
               echo "Ensure Anchore Feeds DB..."
               psql -tc "SELECT 1 FROM pg_database WHERE datname = '$FEEDS_DB'" | grep -q 1 || psql -c "CREATE DATABASE $FEEDS_DB"
               psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$FEEDS_USER'" | grep -q 1 && psql -c "ALTER USER $FEEDS_USER WITH PASSWORD '$FEEDS_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $FEEDS_DB TO $FEEDS_USER;" | grep -q GRANT || psql -c "CREATE USER   $FEEDS_USER WITH PASSWORD '$FEEDS_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $FEEDS_DB TO $FEEDS_USER;"
-              {{- if .Values.istio.injection }}
+              {{- if eq .Values.istio.injection "enabled" }}
               until curl -fsI http://localhost:15021/healthz/ready; do
                 echo "Waiting for Istio sidecar proxy..."
                 sleep 3
@@ -64,7 +64,7 @@ spec:
 
               psql -tc "SELECT 1 FROM pg_database WHERE datname = '$FEEDS_DB'" | grep -q 1 || psql -c "CREATE DATABASE $FEEDS_DB"
               psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$PGUSER'" | grep -q 1 && psql -c "ALTER USER $PGUSER WITH PASSWORD '$PGPASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $FEEDS_DB TO $PGUSER;" | grep -q GRANT || psql -c "CREATE USER $PGUSER WITH PASSWORD '$PGPASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $FEEDS_DB TO $PGUSER;"
-              {{- if .Values.istio.injection }}
+              {{- if eq .Values.istio.injection "enabled" }}
               until curl -fsI http://localhost:15021/healthz/ready; do
                 echo "Waiting for Istio sidecar proxy..."
                 sleep 3
