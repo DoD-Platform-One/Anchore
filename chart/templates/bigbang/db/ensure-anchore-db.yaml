@@ -27,7 +27,7 @@ spec:
               echo "Ensure Anchore DB..."
               psql -tc "SELECT 1 FROM pg_database WHERE datname = '$ANCHORE_DB'" | grep -q 1 || psql -c "CREATE DATABASE $ANCHORE_DB"
               psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$ANCHORE_USER'" | grep -q 1 && psql -c "ALTER USER $ANCHORE_USER WITH PASSWORD '$ANCHORE_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB TO $ANCHORE_USER;" | grep -q GRANT || psql -c "CREATE USER $ANCHORE_USER WITH PASSWORD '$ANCHORE_PASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB TO $ANCHORE_USER;"
-              {{- if .Values.istio.injection }}
+              {{- if eq .Values.istio.injection "enabled" }}
               until curl -fsI http://localhost:15021/healthz/ready; do
                 echo "Waiting for Istio sidecar proxy..."
                 sleep 3
@@ -64,7 +64,7 @@ spec:
 
               psql -tc "SELECT 1 FROM pg_database WHERE datname = '$ANCHORE_DB'" | grep -q 1 || psql -c "CREATE DATABASE $ANCHORE_DB"
               psql -tc "SELECT 1 FROM pg_roles WHERE rolname = '$PGUSER'" | grep -q 1 && psql -c "ALTER USER $PGUSER WITH PASSWORD '$PGPASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB TO $PGUSER;" | grep -q GRANT || psql -c "CREATE USER $PGUSER WITH PASSWORD '$PGPASSWORD'; GRANT ALL PRIVILEGES ON DATABASE $ANCHORE_DB TO $PGUSER;"
-              {{- if .Values.istio.injection }}
+              {{- if eq .Values.istio.injection "enabled" }}
               until curl -fsI http://localhost:15021/healthz/ready; do
                 echo "Waiting for Istio sidecar proxy..."
                 sleep 3

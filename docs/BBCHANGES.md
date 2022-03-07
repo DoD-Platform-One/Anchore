@@ -18,7 +18,7 @@ hostname: bigbang.dev
 istio:
   # Toggle istio integration
   enabled: false
-  injection: false
+  injection: "disabled"
   ui:
     # Toggle vs creation
     enabled: true
@@ -224,7 +224,7 @@ resources:
 To resolve OPA Gatekeeper violations around istio sidecar injection, a curl command was added to `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml` to allow the istio sidecar container to cleanly terminate after jobs complete.
 
 ```yaml
-{{- if .Values.istio.injection }}
+{{- if eq .Values.istio.injection "enabled" }}
   until curl -fsI http://localhost:15021/healthz/ready; do
     echo "Waiting for Istio sidecar proxy..."
     sleep 3

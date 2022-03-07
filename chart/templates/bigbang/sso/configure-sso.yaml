@@ -53,7 +53,7 @@ spec:
                 curl -vvv --fail -u "admin:${ANCHORE_ADMIN_PASSWORD}" -d "@anchore-sso.json" -H "Content-Type: application/json" --request PUT "http://{{ template "anchore-engine.api.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.apiPort }}/v1/saml/idps/${SSO_NAME}"
               fi
 
-              {{- if .Values.istio.injection }}
+              {{- if eq .Values.istio.injection "enabled" }}
               until curl -fsI http://localhost:15021/healthz/ready; do
                 echo "Waiting for Istio sidecar proxy..."
                 sleep 3
