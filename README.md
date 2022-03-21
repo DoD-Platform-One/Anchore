@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.15.0-bb.10](https://img.shields.io/badge/Version-1.15.0--bb.10-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.17.1-bb.0](https://img.shields.io/badge/Version-1.17.1--bb.0-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -106,7 +106,7 @@ helm install anchore-engine chart/
 | ingress.uiPath | string | `"/"` |  |
 | ingress.annotations."kubernetes.io/ingress.class" | string | `"nginx"` |  |
 | ingress.tls | list | `[]` |  |
-| anchoreGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/engine/engine:1.0.0"` |  |
+| anchoreGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/engine/engine:1.1.0"` |  |
 | anchoreGlobal.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreGlobal.imagePullSecretName | string | `"private-registry"` |  |
 | anchoreGlobal.serviceAccountName | string | `nil` |  |
@@ -117,7 +117,7 @@ helm install anchore-engine chart/
 | anchoreGlobal.existingSecret | string | `nil` |  |
 | anchoreGlobal.scratchVolume.fixGroupPermissions | bool | `false` |  |
 | anchoreGlobal.scratchVolume.mountPath | string | `"/analysis_scratch"` |  |
-| anchoreGlobal.scratchVolume.details.emptyDir | object | `{}` |  |
+| anchoreGlobal.scratchVolume.details | object | `{}` |  |
 | anchoreGlobal.certStoreSecretName | string | `nil` |  |
 | anchoreGlobal.securityContext.runAsUser | int | `1000` |  |
 | anchoreGlobal.securityContext.runAsGroup | int | `1000` |  |
@@ -290,7 +290,7 @@ helm install anchore-engine chart/
 | anchoreEngineUpgradeJob.annotations | object | `{}` |  |
 | anchoreEnterpriseGlobal.enabled | bool | `false` |  |
 | anchoreEnterpriseGlobal.licenseSecretName | string | `"anchore-enterprise-license"` |  |
-| anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:3.2.1"` |  |
+| anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:3.3.0"` |  |
 | anchoreEnterpriseGlobal.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseGlobal.imagePullSecretName | string | `"private-registry"` |  |
 | anchore-feeds-db.image | string | `"registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.18"` |  |
@@ -325,6 +325,7 @@ helm install anchore-engine chart/
 | anchoreEnterpriseFeeds.githubDriverEnabled | bool | `false` |  |
 | anchoreEnterpriseFeeds.githubDriverToken | string | `nil` |  |
 | anchoreEnterpriseFeeds.msrcDriverEnabled | bool | `false` |  |
+| anchoreEnterpriseFeeds.rhelDriverConcurrency | int | `5` |  |
 | anchoreEnterpriseFeeds.extraEnv | list | `[]` |  |
 | anchoreEnterpriseFeeds.cycleTimers.driver_sync | int | `7200` |  |
 | anchoreEnterpriseFeeds.existingSecret | string | `nil` |  |
@@ -346,9 +347,9 @@ helm install anchore-engine chart/
 | anchoreEnterpriseFeeds.service.annotations | object | `{}` |  |
 | anchoreEnterpriseFeeds.service.labels | object | `{}` |  |
 | anchoreEnterpriseFeeds.resources.limits.cpu | int | `1` |  |
-| anchoreEnterpriseFeeds.resources.limits.memory | string | `"4G"` |  |
+| anchoreEnterpriseFeeds.resources.limits.memory | string | `"10G"` |  |
 | anchoreEnterpriseFeeds.resources.requests.cpu | int | `1` |  |
-| anchoreEnterpriseFeeds.resources.requests.memory | string | `"4G"` |  |
+| anchoreEnterpriseFeeds.resources.requests.memory | string | `"10G"` |  |
 | anchoreEnterpriseFeeds.labels | object | `{}` |  |
 | anchoreEnterpriseFeeds.annotations | object | `{}` |  |
 | anchoreEnterpriseFeeds.nodeSelector | object | `{}` |  |
@@ -407,7 +408,7 @@ helm install anchore-engine chart/
 | anchoreEnterpriseNotifications.tolerations | list | `[]` |  |
 | anchoreEnterpriseNotifications.affinity | object | `{}` |  |
 | anchoreEnterpriseUi.enabled | bool | `true` |  |
-| anchoreEnterpriseUi.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:3.2.1"` |  |
+| anchoreEnterpriseUi.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:3.3.0"` |  |
 | anchoreEnterpriseUi.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseUi.imagePullSecretName | string | `"private-registry"` |  |
 | anchoreEnterpriseUi.extraEnv | list | `[]` |  |
@@ -448,7 +449,7 @@ helm install anchore-engine chart/
 | anchoreEnterpriseEngineUpgradeJob.affinity | object | `{}` |  |
 | anchoreEnterpriseEngineUpgradeJob.annotations | object | `{}` |  |
 | bbtests.enabled | bool | `false` |  |
-| bbtests.scripts.image | string | `"registry1.dso.mil/ironbank/anchore/cli/cli:0.9.1"` |  |
+| bbtests.scripts.image | string | `"registry1.dso.mil/ironbank/anchore/cli/cli:0.9.4"` |  |
 | bbtests.scripts.envs.ANCHORE_CLI_URL | string | `"http://{{ template \"anchore-engine.api.fullname\" . }}:{{ .Values.anchoreApi.service.port }}/v1"` |  |
 | bbtests.scripts.envs.ANCHORE_CLI_USER | string | `"admin"` |  |
 | bbtests.scripts.envs.ANCHORE_SCAN_IMAGE | string | `"registry.dso.mil/platform-one/big-bang/apps/security-tools/anchore-enterprise/centos:latest"` |  |

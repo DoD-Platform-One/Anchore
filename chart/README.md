@@ -244,9 +244,46 @@ See the anchore-engine [CHANGELOG](https://github.com/anchore/anchore-engine/blo
 A Helm post-upgrade hook job will shut down all previously running Anchore services and perform the Anchore database upgrade process using a Kubernetes job. 
 The upgrade will only be considered successful when this job completes successfully. Performing an upgrade will cause the Helm client to block until the upgrade job completes and the new Anchore service pods are started. To view progress of the upgrade process, tail the logs of the upgrade jobs `anchore-engine-upgrade` and `anchore-enterprise-upgrade`. These job resources will be removed upon a successful Helm upgrade.
 
-## Chart version 1.15.0
+## Chart version 1.17.1
 
----
+* The number of concurrent worker threads used for downloading RHEL feeds has been made configurable and the default value has been reduced from 20 to 5. The default number of threads has been reduced due to recent throttling on concurrent requests from RHEL that was causing feed download failures.
+
+## Chart version 1.17.0
+
+Chart version 1.17.0 is an Enterprise focused release. Anchore Engine users will see no change in behavior from this release.
+
+For Enterprise users, this release specifically helps reduce downtime needed during the transition from the v1 scanner to the v2 scanner. This version sets the GrypeDB driver to run in the feed service v1-scanner deployments so that the GrypeDB is ready when the update to the v2 scanner is made and thus reduces effective downtime during the maintenance window needed for that configuration change.
+
+It is recommended that users upgrade to this chart version prior to changing the scanner configuration to move from the V1 scanner to the V2 scanner.
+
+  ### WARNING
+
+  After this upgrade, the Enterprise Feeds service requires a minimum of 10GB of memory allocated. **Failure to allocate adequate resources to this pod will result in crash loops and an unavailable feeds service.** Resource allocation example:
+
+  ```yaml
+  anchoreEnterpriseFeeds:
+    resources:
+      limits:
+        cpu: 1
+        memory: 10G
+      requests:
+        cpu: 1
+        memory: 10G
+  ```
+
+The impacts of this upgrade are as follows:
+
+* For deployments currently utilizing the V1 (legacy) vulnerability provider, configured with `.Values.anchorePolicyEngine.vulnerabilityProvider=legacy`, this upgrade will enable the GrypeDB Driver on the Enterprise Feeds service.
+  * The GrypeDB driver can be manually disabled for legacy deployments using `.Values.anchoreEnterpriseFeeds.grypeDriverEnabled=false`
+* For deployments of Anchore Engine, configured with `.Values.anchoreEnterpriseGlobal=false`, this upgrade will have zero impact.
+* For Enterprise deployments currently utilizing the Grype vulnerability provider, configured with `.Values.anchorePolicyEngine.vulnerabilityProvider=grype`, this release will have zero impact.
+
+## Chart version 1.16.0
+
+* Anchore Engine image updated to v1.1.0 - [Release Notes](https://engine.anchore.io/docs/releasenotes/110/)
+* Anchore Enterprise image updated to v3.3.0 - [Release Notes](https://docs.anchore.com/current/docs/releasenotes/330/)
+
+## Chart version 1.15.0
 
 Chart version v1.15.0 sets the V2 vulnerability scanner, based on [Grype](https://github.com/anchore/grype), as the default for new deployments. **Users upgrading from chart versions prior to v1.15.0 will need to explicitly set their preferred vulnerability provider using `.Values.anchorePolicyEngine.vulnerabilityProvider`.** If the vulnerability provider is not explicitly set, Helm will prevent an upgrade from being initiated.
 
@@ -257,23 +294,17 @@ Chart version v1.15.0 sets the V2 vulnerability scanner, based on [Grype](https:
 
 ## Chart version 1.14.0
 
----
-
 * Anchore Engine image updated to v0.10.1 - [Release Notes](https://engine.anchore.io/docs/releasenotes/0101/)
 * Anchore Enterprise image updated to v3.1.1 - [Release Notes](https://docs.anchore.com/current/docs/releasenotes/311/)
 * Enterprise Feeds - MSRC feeds no longer require an access token. No changes are needed, however MSRC access tokens can now be removed from values and/or existing secrets.
 
 ## Chart version 1.13.0
 
----
-
 * Anchore Engine image updated to v0.10.0 - [Release Notes](https://engine.anchore.io/docs/releasenotes/0100/)
 * Anchore Enterprise image updated to v3.1.0 - [Release Notes](https://docs.anchore.com/current/docs/releasenotes/310/)
 * If utilizing the Enterprise Runtime Inventory feature, the catalog service can now be configured to automatically setup RBAC for image discovery within the cluster. This is configured under `.Values.anchoreCatalog.runtimeInventory`
 
 ## Chart version 1.12.0
-
----
 
 * Anchore Engine image updated to v0.9.1
 * Anchore Enterprise images updated to v3.0.0
@@ -282,12 +313,10 @@ Chart version v1.15.0 sets the V2 vulnerability scanner, based on [Grype](https:
 
 ## Chart version 1.10.0
 
----
 Chart dependency declarations have been updated to be compatible with Helm v3.4.0
 
 ## Chart version 1.8.0
 
----
 The following Anchore-Engine features were added with this version:
 
 * Malware scanning - see .Values.anchoreAnalyzer.configFile.malware
@@ -299,7 +328,6 @@ For more details see - https://docs.anchore.com/current/docs/engine/releasenotes
 
 ## Chart version 1.7.0
 
----
 Starting with version 1.7.0, the anchore-engine chart will be hosted on charts.anchore.io. If you're upgrading from a previous version of the chart, you will need to delete your previous deployment and redeploy Anchore Engine using the chart from the Anchore Charts repository. 
 
 This version of the chart includes the dependent Postgresql chart in the charts/ directory rather then pulling it from upstream. All apiVersions were updated for compatibility with Kubernetes v1.16+ and the postgresql image has been updated to version 9.6.18. The chart version also updates to the latest version of the Redis chart from Bitnami. These dependency updates require deleting and re-installing your chart. If the following process is performed, no data should be lost.

@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.17.1-bb.0]
+### Changed
+- Bumped chart version to `1.17.1`
+- Bumped Anchore cli image to `0.9.4`
+- Bumped Anchore Engine image tag to `1.1.0`
+- Bumped Anchore Enterprise image tag to `3.3.0`
+- Bumped Anchore Enterprise UI image tag to `3.3.0`
+
 ## [1.15.0-bb.10]
 ### Fixed
 - Change the `istio.injection` value to a string to be consistent with other implementations
