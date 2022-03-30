@@ -19,7 +19,7 @@ spec:
       containers:
         - name: psql
           image: {{ .Values.postgresql.image }}
-          {{- if and .Values.postgresqlSuperUser.postgresUsername .Values.postgresqlSuperUser.postgresPassword }}
+          {{- if or (and .Values.postgresqlSuperUser.postgresUsername .Values.postgresqlSuperUser.postgresPassword) .Values.postgresqlSuperUser.existingSecret }}
           command:
             - /bin/bash
             - -exc
@@ -45,8 +45,13 @@ spec:
             - name: ANCHORE_PASSWORD
               valueFrom:
                 secretKeyRef:
+                  {{- if .Values.anchoreGlobal.existingSecret }}
+                  name: {{ .Values.anchoreGlobal.existingSecret }}
+                  key: ANCHORE_DB_PASSWORD
+                  {{- else }}
                   name: anchore-db-credentials
                   key: PGPASSWORD
+                  {{- end }}
             - name: ANCHORE_DB
               valueFrom:
                 secretKeyRef:
@@ -54,7 +59,7 @@ spec:
                   key: ANCHORE_DB
           envFrom:
             - secretRef:
-                name: superuser-db-credentials
+                name: {{ .Values.postgresqlSuperUser.existingSecret | default "superuser-db-credentials"}}
           {{- else }}
           command:
             - /bin/bash
@@ -73,6 +78,14 @@ spec:
               echo "Stopping the istio proxy..."
               curl -X POST http://localhost:15020/quitquitquit
               {{- end }}
+          {{- if .Values.anchoreGlobal.existingSecret }}
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.anchoreGlobal.existingSecret }}
+                  key: ANCHORE_DB_PASSWORD
+          {{- end }}
           envFrom:
             - secretRef:
                 name: anchore-db-credentials

@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.17.1-bb.0](https://img.shields.io/badge/Version-1.17.1--bb.0-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.17.1-bb.1](https://img.shields.io/badge/Version-1.17.1--bb.1-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -53,6 +53,7 @@ helm install anchore-engine chart/
 | networkPolicies.ingressLabels.istio | string | `"ingressgateway"` |  |
 | postgresqlSuperUser.postgresUsername | string | `""` |  |
 | postgresqlSuperUser.postgresPassword | string | `""` |  |
+| postgresqlSuperUser.existingSecret | string | `nil` |  |
 | ensureDbJobs.resources.limits.cpu | string | `"100m"` |  |
 | ensureDbJobs.resources.limits.memory | string | `"256Mi"` |  |
 | ensureDbJobs.resources.requests.cpu | string | `"100m"` |  |
@@ -75,7 +76,7 @@ helm install anchore-engine chart/
 | sso.resources.limits.memory | string | `"256Mi"` |  |
 | sso.resources.requests.cpu | string | `"100m"` |  |
 | sso.resources.requests.memory | string | `"256Mi"` |  |
-| postgresql.image | string | `"registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.18"` |  |
+| postgresql.image | string | `"registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.24"` |  |
 | postgresql.imagePullSecrets | string | `"private-registry"` |  |
 | postgresql.externalEndpoint | string | `nil` |  |
 | postgresql.postgresUser | string | `"anchoreengine"` |  |
@@ -250,7 +251,7 @@ helm install anchore-engine chart/
 | anchorePolicyEngine.cycleTimers.feed_sync | int | `14400` |  |
 | anchorePolicyEngine.cycleTimers.feed_sync_checker | int | `3600` |  |
 | anchorePolicyEngine.cycleTimers.grypedb_sync | int | `60` |  |
-| anchorePolicyEngine.vulnerabilityProvider | string | `"legacy"` |  |
+| anchorePolicyEngine.vulnerabilityProvider | string | `"grype"` |  |
 | anchorePolicyEngine.service.type | string | `"ClusterIP"` |  |
 | anchorePolicyEngine.service.port | int | `8087` |  |
 | anchorePolicyEngine.service.annotations | object | `{}` |  |
@@ -293,7 +294,7 @@ helm install anchore-engine chart/
 | anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:3.3.0"` |  |
 | anchoreEnterpriseGlobal.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseGlobal.imagePullSecretName | string | `"private-registry"` |  |
-| anchore-feeds-db.image | string | `"registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.18"` |  |
+| anchore-feeds-db.image | string | `"registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.24"` |  |
 | anchore-feeds-db.imagePullSecrets | string | `"private-registry"` |  |
 | anchore-feeds-db.externalEndpoint | string | `nil` |  |
 | anchore-feeds-db.postgresUser | string | `"anchoreengine"` |  |
@@ -320,6 +321,7 @@ helm install anchore-engine chart/
 | anchore-feeds-gem-db.persistence.enabled | bool | `false` |  |
 | anchoreEnterpriseFeeds.enabled | bool | `true` |  |
 | anchoreEnterpriseFeeds.url | string | `""` |  |
+| anchoreEnterpriseFeeds.vulndbDriverEnabled | bool | `false` |  |
 | anchoreEnterpriseFeeds.npmDriverEnabled | bool | `false` |  |
 | anchoreEnterpriseFeeds.gemDriverEnabled | bool | `false` |  |
 | anchoreEnterpriseFeeds.githubDriverEnabled | bool | `false` |  |

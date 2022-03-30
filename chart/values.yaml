@@ -37,6 +37,14 @@ networkPolicies:
 postgresqlSuperUser:
   postgresUsername: ""
   postgresPassword: ""
+  # Optionally use an existing secret for the superuser credentials with the following defined:
+  # PGUSER
+  # PGPASSWORD
+  # PGDATABASE
+  # PGHOST
+  # PGPORT
+  # ANCHORE_DB
+  existingSecret: Null
 
 # Configure resource requests and limits in ./chart/templates/bigbang/db/ensure-anchore-db.yaml and ./chart/templates/bigbang/db/ensure-feeds-db.yaml
 ensureDbJobs:

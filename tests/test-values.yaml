@@ -3,6 +3,10 @@ networkPolicies:
 
 bbtests:
   enabled: true
+  # ENV injects delay into package CI until a better solution is in place
+  scripts:
+    envs:
+      PACKAGE_CI: "true"
 
 anchoreGlobal:
   saml:
