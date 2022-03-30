@@ -1,10 +1,16 @@
 #!/bin/bash
 
 # Wait for Anchore Engine API to go live
-while [ $(curl -sw '%{http_code}' -u "admin:${ANCHORE_CLI_PASS}" "${ANCHORE_CLI_URL}/swagger.json" -o /dev/null) -ne 200 ]; do
+while [ $(curl -sw '%{http_code}' "${ANCHORE_CLI_URL}/swagger.json" -o /dev/null) -ne 200 ]; do
   echo "Waiting for Anchore API..."
   sleep 10;
 done
+
+if [ "$PACKAGE_CI" = "true" ] ; then
+  echo "Sleeping for 200s to give time for Anchore RBAC to be healthy..."
+  sleep 200
+  echo "Sleep complete."
+fi
 
 echo "Retrieving system health..."
 status=$(anchore-cli --debug system status 2>&1)

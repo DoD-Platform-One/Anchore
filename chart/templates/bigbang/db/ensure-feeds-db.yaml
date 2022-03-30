@@ -19,7 +19,7 @@ spec:
       containers:
         - name: psql
           image: {{ (index .Values "anchore-feeds-db" "image") }}
-          {{- if and .Values.postgresqlSuperUser.postgresUsername .Values.postgresqlSuperUser.postgresPassword }}
+          {{- if or (and .Values.postgresqlSuperUser.postgresUsername .Values.postgresqlSuperUser.postgresPassword) .Values.postgresqlSuperUser.existingSecret }}
           command:
             - /bin/bash
             - -exc
@@ -45,8 +45,13 @@ spec:
             - name: FEEDS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: feeds-db-credentials
+                  {{- if .Values.anchoreEnterpriseFeeds.existingSecret }}
+                  name: {{ .Values.anchoreEnterpriseFeeds.existingSecret }}
+                  key: ANCHORE_FEEDS_DB_PASSWORD
+                  {{- else }}
+                  name: anchore-db-credentials
                   key: PGPASSWORD
+                  {{- end }}
             - name: FEEDS_DB
               valueFrom:
                 secretKeyRef:
@@ -54,7 +59,7 @@ spec:
                   key: FEEDS_DB
           envFrom:
             - secretRef:
-                name: superuser-db-credentials
+                name: {{ .Values.postgresqlSuperUser.existingSecret | default "superuser-db-credentials"}}
           {{- else }}
           command:
             - /bin/bash
@@ -73,6 +78,14 @@ spec:
               echo "Stopping the istio proxy..."
               curl -X POST http://localhost:15020/quitquitquit
               {{- end }}
+          {{- if .Values.anchoreEnterpriseFeeds.existingSecret }}
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.anchoreEnterpriseFeeds.existingSecret }}
+                  key: ANCHORE_FEEDS_DB_PASSWORD
+          {{- end }}
           envFrom:
             - secretRef:
                 name: feeds-db-credentials
