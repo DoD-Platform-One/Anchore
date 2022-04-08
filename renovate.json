@@ -58,6 +58,15 @@
       ],
       "depNameTemplate": "https://repo1.dso.mil/platform-one/big-bang/apps/application-utilities/redis.git",
       "datasourceTemplate": "git-tags"
+    },    
+    {
+      "fileMatch": ["^chart/Chart\\.yaml$"],
+      "matchStrings": [
+        "appVersion:[^\\S\\r\\n]+(?<currentValue>.+)"
+      ],
+      "registryUrlTemplate": "https://registry1.dso.mil",
+      "depNameTemplate": "ironbank/anchore/engine/engine",
+      "datasourceTemplate": "docker"
     },
     {
       "fileMatch": ["^chart/Chart\\.yaml$"],
