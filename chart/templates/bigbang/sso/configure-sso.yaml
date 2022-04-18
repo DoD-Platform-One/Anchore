@@ -21,23 +21,28 @@ spec:
             - /bin/sh
             - -c
             - |
-              set -ex
+              set -e
               cd "/tmp"
 
               # Extract SAML URL and name
               SSO_NAME=$(grep -oP '^\s*"name"\s*:\s*"\K(.*)(?=",?\s*$)' anchore-sso.json)
-              IDP_URL=$(grep -oP '^\s*"idp_metadata_url"\s*:\s*"\K(.*)(?=",?\s*$)' anchore-sso.json)
 
               # Wait for the given SAML IdP metadata url to exist and give data back
-              while [ $(curl -sw '%{http_code}' "${IDP_URL}" -o /dev/null) -ne 200 ]; do
+              while [ $(curl -sw '%{http_code}' "{{ .Values.sso.idpMetadataUrl }}" -o /dev/null) -ne 200 ]; do
                 echo "Waiting for IdP metadata..."
                 sleep 10;
               done
 
               echo "IdP URL is live..."
 
+              # Use the IDP_URL to get the metadata XML
+              idp_metadata_xml_raw=$(curl -s {{ .Values.sso.idpMetadataUrl }})
+              # Escape quotes so that it formats nicely in the JSON
+              # Quadruple escape ensures a literal double escape which ensures our sed replace later prints a literal escape
+              idp_metadata_xml=$(echo ${idp_metadata_xml_raw} | sed 's/"/\\\\"/g')
+
               # Wait for Anchore Engine API to go live
-              while [ $(curl -sw '%{http_code}' "http://{{ template "anchore-engine.api.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.apiPort }}/v1/swagger.json" -o /dev/null) -ne 200 ]; do
+              while [ $(curl -sw '%{http_code}' "http://{{ template "anchore-engine.enterprise-rbac.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.managerPort }}/v1/swagger.json" -o /dev/null) -ne 200 ]; do
                 echo "Waiting for Anchore API..."
                 sleep 10;
               done
@@ -45,12 +50,12 @@ spec:
               echo "Anchore Engine is live..."
 
               # If a SAML IdP doesn't exist with the given name, add this. Otherwise update the existing entry
-              if [ $(curl -sw '%{http_code}' -u "admin:${ANCHORE_ADMIN_PASSWORD}" "http://{{ template "anchore-engine.api.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.apiPort }}/v1/saml/idps/${SSO_NAME}" -o /dev/null) -ne 200 ]; then
+              if [ $(curl -sw '%{http_code}' -u "admin:${ANCHORE_ADMIN_PASSWORD}" "http://{{ template "anchore-engine.enterprise-rbac.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.managerPort }}/saml/idps/${SSO_NAME}" -o /dev/null) -ne 200 ]; then
                 echo "Applying SAML config to Anchore..."
-                curl -vvv --fail -u "admin:${ANCHORE_ADMIN_PASSWORD}" -d "@anchore-sso.json" -H "Content-Type: application/json" http://{{ template "anchore-engine.api.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.apiPort }}/v1/saml/idps
+                curl -vvv --fail -u "admin:${ANCHORE_ADMIN_PASSWORD}" -d "$(sed "s@XML_PLACEHOLDER@${idp_metadata_xml}@g" anchore-sso.json)" -H "Content-Type: application/json" --request POST http://{{ template "anchore-engine.enterprise-rbac.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.managerPort }}/saml/idps
               else
                 echo  "SAML config already exists, updating..."
-                curl -vvv --fail -u "admin:${ANCHORE_ADMIN_PASSWORD}" -d "@anchore-sso.json" -H "Content-Type: application/json" --request PUT "http://{{ template "anchore-engine.api.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.apiPort }}/v1/saml/idps/${SSO_NAME}"
+                curl -vvv --fail -u "admin:${ANCHORE_ADMIN_PASSWORD}" -d "$(sed "s@XML_PLACEHOLDER@${idp_metadata_xml}@g" anchore-sso.json)" -H "Content-Type: application/json" --request PUT "http://{{ template "anchore-engine.enterprise-rbac.fullname" . }}:{{ .Values.anchoreEnterpriseRbac.service.managerPort }}/saml/idps/${SSO_NAME}"
               fi
 
               {{- if eq .Values.istio.injection "enabled" }}
