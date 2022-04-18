@@ -1,4 +1,4 @@
-appVersion: 9.6.18
+appVersion: 9.6.24
 description: Object-relational database management system (ORDBMS) with an emphasis
   on extensibility and on standards-compliance.
 engine: gotpl
