@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.18.0-bb.0](https://img.shields.io/badge/Version-1.18.0--bb.0-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.18.0-bb.1](https://img.shields.io/badge/Version-1.18.0--bb.1-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -72,6 +72,8 @@ helm install anchore-engine chart/
 | sso.requireSignedAssertions | bool | `false` |  |
 | sso.requireSignedResponse | bool | `true` |  |
 | sso.idpMetadataUrl | string | `"https://login.dso.mil/auth/realms/baby-yoda/protocol/saml/descriptor"` |  |
+| sso.host | string | `"login.dso.mil"` |  |
+| sso.realm | string | `"baby-yoda"` |  |
 | sso.resources.limits.cpu | string | `"100m"` |  |
 | sso.resources.limits.memory | string | `"256Mi"` |  |
 | sso.resources.requests.cpu | string | `"100m"` |  |
@@ -180,7 +182,7 @@ helm install anchore-engine chart/
 | anchoreAnalyzer.configFile.secret_search.regexp_match[1] | string | `"AWS_SECRET_KEY=(?i).*aws_secret_access_key( *=+ *).*(?<![A-Za-z0-9/+=])[A-Za-z0-9/+=]{40}(?![A-Za-z0-9/+=]).*"` |  |
 | anchoreAnalyzer.configFile.secret_search.regexp_match[2] | string | `"PRIV_KEY=(?i)-+BEGIN(.*)PRIVATE KEY-+"` |  |
 | anchoreAnalyzer.configFile.secret_search.regexp_match[3] | string | `"DOCKER_AUTH=(?i).*\"auth\": *\".+\""` |  |
-| anchoreAnalyzer.configFile.secret_search.regexp_match[4] | string | `"API_KEY=(?i).*api(-|_)key( *=+ *).*(?<![A-Z0-9])[A-Z0-9]{20,60}(?![A-Z0-9]).*"` |  |
+| anchoreAnalyzer.configFile.secret_search.regexp_match[4] | string | `"API_KEY=(?i).*api(-\|_)key( *=+ *).*(?<![A-Z0-9])[A-Z0-9]{20,60}(?![A-Z0-9]).*"` |  |
 | anchoreAnalyzer.resources.limits.cpu | int | `1` |  |
 | anchoreAnalyzer.resources.limits.memory | string | `"4G"` |  |
 | anchoreAnalyzer.resources.requests.cpu | int | `1` |  |
