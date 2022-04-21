@@ -108,6 +108,72 @@ spec:
         # ONLY Block requests to AWS metadata IP
         except:
         - 169.254.169.254/32
+---
+{{- if .Values.anchoreEnterpriseGlobal.enabled }}
+# if an external db and enterprise are enabled, the RBAC, Reports, and Notifications pods will require egress to communicate with the db
+{{- if .Values.anchoreEnterpriseRbac.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-rbac
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      component: enterprise-rbac
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+---
+{{- end }}
+{{- if .Values.anchoreEnterpriseReports.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-reports
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      component: enterprise-reports
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+---
+{{- end }}
+{{- if .Values.anchoreEnterpriseNotifications.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-from-notifications
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      component: enterprise-notifications
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        # ONLY Block requests to AWS metadata IP
+        except:
+        - 169.254.169.254/32
+{{- end }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- if .Values.anchoreEnterpriseGlobal.enabled }}

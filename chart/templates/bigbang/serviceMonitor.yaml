@@ -67,6 +67,38 @@ spec:
       port: feeds-api
       scheme: http
       #jobLabel: anchore-metrics-feeds-api
+    {{- if .Values.anchoreEnterpriseGlobal.enabled }}
+    {{- if .Values.anchoreEnterpriseRbac.enabled }}
+    - interval: 30s
+      path: /metrics
+      params:
+        format:
+          - prometheus
+      port: rbac
+      scheme: http
+      #jobLabel: anchore-metrics-enterprise-rbac
+    {{- end }}
+    {{- if .Values.anchoreEnterpriseReports.enabled }}
+    - interval: 30s
+      path: /metrics
+      params:
+        format:
+          - prometheus
+      port: reports
+      scheme: http
+      #jobLabel: anchore-metrics-enterprise-reports
+    {{- end }}
+    {{- if .Values.anchoreEnterpriseNotifications.enabled }}
+    - interval: 30s
+      path: /metrics
+      params:
+        format:
+          - prometheus
+      port: notify
+      scheme: http
+      #jobLabel: anchore-metrics-enterprise-notifications
+    {{- end }}
+  {{- end }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
