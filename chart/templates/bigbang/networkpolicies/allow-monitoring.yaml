@@ -28,8 +28,10 @@ spec:
     - port: {{ .Values.anchoreAnalyzer.containerPort }} # anchore analyzer (default: 8084)
       protocol: TCP
     {{- if .Values.anchoreEnterpriseGlobal.enabled }}
+    {{- if .Values.anchoreEnterpriseFeeds.enabled }}
     - port: {{ .Values.anchoreEnterpriseFeeds.service.port }} # anchore enterprise feeds api (default: 8448)
       protocol: TCP
+    {{- end }}
     {{- if .Values.anchoreEnterpriseRbac.enabled }}
     - port: {{ .Values.anchoreEnterpriseRbac.service.managerPort }} # anchore enterprise rbac manager (default: 8229)
       protocol: TCP

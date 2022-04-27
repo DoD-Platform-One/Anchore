@@ -1,0 +1,76 @@
+{{- if and (eq .Values.istio.injection "enabled") .Values.istio.enabled .Values.monitoring.enabled (eq .Values.istio.mtls.mode "STRICT") }}
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: anchore-api-metrics-exception
+  namespace: {{ .Release.Namespace }}
+spec:
+  mtls:
+    mode: {{ .Values.istio.mtls.mode }}
+  selector:
+    matchLabels:
+      component: "api"
+  portLevelMtls:
+    "{{ .Values.anchoreApi.service.port }}":
+      mode: PERMISSIVE
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: anchore-catalog-metrics-exception
+  namespace: {{ .Release.Namespace }}
+spec:
+  mtls:
+    mode: {{ .Values.istio.mtls.mode }}
+  selector:
+    matchLabels:
+      component: "catalog"
+  portLevelMtls:
+    "{{ .Values.anchoreCatalog.service.port }}":
+      mode: PERMISSIVE
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: anchore-policy-metrics-exception
+  namespace: {{ .Release.Namespace }}
+spec:
+  mtls:
+    mode: {{ .Values.istio.mtls.mode }}
+  selector:
+    matchLabels:
+      component: "policy"
+  portLevelMtls:
+    "{{ .Values.anchorePolicyEngine.service.port }}":
+      mode: PERMISSIVE
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: anchore-simplequeue-metrics-exception
+  namespace: {{ .Release.Namespace }}
+spec:
+  mtls:
+    mode: {{ .Values.istio.mtls.mode }}
+  selector:
+    matchLabels:
+      component: "simplequeue"
+  portLevelMtls:
+    "{{ .Values.anchoreSimpleQueue.service.port }}":
+      mode: PERMISSIVE
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: anchore-analyzer-metrics-exception
+  namespace: {{ .Release.Namespace }}
+spec:
+  mtls:
+    mode: {{ .Values.istio.mtls.mode }}
+  selector:
+    matchLabels:
+      component: "analyzer"
+  portLevelMtls:
+    "{{ .Values.anchoreAnalyzer.containerPort }}":
+      mode: PERMISSIVE
+{{- end }}

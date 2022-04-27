@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.18.0-bb.2](https://img.shields.io/badge/Version-1.18.0--bb.2-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.18.0-bb.3](https://img.shields.io/badge/Version-1.18.0--bb.3-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -48,6 +48,8 @@ helm install anchore-engine chart/
 | istio.api.labels | object | `{}` |  |
 | istio.api.gateways[0] | string | `"istio-system/main"` |  |
 | istio.api.hosts[0] | string | `"anchore-api.{{ .Values.domain }}"` |  |
+| istio.mtls | object | `{"mode":"STRICT"}` | Default peer authentication |
+| istio.mtls.mode | string | `"STRICT"` | STRICT = Allow only mutual TLS traffic, PERMISSIVE = Allow both plain text and mutual TLS traffic |
 | networkPolicies.enabled | bool | `false` |  |
 | networkPolicies.ingressLabels.app | string | `"istio-ingressgateway"` |  |
 | networkPolicies.ingressLabels.istio | string | `"ingressgateway"` |  |
