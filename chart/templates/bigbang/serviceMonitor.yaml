@@ -59,6 +59,8 @@ spec:
       scheme: http
       #jobLabel: anchore-metrics-simplequeue-api
 
+    {{- if .Values.anchoreEnterpriseGlobal.enabled }}
+    {{- if .Values.anchoreEnterpriseFeeds.enabled }}
     - interval: 30s
       path: /metrics
       params:
@@ -67,7 +69,7 @@ spec:
       port: feeds-api
       scheme: http
       #jobLabel: anchore-metrics-feeds-api
-    {{- if .Values.anchoreEnterpriseGlobal.enabled }}
+    {{- end }}
     {{- if .Values.anchoreEnterpriseRbac.enabled }}
     - interval: 30s
       path: /metrics
