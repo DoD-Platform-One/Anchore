@@ -125,11 +125,11 @@ postgresql:
   # Configure resource limits and requests for the postgresql deployment
   resources:
     limits:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 200m
+      memory: 1024Mi
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 200m
+      memory: 1024Mi
 
   # Configure resource limits and requests for postgresql metrics (disabled by default)
   metrics:

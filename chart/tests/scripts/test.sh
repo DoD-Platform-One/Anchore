@@ -6,11 +6,29 @@ while [ $(curl -sw '%{http_code}' "${ANCHORE_CLI_URL}/swagger.json" -o /dev/null
   sleep 10;
 done
 
-if [ "$PACKAGE_CI" = "true" ] ; then
-  echo "Sleeping for 200s to give time for Anchore RBAC to be healthy..."
-  sleep 200
-  echo "Sleep complete."
-fi
+# Confirm able to auth
+interval=5
+# 3 minute timeout
+timeout=180
+resourcename="anchore-api-login"
+counter=0
+# need to remove the default "set -e" to allow commands to return nonzero exit codes without the script failing
+set +e
+while true; do
+   if [[ $(curl -s -u admin:$ANCHORE_CLI_PASS -X get ${ANCHORE_CLI_URL}/images) != "Unauthorized" ]]
+   then
+      echo "$resourcename is now available"
+      echo "Total wait time was $(($counter * $interval))"
+      break
+   fi
+   sleep $interval
+   let counter++
+   if [[ $(($counter * $interval)) -ge $timeout ]]; then
+      echo "$resourcename timeout waiting $timeout seconds for resource creation" 1>&2
+      exit 1
+   fi
+done
+set -e
 
 echo "Retrieving system health..."
 status=$(anchore-cli --debug system status 2>&1)
