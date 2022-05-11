@@ -16,6 +16,15 @@ metadata:
     {{- with .Values.anchoreGlobal.labels }}
     {{ toYaml . | nindent 4 }}
     {{- end }}
+  {{- if or .Values.anchoreGlobal.deploymentAnnotations .Values.anchoreEnterpriseRbac.deploymentAnnotations }}
+  annotations:
+  {{- with .Values.anchoreGlobal.deploymentAnnotations }}
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+  {{- with .Values.anchoreEnterpriseRbac.deploymentAnnotations }}
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+  {{- end }}
 spec:
   selector:
     matchLabels:
@@ -147,7 +156,7 @@ spec:
           failureThreshold: {{ .Values.anchoreGlobal.probes.readiness.failureThreshold }}
           successThreshold: {{ .Values.anchoreGlobal.probes.readiness.successThreshold }}
         resources:
-          {{ toYaml .Values.anchoreEnterpriseRbac.resources | nindent 10 }}
+          {{ toYaml .Values.anchoreEnterpriseRbac.managerResources | nindent 10 }}
       - name: {{ .Chart.Name }}-rbac-authorizer
         image: {{ .Values.anchoreEnterpriseGlobal.image }}
         imagePullPolicy: {{ .Values.anchoreEnterpriseGlobal.imagePullPolicy }}

@@ -251,6 +251,9 @@ anchoreGlobal:
     # vault.security.banzaicloud.io/vault-addr: "https://vault:8200"
     # vault.security.banzaicloud.io/vault-tls-secret: "vault-tls"
 
+  # Add common metadata annotations to all pod deployments
+  deploymentAnnotations: {}
+
   # Set extra environment variables. These will be set on all containers.
   extraEnv: []
     # - name: foo
@@ -493,6 +496,8 @@ anchoreAnalyzer:
 
   labels: {}
   annotations: {}
+  # Add metadata annotations to analyzer deployments
+  deploymentAnnotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -530,6 +535,8 @@ anchoreApi:
 
   labels: {}
   annotations: {}
+  # Add metadata annotations to api deployments
+  deploymentAnnotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -676,8 +683,6 @@ anchoreCatalog:
       #     # Create the container if it is not already present
       #     create_container: false
 
-  imageGCMaxMaxWorkerThreads: 4
-
   # **NOTE: all runtime inventory configurations only apply to Anchore Enterprise deployments
 
   # If enabled, the Anchore Helm Chart will create a Service Account with read-only permission to the cluster (pods & namespaces)
@@ -726,6 +731,8 @@ anchoreCatalog:
 
   labels: {}
   annotations: {}
+  # Add metadata annotations to catalog deployments
+  deploymentAnnotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -770,6 +777,8 @@ anchorePolicyEngine:
 
   labels: {}
   annotations: {}
+  # Add metadata annotations to policy engine deployments
+  deploymentAnnotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -800,6 +809,8 @@ anchoreSimpleQueue:
 
   labels: {}
   annotations: {}
+  # Add metadata annotations to simplequeue deployments
+  deploymentAnnotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -828,7 +839,7 @@ anchoreEnterpriseGlobal:
   # Create this secret with the following command - kubectl create secret generic anchore-enterprise-license --from-file=license.yaml=<PATH TO LICENSE.YAML>
   licenseSecretName: anchore-enterprise-license
 
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.0.0
+  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.0.1
   imagePullPolicy: IfNotPresent
   # Name of the kubernetes secret containing your dockerhub creds with access to the anchore enterprise images.
   # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
@@ -1021,6 +1032,8 @@ anchoreEnterpriseFeeds:
 
   labels: {}
   annotations: {}
+  # Add metadata annotations to feeds deployments
+  deploymentAnnotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -1079,6 +1092,9 @@ anchoreEnterpriseRbac:
       cpu: 1
       memory: 4G
 
+  # Add metadata annotations to rbac deployments
+  deploymentAnnotations: {}
+
 # Configure the Anchore Enterprise reporting component.
 anchoreEnterpriseReports:
   enabled: true
@@ -1134,6 +1150,8 @@ anchoreEnterpriseReports:
 
   labels: {}
   annotations: {}
+  # Add metadata annotations to reports deployments
+  deploymentAnnotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -1169,6 +1187,8 @@ anchoreEnterpriseNotifications:
 
   labels: {}
   annotations: {}
+  # Add metadata annotations to notifications deployments
+  deploymentAnnotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -1331,6 +1351,8 @@ anchoreEnterpriseUi:
 
   labels: {}
   annotations: {}
+  # Add metadata annotations to ui deployments
+  deploymentAnnotations: {}
   nodeSelector: {}
   tolerations: []
   affinity: {}
