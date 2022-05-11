@@ -1,6 +1,6 @@
 apiVersion: v2
 name: anchore-engine
-version: 1.18.0-bb.4
+version: 1.18.6-bb.0
 appVersion: 1.1.0
 description: Anchore container analysis and policy evaluation engine service
 keywords:
@@ -43,9 +43,9 @@ dependencies:
    condition: anchore-ui-redis.enabled,anchoreEnterpriseGlobal.enabled
    alias: anchore-ui-redis
  - name: gluon
-   version: "0.2.3"
+   version: "0.2.9"
    repository: oci://registry.dso.mil/platform-one/big-bang/apps/library-charts/gluon
 annotations:
   bigbang.dev/applicationVersions: |
-    - Enterprise: 4.0.0
+    - Enterprise: 4.0.1
     - Engine: 1.1.0
