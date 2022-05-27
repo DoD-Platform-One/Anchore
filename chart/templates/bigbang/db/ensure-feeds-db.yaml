@@ -49,7 +49,7 @@ spec:
                   name: {{ .Values.anchoreEnterpriseFeeds.existingSecret }}
                   key: ANCHORE_FEEDS_DB_PASSWORD
                   {{- else }}
-                  name: anchore-db-credentials
+                  name: feeds-db-credentials
                   key: PGPASSWORD
                   {{- end }}
             - name: FEEDS_DB
