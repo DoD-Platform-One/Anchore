@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.18.6-bb.2]
+### Changed
+- Updated Anchore redis dependency
+
 ## [1.18.6-bb.1]
 ### Fixed
 - Fixed a bug with credential handling for feeds DB on jobs

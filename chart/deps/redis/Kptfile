@@ -5,7 +5,7 @@ metadata:
 upstream:
   type: git
   git:
-    commit: c562f1682925b8aad0fb7d62e449e726ce1e4d71
+    commit: 9817539972fefe994a8809fcb7ca5e05133fafee
     repo: https://repo1.dso.mil/platform-one/big-bang/apps/application-utilities/redis
     directory: /chart
-    ref: redis-prom-rules-fix
+    ref: 16.9.2-bb.0
