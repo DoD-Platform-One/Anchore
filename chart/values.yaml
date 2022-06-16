@@ -120,7 +120,7 @@ postgresql:
     resourcePolicy: keep
     size: 20Gi
     subPath: "pgdata"
-    mountPath: /var/lib/postgresql
+    mountPath: /var/lib/postgresql/data
 
   # Configure resource limits and requests for the postgresql deployment
   resources:
@@ -867,7 +867,7 @@ anchore-feeds-db:
     resourcePolicy: keep
     size: 20Gi
     subPath: "pgdata"
-    mountPath: /var/lib/postgresql
+    mountPath: /var/lib/postgresql/data
 
   # Configure resource limits and requests for the postgresql deployment
   resources:
