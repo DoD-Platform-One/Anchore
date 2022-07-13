@@ -1,0 +1,12 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: anchore-grafana-dashboards
+  namespace: monitoring
+  labels:
+    grafana_dasboard: "1"
+data:
+  grafana-anchore-general.json: |
+    {{ .Files.Get "dashboards/grafana-anchore-general.json" | nindent 4 }}
+{{- end }}
