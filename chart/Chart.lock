@@ -1,18 +1,18 @@
 dependencies:
 - name: postgresql
   repository: file://./deps/postgresql
-  version: 1.0.1
+  version: 10.3.13
 - name: postgresql
   repository: file://./deps/postgresql
-  version: 1.0.1
+  version: 10.3.13
 - name: postgresql
   repository: file://./deps/postgresql
-  version: 1.0.1
+  version: 10.3.13
 - name: redis
   repository: file://./deps/redis
   version: 16.12.3-bb.1
 - name: gluon
   repository: oci://registry.dso.mil/platform-one/big-bang/apps/library-charts/gluon
   version: 0.2.10
-digest: sha256:d062869508925b6e11837bbcb5d51793494205f0c88341207524e93987c4888a
-generated: "2022-07-01T08:48:42.641234-05:00"
+digest: sha256:f62838e164d0206f40ba64af30202ebe8798980515776ee14d31d9a16958a0bc
+generated: "2022-07-08T11:25:12.3401425-06:00"

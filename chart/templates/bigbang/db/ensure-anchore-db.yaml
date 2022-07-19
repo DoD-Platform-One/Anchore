@@ -15,10 +15,10 @@ spec:
       name: ensure-anchore-db
     spec:
       imagePullSecrets:
-        - name: {{ .Values.postgresql.imagePullSecrets }}
+        {{ toYaml .Values.postgresql.global.imagePullSecrets . | nindent 10 }}
       containers:
         - name: psql
-          image: {{ .Values.postgresql.image }}
+          image: {{ .Values.postgresql.image.registry }}/{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}
           {{- if or (and .Values.postgresqlSuperUser.postgresUsername .Values.postgresqlSuperUser.postgresPassword) .Values.postgresqlSuperUser.existingSecret }}
           command:
             - /bin/bash
