@@ -102,8 +102,13 @@ sso:
 # Anchore engine has a dependency on Postgresql, configure here
 postgresql:
   # Use Ironbank image + pull secrets
-  image: registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.24
-  imagePullSecrets: private-registry
+  image: 
+    registry: registry1.dso.mil
+    repository: ironbank/opensource/postgres/postgresql12
+    tag: 12.11
+  global:
+    imagePullSecrets: 
+      - private-registry
   # To use an external DB or Google CloudSQL in GKE, uncomment & set 'enabled: false'
   # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
   # enabled: false
@@ -114,13 +119,24 @@ postgresql:
   postgresPassword: anchore-postgres,123
   postgresDatabase: anchore
 
+  securityContext:
+    enabled: true
+    fsGroup: 26
+    runAsUser: 26
+    runAsGroup: 26
+
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 26
+    runAsGroup: 26
   # Configure size of the persistent volume used with helm managed chart.
   # This should be commented out if using an external endpoint.
   persistence:
     resourcePolicy: keep
     size: 20Gi
-    subPath: "pgdata"
-    mountPath: /var/lib/postgresql/data
+    subPath: "data/pgdata"
+    mountPath: /var/lib/postgresql
+  postgresqlDataDir: /var/lib/postgresql/data
 
   # Configure resource limits and requests for the postgresql deployment
   resources:
@@ -142,8 +158,8 @@ postgresql:
         memory: 256Mi
 
   # Set the configs to allow listening and connecting from other pods
-  postgresConfig: {"listen_addresses": "*"}
-  pgHbaConf: |-
+  postgresConfiguration: {"listen_addresses": "*"}
+  pgHbaConfiguration: |-
     local all all md5
     host all all all md5
 
@@ -849,8 +865,13 @@ anchoreEnterpriseGlobal:
 # Only utilized if anchoreEnterpriseGlobal.enabled: true
 anchore-feeds-db:
   # Use Ironbank image + pull secrets
-  image: registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.24
-  imagePullSecrets: private-registry
+  image: 
+    registry: registry1.dso.mil
+    repository: ironbank/opensource/postgres/postgresql12
+    tag: 12.11
+  global:
+    imagePullSecrets: 
+      - private-registry
   # To use an external DB or Google CloudSQL, uncomment & set 'enabled: false'
   # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
   # enabled: false
@@ -867,7 +888,8 @@ anchore-feeds-db:
     resourcePolicy: keep
     size: 20Gi
     subPath: "pgdata"
-    mountPath: /var/lib/postgresql/data
+    mountPath: /var/lib/postgresql
+  postgresqlDataDir: /var/lib/postgresql/data
 
   # Configure resource limits and requests for the postgresql deployment
   resources:
@@ -888,9 +910,20 @@ anchore-feeds-db:
         cpu: 100m
         memory: 256Mi
 
+  securityContext:
+    enabled: true
+    fsGroup: 26
+    runAsUser: 26
+    runAsGroup: 26
+
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 26
+    runAsGroup: 26
+
   # Set the configs to allow listening and connecting from other pods
-  postgresConfig: {"listen_addresses": "*"}
-  pgHbaConf: |-
+  postgresqlConfiguration: {"listen_addresses": "*"}
+  pgHbaConfiguration: |-
     local all all md5
     host all all all md5
 
@@ -926,6 +959,18 @@ anchore-feeds-gem-db:
   postgresDatabase: gems
   persistence:
     enabled: false
+  postgresqlDataDir: /var/lib/postgresql/data
+
+  securityContext:
+    enabled: true
+    fsGroup: 26
+    runAsUser: 26
+    runAsGroup: 26
+
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 26
+    runAsGroup: 26
 
 # Configure & enable the Anchore Enterprise on-prem feeds service.
 anchoreEnterpriseFeeds:

@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.18.6-bb.6](https://img.shields.io/badge/Version-1.18.6--bb.6-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.18.6-bb.7](https://img.shields.io/badge/Version-1.18.6--bb.7-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -80,16 +80,26 @@ helm install anchore-engine chart/
 | sso.resources.limits.memory | string | `"256Mi"` |  |
 | sso.resources.requests.cpu | string | `"100m"` |  |
 | sso.resources.requests.memory | string | `"256Mi"` |  |
-| postgresql.image | string | `"registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.24"` |  |
-| postgresql.imagePullSecrets | string | `"private-registry"` |  |
+| postgresql.image.registry | string | `"registry1.dso.mil"` |  |
+| postgresql.image.repository | string | `"ironbank/opensource/postgres/postgresql12"` |  |
+| postgresql.image.tag | float | `12.11` |  |
+| postgresql.global.imagePullSecrets[0] | string | `"private-registry"` |  |
 | postgresql.externalEndpoint | string | `nil` |  |
 | postgresql.postgresUser | string | `"anchoreengine"` |  |
 | postgresql.postgresPassword | string | `"anchore-postgres,123"` |  |
 | postgresql.postgresDatabase | string | `"anchore"` |  |
+| postgresql.securityContext.enabled | bool | `true` |  |
+| postgresql.securityContext.fsGroup | int | `26` |  |
+| postgresql.securityContext.runAsUser | int | `26` |  |
+| postgresql.securityContext.runAsGroup | int | `26` |  |
+| postgresql.containerSecurityContext.enabled | bool | `true` |  |
+| postgresql.containerSecurityContext.runAsUser | int | `26` |  |
+| postgresql.containerSecurityContext.runAsGroup | int | `26` |  |
 | postgresql.persistence.resourcePolicy | string | `"keep"` |  |
 | postgresql.persistence.size | string | `"20Gi"` |  |
-| postgresql.persistence.subPath | string | `"pgdata"` |  |
-| postgresql.persistence.mountPath | string | `"/var/lib/postgresql/data"` |  |
+| postgresql.persistence.subPath | string | `"data/pgdata"` |  |
+| postgresql.persistence.mountPath | string | `"/var/lib/postgresql"` |  |
+| postgresql.postgresqlDataDir | string | `"/var/lib/postgresql/data"` |  |
 | postgresql.resources.limits.cpu | string | `"200m"` |  |
 | postgresql.resources.limits.memory | string | `"1024Mi"` |  |
 | postgresql.resources.requests.cpu | string | `"200m"` |  |
@@ -98,8 +108,8 @@ helm install anchore-engine chart/
 | postgresql.metrics.resources.limits.memory | string | `"256Mi"` |  |
 | postgresql.metrics.resources.requests.cpu | string | `"100m"` |  |
 | postgresql.metrics.resources.requests.memory | string | `"256Mi"` |  |
-| postgresql.postgresConfig.listen_addresses | string | `"*"` |  |
-| postgresql.pgHbaConf | string | `"local all all md5\nhost all all all md5"` |  |
+| postgresql.postgresConfiguration.listen_addresses | string | `"*"` |  |
+| postgresql.pgHbaConfiguration | string | `"local all all md5\nhost all all all md5"` |  |
 | cloudsql.enabled | bool | `false` |  |
 | cloudsql.instance | string | `""` |  |
 | cloudsql.image.repository | string | `"gcr.io/cloudsql-docker/gce-proxy"` |  |
@@ -185,7 +195,7 @@ helm install anchore-engine chart/
 | anchoreAnalyzer.configFile.secret_search.regexp_match[1] | string | `"AWS_SECRET_KEY=(?i).*aws_secret_access_key( *=+ *).*(?<![A-Za-z0-9/+=])[A-Za-z0-9/+=]{40}(?![A-Za-z0-9/+=]).*"` |  |
 | anchoreAnalyzer.configFile.secret_search.regexp_match[2] | string | `"PRIV_KEY=(?i)-+BEGIN(.*)PRIVATE KEY-+"` |  |
 | anchoreAnalyzer.configFile.secret_search.regexp_match[3] | string | `"DOCKER_AUTH=(?i).*\"auth\": *\".+\""` |  |
-| anchoreAnalyzer.configFile.secret_search.regexp_match[4] | string | `"API_KEY=(?i).*api(-\|_)key( *=+ *).*(?<![A-Z0-9])[A-Z0-9]{20,60}(?![A-Z0-9]).*"` |  |
+| anchoreAnalyzer.configFile.secret_search.regexp_match[4] | string | `"API_KEY=(?i).*api(-|_)key( *=+ *).*(?<![A-Z0-9])[A-Z0-9]{20,60}(?![A-Z0-9]).*"` |  |
 | anchoreAnalyzer.resources.limits.cpu | int | `1` |  |
 | anchoreAnalyzer.resources.limits.memory | string | `"4G"` |  |
 | anchoreAnalyzer.resources.requests.cpu | int | `1` |  |
@@ -308,8 +318,10 @@ helm install anchore-engine chart/
 | anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.0.2"` |  |
 | anchoreEnterpriseGlobal.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseGlobal.imagePullSecretName | string | `"private-registry"` |  |
-| anchore-feeds-db.image | string | `"registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.24"` |  |
-| anchore-feeds-db.imagePullSecrets | string | `"private-registry"` |  |
+| anchore-feeds-db.image.registry | string | `"registry1.dso.mil"` |  |
+| anchore-feeds-db.image.repository | string | `"ironbank/opensource/postgres/postgresql12"` |  |
+| anchore-feeds-db.image.tag | float | `12.11` |  |
+| anchore-feeds-db.global.imagePullSecrets[0] | string | `"private-registry"` |  |
 | anchore-feeds-db.externalEndpoint | string | `nil` |  |
 | anchore-feeds-db.postgresUser | string | `"anchoreengine"` |  |
 | anchore-feeds-db.postgresPassword | string | `"anchore-postgres,123"` |  |
@@ -317,7 +329,8 @@ helm install anchore-engine chart/
 | anchore-feeds-db.persistence.resourcePolicy | string | `"keep"` |  |
 | anchore-feeds-db.persistence.size | string | `"20Gi"` |  |
 | anchore-feeds-db.persistence.subPath | string | `"pgdata"` |  |
-| anchore-feeds-db.persistence.mountPath | string | `"/var/lib/postgresql/data"` |  |
+| anchore-feeds-db.persistence.mountPath | string | `"/var/lib/postgresql"` |  |
+| anchore-feeds-db.postgresqlDataDir | string | `"/var/lib/postgresql/data"` |  |
 | anchore-feeds-db.resources.limits.cpu | string | `"100m"` |  |
 | anchore-feeds-db.resources.limits.memory | string | `"256Mi"` |  |
 | anchore-feeds-db.resources.requests.cpu | string | `"100m"` |  |
@@ -326,13 +339,28 @@ helm install anchore-engine chart/
 | anchore-feeds-db.metrics.resources.limits.memory | string | `"256Mi"` |  |
 | anchore-feeds-db.metrics.resources.requests.cpu | string | `"100m"` |  |
 | anchore-feeds-db.metrics.resources.requests.memory | string | `"256Mi"` |  |
-| anchore-feeds-db.postgresConfig.listen_addresses | string | `"*"` |  |
-| anchore-feeds-db.pgHbaConf | string | `"local all all md5\nhost all all all md5"` |  |
+| anchore-feeds-db.securityContext.enabled | bool | `true` |  |
+| anchore-feeds-db.securityContext.fsGroup | int | `26` |  |
+| anchore-feeds-db.securityContext.runAsUser | int | `26` |  |
+| anchore-feeds-db.securityContext.runAsGroup | int | `26` |  |
+| anchore-feeds-db.containerSecurityContext.enabled | bool | `true` |  |
+| anchore-feeds-db.containerSecurityContext.runAsUser | int | `26` |  |
+| anchore-feeds-db.containerSecurityContext.runAsGroup | int | `26` |  |
+| anchore-feeds-db.postgresqlConfiguration.listen_addresses | string | `"*"` |  |
+| anchore-feeds-db.pgHbaConfiguration | string | `"local all all md5\nhost all all all md5"` |  |
 | anchore-feeds-gem-db.externalEndpoint | string | `nil` |  |
 | anchore-feeds-gem-db.postgresUser | string | `"postgres"` |  |
 | anchore-feeds-gem-db.postgresPassword | string | `"anchore-postgres,123"` |  |
 | anchore-feeds-gem-db.postgresDatabase | string | `"gems"` |  |
 | anchore-feeds-gem-db.persistence.enabled | bool | `false` |  |
+| anchore-feeds-gem-db.postgresqlDataDir | string | `"/var/lib/postgresql/data"` |  |
+| anchore-feeds-gem-db.securityContext.enabled | bool | `true` |  |
+| anchore-feeds-gem-db.securityContext.fsGroup | int | `26` |  |
+| anchore-feeds-gem-db.securityContext.runAsUser | int | `26` |  |
+| anchore-feeds-gem-db.securityContext.runAsGroup | int | `26` |  |
+| anchore-feeds-gem-db.containerSecurityContext.enabled | bool | `true` |  |
+| anchore-feeds-gem-db.containerSecurityContext.runAsUser | int | `26` |  |
+| anchore-feeds-gem-db.containerSecurityContext.runAsGroup | int | `26` |  |
 | anchoreEnterpriseFeeds.enabled | bool | `true` |  |
 | anchoreEnterpriseFeeds.url | string | `""` |  |
 | anchoreEnterpriseFeeds.vulndbDriverEnabled | bool | `false` |  |
