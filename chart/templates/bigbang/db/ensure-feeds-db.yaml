@@ -15,7 +15,9 @@ spec:
       name: ensure-feeds-db
     spec:
       imagePullSecrets:
-        - name: {{ (index .Values "anchore-feeds-db" "imagePullSecrets") }}
+      {{- range (index .Values "anchore-feeds-db" "global" "imagePullSecrets") }}
+        - name: {{ . }}
+      {{- end }}
       containers:
         - name: psql
           image: {{ (index .Values "anchore-feeds-db" "image") }}

@@ -15,7 +15,9 @@ spec:
       name: ensure-anchore-db
     spec:
       imagePullSecrets:
-        {{ toYaml .Values.postgresql.global.imagePullSecrets . | nindent 10 }}
+      {{- range .Values.postgresql.global.imagePullSecrets }}
+        - name: {{ . }}
+      {{- end }}
       containers:
         - name: psql
           image: {{ .Values.postgresql.image.registry }}/{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}
