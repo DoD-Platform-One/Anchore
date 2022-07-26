@@ -20,7 +20,7 @@ spec:
       {{- end }}
       containers:
         - name: psql
-          image: {{ (index .Values "anchore-feeds-db" "image") }}
+          image: "{{ (index .Values "anchore-feeds-db" "image" "registry") }}/{{ (index .Values "anchore-feeds-db" "image" "repository") }}:{{ (index .Values "anchore-feeds-db" "image" "tag") }}"
           {{- if or (and .Values.postgresqlSuperUser.postgresUsername .Values.postgresqlSuperUser.postgresPassword) .Values.postgresqlSuperUser.existingSecret }}
           command:
             - /bin/bash
