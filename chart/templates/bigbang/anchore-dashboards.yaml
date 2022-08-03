@@ -5,7 +5,7 @@ metadata:
   name: anchore-grafana-dashboards
   namespace: monitoring
   labels:
-    grafana_dasboard: "1"
+    grafana_dashboard: "1"
 data:
   grafana-anchore-general.json: |
     {{ .Files.Get "dashboards/grafana-anchore-general.json" | nindent 4 }}
