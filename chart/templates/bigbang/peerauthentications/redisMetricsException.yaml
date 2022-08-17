@@ -1,5 +1,5 @@
 {{- if and (eq .Values.istio.injection "enabled") .Values.istio.enabled .Values.monitoring.enabled (eq .Values.istio.mtls.mode "STRICT") }}
-{{- if and .Values.anchoreEnterpriseGlobal.enabled (not (hasKey (index .Values "anchore-ui-redis") "enabled")) }}
+{{- if and .Values.anchoreEnterpriseGlobal.enabled (not (hasKey (index .Values "ui-redis") "enabled")) }}
 apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
 metadata:
@@ -10,7 +10,7 @@ spec:
     mode: {{ .Values.istio.mtls.mode }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: anchore-ui-redis
+      app.kubernetes.io/name: ui-redis
   portLevelMtls:
     "9121":
       mode: PERMISSIVE
