@@ -198,8 +198,8 @@ spec:
         except:
         - 169.254.169.254/32
 {{- end }}
-{{- if or (hasKey (index .Values "anchore-ui-redis") "enabled") (hasKey .Values.postgresql "enabled") }}
-{{- if and (or (not (index .Values "anchore-ui-redis" "enabled")) (not .Values.postgresql.enabled)) .Values.anchoreEnterpriseGlobal.enabled }}
+{{- if or (hasKey (index .Values "ui-redis") "enabled") (hasKey .Values.postgresql "enabled") }}
+{{- if and (or (not (index .Values "ui-redis" "enabled")) (not .Values.postgresql.enabled)) .Values.anchoreEnterpriseGlobal.enabled }}
 ---
 # if external redis is enabled OR external postgres is enabled, the ui pod will require egress as it depends on redis and interacts with the db to perform specific functions such as SAML
 apiVersion: networking.k8s.io/v1
