@@ -5,6 +5,7 @@
   "dependencyDashboardTitle": "Renovate: Upgrade Anchore Enterprise Package Dependencies",
   "draftPR": "true",
   "labels": ["anchore","Big Bang Add-Ons","Package Sustainment","kind::maintenance"],
+  "commitMessagePrefix": "SKIP UPDATE CHECK",
   "packageRules": [
     {
       "matchDatasources": ["docker"],
