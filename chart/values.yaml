@@ -105,7 +105,7 @@ postgresql:
   image:
     registry: registry1.dso.mil
     repository: ironbank/opensource/postgres/postgresql12
-    tag: 12.11
+    tag: 12.12
   global:
     imagePullSecrets:
       - private-registry
@@ -868,7 +868,7 @@ anchore-feeds-db:
   image:
     registry: registry1.dso.mil
     repository: ironbank/opensource/postgres/postgresql12
-    tag: 12.11
+    tag: 12.12
   global:
     imagePullSecrets:
       - private-registry
