@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.19.4-bb.0](https://img.shields.io/badge/Version-1.19.4--bb.0-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.19.4-bb.1](https://img.shields.io/badge/Version-1.19.4--bb.1-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -82,7 +82,7 @@ helm install anchore-engine chart/
 | sso.resources.requests.memory | string | `"256Mi"` |  |
 | postgresql.image.registry | string | `"registry1.dso.mil"` |  |
 | postgresql.image.repository | string | `"ironbank/opensource/postgres/postgresql12"` |  |
-| postgresql.image.tag | float | `12.11` |  |
+| postgresql.image.tag | float | `12.12` |  |
 | postgresql.global.imagePullSecrets[0] | string | `"private-registry"` |  |
 | postgresql.externalEndpoint | string | `nil` |  |
 | postgresql.postgresUser | string | `"anchoreengine"` |  |
@@ -320,7 +320,7 @@ helm install anchore-engine chart/
 | anchoreEnterpriseGlobal.imagePullSecretName | string | `"private-registry"` |  |
 | anchore-feeds-db.image.registry | string | `"registry1.dso.mil"` |  |
 | anchore-feeds-db.image.repository | string | `"ironbank/opensource/postgres/postgresql12"` |  |
-| anchore-feeds-db.image.tag | float | `12.11` |  |
+| anchore-feeds-db.image.tag | float | `12.12` |  |
 | anchore-feeds-db.global.imagePullSecrets[0] | string | `"private-registry"` |  |
 | anchore-feeds-db.externalEndpoint | string | `nil` |  |
 | anchore-feeds-db.postgresUser | string | `"anchoreengine"` |  |
@@ -363,7 +363,6 @@ helm install anchore-engine chart/
 | anchore-feeds-gem-db.containerSecurityContext.runAsGroup | int | `26` |  |
 | anchoreEnterpriseFeeds.enabled | bool | `true` |  |
 | anchoreEnterpriseFeeds.url | string | `""` |  |
-| anchoreEnterpriseFeeds.vulndbDriverEnabled | bool | `false` |  |
 | anchoreEnterpriseFeeds.npmDriverEnabled | bool | `false` |  |
 | anchoreEnterpriseFeeds.gemDriverEnabled | bool | `false` |  |
 | anchoreEnterpriseFeeds.githubDriverEnabled | bool | `false` |  |
