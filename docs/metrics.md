@@ -89,7 +89,7 @@ prometheus_engine_query_duration_seconds_count
 prometheus_engine_query_duration_seconds
 
 * Duration of each process
-  * Differs from prometheus_engine_query_duration_seconds_count as the duration for every process is listed seperatly
+  * Differs from prometheus_engine_query_duration_seconds_count as the duration for every process is listed separately
 
 prometheus_engine_query_duration_seconds_sum
 
@@ -124,5 +124,5 @@ No data
 
 * This results when the query is not in the list of available queries
   * Make sure your query is among ones that are listed.
-  * Make sure that that your expression is spelled correctly.  
+  * Make sure that that your expression is spelled correctly.
   * Make sure the app is integrated correctly
