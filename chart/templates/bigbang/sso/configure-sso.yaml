@@ -17,6 +17,7 @@ spec:
       containers:
         - name: configure-sso
           image: {{ .Values.anchoreEnterpriseGlobal.image }}
+          securityContext: {{- toYaml .Values.sso.containerSecurityContext | nindent 12 }}
           command:
             - /bin/sh
             - -c

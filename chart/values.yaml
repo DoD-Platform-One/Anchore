@@ -96,6 +96,11 @@ sso:
     requests:
       cpu: 100m
       memory: 256Mi
+  
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
 
 # Upstream Anchore Values
 #
@@ -129,6 +134,9 @@ postgresql:
     enabled: true
     runAsUser: 26
     runAsGroup: 26
+    capabilities:
+      drop:
+        - ALL
   # Configure size of the persistent volume used with helm managed chart.
   # This should be commented out if using an external endpoint.
   persistence:
@@ -510,6 +518,11 @@ anchoreAnalyzer:
       cpu: 1
       memory: 4G
 
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
+
   labels: {}
   annotations: {}
   # Add metadata annotations to analyzer deployments
@@ -548,6 +561,11 @@ anchoreApi:
     requests:
       cpu: 1
       memory: 4G
+
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
 
   labels: {}
   annotations: {}
@@ -745,6 +763,11 @@ anchoreCatalog:
      cpu: 1
      memory: 2G
 
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
+
   labels: {}
   annotations: {}
   # Add metadata annotations to catalog deployments
@@ -791,6 +814,11 @@ anchorePolicyEngine:
       cpu: 1
       memory: 4G
 
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
+
   labels: {}
   annotations: {}
   # Add metadata annotations to policy engine deployments
@@ -823,6 +851,11 @@ anchoreSimpleQueue:
       cpu: 1
       memory: 1G
 
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
+
   labels: {}
   annotations: {}
   # Add metadata annotations to simplequeue deployments
@@ -842,6 +875,11 @@ anchoreEngineUpgradeJob:
     requests:
       cpu: 1
       memory: 1G
+
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
 
   nodeSelector: {}
   tolerations: []
@@ -920,6 +958,9 @@ anchore-feeds-db:
     enabled: true
     runAsUser: 26
     runAsGroup: 26
+    capabilities:
+      drop:
+        - ALL
 
   # Set the configs to allow listening and connecting from other pods
   postgresqlConfiguration: {"listen_addresses": "*"}
@@ -971,6 +1012,9 @@ anchore-feeds-gem-db:
     enabled: true
     runAsUser: 26
     runAsGroup: 26
+    capabilities:
+      drop:
+        - ALL
 
 # Configure & enable the Anchore Enterprise on-prem feeds service.
 anchoreEnterpriseFeeds:
@@ -1072,6 +1116,11 @@ anchoreEnterpriseFeeds:
       cpu: 1
       memory: 10G
 
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
+
   labels: {}
   annotations: {}
   # Add metadata annotations to feeds deployments
@@ -1091,6 +1140,11 @@ anchoreEnterpriseFeedsUpgradeJob:
     requests:
       cpu: 1
       memory: 1G
+
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
 
   nodeSelector: {}
   tolerations: []
@@ -1133,6 +1187,11 @@ anchoreEnterpriseRbac:
     requests:
       cpu: 1
       memory: 4G
+
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
 
   # Add metadata annotations to rbac deployments
   deploymentAnnotations: {}
@@ -1190,6 +1249,11 @@ anchoreEnterpriseReports:
       cpu: 1
       memory: 1G
 
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
+
   labels: {}
   annotations: {}
   # Add metadata annotations to reports deployments
@@ -1226,6 +1290,11 @@ anchoreEnterpriseNotifications:
     requests:
       cpu: 1
       memory: 1G
+
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
 
   labels: {}
   annotations: {}
@@ -1391,6 +1460,11 @@ anchoreEnterpriseUi:
       cpu: 1
       memory: 1G
 
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
+
   labels: {}
   annotations: {}
   # Add metadata annotations to ui deployments
@@ -1433,6 +1507,12 @@ anchoreEnterpriseEngineUpgradeJob:
     requests:
       cpu: 1
       memory: 1G
+
+
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
 
   nodeSelector: {}
   tolerations: []

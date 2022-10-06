@@ -75,6 +75,7 @@ spec:
       - name: cloudsql-proxy
         image: {{ .Values.cloudsql.image.repository }}:{{ .Values.cloudsql.image.tag }}
         imagePullPolicy: {{ .Values.cloudsql.image.pullPolicy }}
+        securityContext: {{- toYaml .Values.anchoreSimpleQueue.containerSecurityContext | nindent 10 }}
         command: ["/cloud_sql_proxy"]
         args:
         - "-instances={{ .Values.cloudsql.instance }}=tcp:5432"
@@ -99,6 +100,7 @@ spec:
         {{- else }}
         args: ["anchore-manager", "service", "start", "--no-auto-upgrade", "simplequeue"]
         {{- end }}
+        securityContext: {{- toYaml .Values.anchoreSimpleQueue.containerSecurityContext | nindent 10 }}
         envFrom:
         {{- if not .Values.inject_secrets_via_env }}
         {{- if .Values.anchoreGlobal.existingSecret }}

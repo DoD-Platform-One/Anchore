@@ -72,6 +72,7 @@ spec:
       - name: cloudsql-proxy
         image: {{ .Values.cloudsql.image.repository }}:{{ .Values.cloudsql.image.tag }}
         imagePullPolicy: {{ .Values.cloudsql.image.pullPolicy }}
+        securityContext: {{- toYaml .Values.anchoreEnterpriseUi.containerSecurityContext | nindent 10 }}
         command: ["/cloud_sql_proxy"]
         args:
         - "-instances={{ .Values.cloudsql.instance }}=tcp:5432"
@@ -86,6 +87,7 @@ spec:
       - name: "{{ .Chart.Name }}-{{ $component }}"
         image: {{ .Values.anchoreEnterpriseUi.image }}
         imagePullPolicy: {{ .Values.anchoreEnterpriseUi.imagePullPolicy }}
+        securityContext: {{- toYaml .Values.anchoreEnterpriseUi.containerSecurityContext | nindent 10 }}
         env:
         {{- if and (not (index .Values "anchoreEnterpriseUi" "existingSecret")) (not (index .Values "ui-redis" "externalEndpoint")) }}
         - name: ANCHORE_REDIS_URI
