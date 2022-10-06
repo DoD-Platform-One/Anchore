@@ -42,6 +42,7 @@ spec:
       - name: cloudsql-proxy
         image: {{ .Values.cloudsql.image.repository }}:{{ .Values.cloudsql.image.tag }}
         imagePullPolicy: {{ .Values.cloudsql.image.pullPolicy }}
+        securityContext: {{- toYaml .Values.anchoreEnterpriseFeedsUpgradeJob.containerSecurityContext | nindent 10 }}
         command: ["/cloud_sql_proxy"]
         args:
         - "-instances={{ .Values.cloudsql.instance }}=tcp:5432"
@@ -56,6 +57,7 @@ spec:
       - name: "{{ .Release.Name }}-enterprise-feeds-upgrade"
         imagePullPolicy: {{ .Values.anchoreEnterpriseGlobal.imagePullPolicy }}
         image: {{ .Values.anchoreEnterpriseGlobal.image }}
+        securityContext: {{- toYaml .Values.anchoreEnterpriseFeedsUpgradeJob.containerSecurityContext | nindent 10 }}
         command: ["/bin/bash", "-c"]
         args:
         {{- if not .Values.anchoreEnterpriseFeeds.dbConfig.ssl }}
@@ -84,6 +86,8 @@ spec:
             sql_proxy_pid=$(pgrep cloud_sql_proxy) && kill -INT $sql_proxy_pid;
         securityContext:
           capabilities:
+            drop:
+              - ALL
             add:
               - SYS_PTRACE
         {{- end }}

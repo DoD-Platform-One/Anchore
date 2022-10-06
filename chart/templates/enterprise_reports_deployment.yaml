@@ -69,6 +69,7 @@ spec:
       - name: cloudsql-proxy
         image: {{ .Values.cloudsql.image.repository }}:{{ .Values.cloudsql.image.tag }}
         imagePullPolicy: {{ .Values.cloudsql.image.pullPolicy }}
+        securityContext: {{- toYaml .Values.anchoreEnterpriseReports.containerSecurityContext | nindent 10 }}
         command: ["/cloud_sql_proxy"]
         args:
         - "-instances={{ .Values.cloudsql.instance }}=tcp:5432"
@@ -83,6 +84,7 @@ spec:
       - name: "{{ .Chart.Name }}-{{ $component }}"
         image: {{ .Values.anchoreEnterpriseGlobal.image }}
         imagePullPolicy: {{ .Values.anchoreEnterpriseGlobal.imagePullPolicy }}
+        securityContext: {{- toYaml .Values.anchoreEnterpriseReports.containerSecurityContext | nindent 10 }}
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "reports_worker"]
         ports:
         - containerPort: {{ .Values.anchoreEnterpriseReports.service.workerPort }}

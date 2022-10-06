@@ -278,3 +278,14 @@ To prevent the postgresql container from writing to local disk, volumes, volume 
       - name: tmp
         emptyDir: {}
 ```
+
+### Container Security Context Additions
+
+To set all containers to run without additional capabilities, and instead to add explicit drops, several containerSecurityContext sections have been added.  Each of these sections look like the following (other sections with additional securityContext settings may have been modified to include explicit drops, but were already part of the chart) and are referenced in the template files:
+
+```yaml
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
+```

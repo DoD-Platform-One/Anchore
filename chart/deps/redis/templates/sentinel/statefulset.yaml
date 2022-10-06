@@ -550,6 +550,9 @@ spec:
           securityContext:
             privileged: true
             runAsUser: 0
+            capabilities:
+              drop:
+                - ALL
           {{- if .Values.sysctl.command }}
           command: {{- include "common.tplvalues.render" (dict "value" .Values.sysctl.command "context" $) | nindent 12 }}
           {{- end }}

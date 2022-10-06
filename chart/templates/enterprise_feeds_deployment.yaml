@@ -70,6 +70,9 @@ spec:
           image: alpine
           securityContext:
             runAsUser: 0
+            capabilities:
+              drop:
+                - ALL
           volumeMounts:
             - name: {{ $component }}-scratch
               mountPath: {{ .Values.anchoreGlobal.scratchVolume.mountPath }}
@@ -83,6 +86,7 @@ spec:
       - name: cloudsql-proxy
         image: {{ .Values.cloudsql.image.repository }}:{{ .Values.cloudsql.image.tag }}
         imagePullPolicy: {{ .Values.cloudsql.image.pullPolicy }}
+        securityContext: {{- toYaml .Values.anchoreEnterpriseFeeds.containerSecurityContext | nindent 10 }}
         command: ["/cloud_sql_proxy"]
         args:
         - "-instances={{ .Values.cloudsql.instance }}=tcp:5432"
@@ -97,6 +101,7 @@ spec:
       - name: "{{ .Chart.Name }}-{{ $component }}"
         image: {{ .Values.anchoreEnterpriseGlobal.image }}
         imagePullPolicy: {{ .Values.anchoreEnterpriseGlobal.imagePullPolicy }}
+        securityContext: {{- toYaml .Values.anchoreEnterpriseFeeds.containerSecurityContext | nindent 10 }}
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "feeds"]
         ports:
         - containerPort: {{ .Values.anchoreEnterpriseFeeds.service.port }}

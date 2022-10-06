@@ -21,6 +21,7 @@ spec:
       containers:
         - name: psql
           image: {{ .Values.postgresql.image.registry }}/{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}
+          securityContext: {{- toYaml .Values.postgresql.containerSecurityContext | nindent 10 }}
           {{- if or (and .Values.postgresqlSuperUser.postgresUsername .Values.postgresqlSuperUser.postgresPassword) .Values.postgresqlSuperUser.existingSecret }}
           command:
             - /bin/bash

@@ -78,6 +78,7 @@ spec:
       - name: cloudsql-proxy
         image: {{ .Values.cloudsql.image.repository }}:{{ .Values.cloudsql.image.tag }}
         imagePullPolicy: {{ .Values.cloudsql.image.pullPolicy }}
+        securityContext: {{- toYaml .Values.anchoreApi.containerSecurityContext | nindent 10 }}
         command: ["/cloud_sql_proxy"]
         args:
         - "-instances={{ .Values.cloudsql.instance }}=tcp:5432"
@@ -97,6 +98,7 @@ spec:
         image: {{ .Values.anchoreGlobal.image }}
         imagePullPolicy: {{ .Values.anchoreGlobal.imagePullPolicy }}
         {{- end }}
+        securityContext: {{- toYaml .Values.anchoreApi.containerSecurityContext | nindent 10 }}
         {{- if .Values.anchoreEnterpriseGlobal.enabled }}
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "apiext"]
         {{- else }}
@@ -195,6 +197,7 @@ spec:
       - name: {{ .Chart.Name }}-rbac-authorizer
         image: {{ .Values.anchoreEnterpriseGlobal.image }}
         imagePullPolicy: {{ .Values.anchoreEnterpriseGlobal.imagePullPolicy }}
+        securityContext: {{- toYaml .Values.anchoreApi.containerSecurityContext | nindent 10 }}
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "rbac_authorizer"]
         envFrom:
         {{- if not .Values.inject_secrets_via_env }}
@@ -272,6 +275,7 @@ spec:
       - name: "{{ .Chart.Name }}-reports-api"
         image: {{ .Values.anchoreEnterpriseGlobal.image }}
         imagePullPolicy: {{ .Values.anchoreEnterpriseGlobal.imagePullPolicy }}
+        securityContext: {{- toYaml .Values.anchoreApi.containerSecurityContext | nindent 10 }}
         args: ["anchore-enterprise-manager", "service", "start", "--no-auto-upgrade", "reports"]
         ports:
         - containerPort: {{ .Values.anchoreEnterpriseReports.service.apiPort }}
