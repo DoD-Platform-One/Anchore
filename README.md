@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.19.4-bb.2](https://img.shields.io/badge/Version-1.19.4--bb.2-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.19.7-bb.0](https://img.shields.io/badge/Version-1.19.7--bb.0-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -126,7 +126,6 @@ helm install anchore-engine chart/
 | anchoreGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/engine/engine:1.1.0"` |  |
 | anchoreGlobal.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreGlobal.imagePullSecretName | string | `"private-registry"` |  |
-| anchoreGlobal.serviceAccountName | string | `nil` |  |
 | anchoreGlobal.openShiftDeployment | bool | `false` |  |
 | anchoreGlobal.labels | object | `{}` |  |
 | anchoreGlobal.annotations | object | `{}` |  |
@@ -185,7 +184,7 @@ helm install anchore-engine chart/
 | anchoreAnalyzer.replicaCount | int | `2` |  |
 | anchoreAnalyzer.containerPort | int | `8084` |  |
 | anchoreAnalyzer.extraEnv | list | `[]` |  |
-| anchoreAnalyzer.cycleTimers.image_analyzer | int | `5` |  |
+| anchoreAnalyzer.cycleTimers.image_analyzer | int | `1` |  |
 | anchoreAnalyzer.concurrentTasksPerWorker | int | `1` |  |
 | anchoreAnalyzer.layerCacheMaxGigabytes | int | `0` |  |
 | anchoreAnalyzer.enableHints | bool | `false` |  |
@@ -277,7 +276,6 @@ helm install anchore-engine chart/
 | anchorePolicyEngine.cycleTimers.feed_sync | int | `14400` |  |
 | anchorePolicyEngine.cycleTimers.feed_sync_checker | int | `3600` |  |
 | anchorePolicyEngine.cycleTimers.grypedb_sync | int | `60` |  |
-| anchorePolicyEngine.vulnerabilityProvider | string | `"grype"` |  |
 | anchorePolicyEngine.cacheTTL | int | `3600` |  |
 | anchorePolicyEngine.service.type | string | `"ClusterIP"` |  |
 | anchorePolicyEngine.service.port | int | `8087` |  |
@@ -323,7 +321,7 @@ helm install anchore-engine chart/
 | anchoreEngineUpgradeJob.annotations | object | `{}` |  |
 | anchoreEnterpriseGlobal.enabled | bool | `false` |  |
 | anchoreEnterpriseGlobal.licenseSecretName | string | `"anchore-enterprise-license"` |  |
-| anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.1.0"` |  |
+| anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.1.1"` |  |
 | anchoreEnterpriseGlobal.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseGlobal.imagePullSecretName | string | `"private-registry"` |  |
 | anchore-feeds-db.image.registry | string | `"registry1.dso.mil"` |  |
@@ -485,7 +483,7 @@ helm install anchore-engine chart/
 | anchoreEnterpriseNotifications.tolerations | list | `[]` |  |
 | anchoreEnterpriseNotifications.affinity | object | `{}` |  |
 | anchoreEnterpriseUi.enabled | bool | `true` |  |
-| anchoreEnterpriseUi.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.1.0"` |  |
+| anchoreEnterpriseUi.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.1.1"` |  |
 | anchoreEnterpriseUi.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseUi.imagePullSecretName | string | `"private-registry"` |  |
 | anchoreEnterpriseUi.extraEnv | list | `[]` |  |
@@ -496,6 +494,7 @@ helm install anchore-engine chart/
 | anchoreEnterpriseUi.appDBConfig.pool.acquire | int | `30000` |  |
 | anchoreEnterpriseUi.appDBConfig.pool.idle | int | `10000` |  |
 | anchoreEnterpriseUi.ldapsRootCaCertName | string | `nil` |  |
+| anchoreEnterpriseUi.logLevel | string | `"http"` |  |
 | anchoreEnterpriseUi.enableProxy | bool | `false` |  |
 | anchoreEnterpriseUi.enableSsl | bool | `false` |  |
 | anchoreEnterpriseUi.enableSharedLogin | bool | `true` |  |

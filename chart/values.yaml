@@ -258,7 +258,7 @@ anchoreGlobal:
   imagePullSecretName: private-registry
 
   # Specify a service account name utilized to run all Anchore pods
-  serviceAccountName: Null
+  # serviceAccountName: Null
 
   # Set this value to true to setup the chart for OpenShift deployment compatibility.
   openShiftDeployment: false
@@ -442,9 +442,12 @@ anchoreAnalyzer:
     # - name: foo
     #   value: bar
 
+  # Specify the service account name utilized to run the analyzer pods
+  # serviceAccountName: Null
+
   # The cycle timer is the interval between checks to the work queue for new jobs
   cycleTimers:
-    image_analyzer: 5
+    image_analyzer: 1
 
   # Controls the concurrency of the analyzer itself. Can be configured to process more than one task at a time, but it IO bound, so may not
   # necessarily be faster depending on hardware. Should test and balance this value vs. number of analyzers for your deployment cluster performance.
@@ -543,10 +546,15 @@ anchoreApi:
 
   # kubernetes service configuration for anchore external API
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     port: 8228
     annotations: {}
     label: {}
+
+  # Specify the service account name utilized to run the API pods
+  # serviceAccountName: Null
 
   # (Optional) Overrides for constructing API URLs.  All values are optional.
   # external:
@@ -582,6 +590,9 @@ anchoreCatalog:
   extraEnv: []
     # - name: foo
     #   value: bar
+
+  # Specify the service account name utilized to run the catalog pods
+  # serviceAccountName: Null
 
   # Intervals to run specific events on (seconds)
   cycleTimers:
@@ -750,6 +761,8 @@ anchoreCatalog:
 
   # kubernetes service configuration for anchore catalog api
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     port: 8082
     annotations: {}
@@ -785,6 +798,9 @@ anchorePolicyEngine:
     # - name: foo
     #   value: bar
 
+  # Specify the service account name utilized to run the policy engine pods
+  # serviceAccountName: Null
+
   # Intervals to run specific events on (seconds)
   cycleTimers:
     # Interval to run a feed sync to get latest cve data
@@ -794,13 +810,12 @@ anchorePolicyEngine:
     # 1 minute between checks to verify local grype-db is up to date
     grypedb_sync: 60
 
-  # After chart v1.18.0 the only valid vulnerabilityProvider setting is `grype`, any other settings will fail
-  vulnerabilityProvider: grype
-
   cacheTTL: 3600  # 1 hour
 
   # kubernetes service configuration for anchore policy engine api
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     port: 8087
     annotations: {}
@@ -836,8 +851,13 @@ anchoreSimpleQueue:
     # - name: foo
     #   value: bar
 
+  # Specify the service account name utilized to run the simple queue pods
+  # serviceAccountName: Null
+
   # kubernetes service configuration for anchore simplequeue api
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     port: 8083
     annotations: {}
@@ -893,7 +913,7 @@ anchoreEnterpriseGlobal:
   # Create this secret with the following command - kubectl create secret generic anchore-enterprise-license --from-file=license.yaml=<PATH TO LICENSE.YAML>
   licenseSecretName: anchore-enterprise-license
 
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.1.0
+  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.1.1
   imagePullPolicy: IfNotPresent
   # Name of the kubernetes secret containing your dockerhub creds with access to the anchore enterprise images.
   # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
@@ -1050,6 +1070,9 @@ anchoreEnterpriseFeeds:
     # - name: foo
     #   value: bar
 
+  # Specify the service account name utilized to run the feeds pods
+  # serviceAccountName: Null
+
   # Time delay in seconds between consecutive driver runs for processing data
   cycleTimers:
     driver_sync: 7200
@@ -1103,6 +1126,8 @@ anchoreEnterpriseFeeds:
 
   # kubernetes service configuration for anchore feeds service api
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     port: 8448
     annotations: {}
@@ -1166,6 +1191,8 @@ anchoreEnterpriseRbac:
   # Kubernetes service config - annotations & serviceType configs must be set in anchoreApi
   # Due to RBAC sharing a service with the general API.
   service:
+    # Override the service name
+    # name: Null
     managerPort: 8229
     authPort: 8089
     type: ClusterIP
@@ -1205,6 +1232,9 @@ anchoreEnterpriseReports:
     # - name: foo
     #   value: bar
 
+  # Specify the service account name utilized to run the reports pods
+  # serviceAccountName: Null
+
   # GraphiQL is a GUI for editing and testing GraphQL queries and mutations.
   # Set enableGraphiql to true and open http://<host>:<port>/v1/reports/graphql in a browser for reports API
   enableGraphiql: true
@@ -1235,6 +1265,8 @@ anchoreEnterpriseReports:
     reports_data_egress: 600
 
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     apiPort: 8558
     workerPort: 8778
@@ -1271,6 +1303,9 @@ anchoreEnterpriseNotifications:
     # - name: foo
     #   value: bar
 
+  # Specify the service account name utilized to run the notification pods
+  # serviceAccountName: Null
+
   cycleTimers:
     notifications: 30
 
@@ -1278,6 +1313,8 @@ anchoreEnterpriseNotifications:
   # uiUrl: "http://<ui_url>"
 
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     port: 8668
     annotations: {}
@@ -1308,7 +1345,7 @@ anchoreEnterpriseNotifications:
 anchoreEnterpriseUi:
   # If enabled is set to false, set ui-redis.enabled to false to ensure that helm doesn't stand up a unneccessary redis instance.
   enabled: true
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.1.0
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.1.1
   imagePullPolicy: IfNotPresent
   imagePullSecretName: private-registry
 
@@ -1316,6 +1353,9 @@ anchoreEnterpriseUi:
   extraEnv: []
     # - name: foo
     #   value: bar
+
+  # Specify the service account name utilized to run the UI pods
+  # serviceAccountName: Null
 
   # Specifies an existing secret to be used for db and redis endpoints
   # This secret should define the following ENV vars
@@ -1347,6 +1387,26 @@ anchoreEnterpriseUi:
 
   # If using LDAPS with a custom CA certificate, add the certificate to the secret specified at anchoreGlobal.certStoreSecretName and specify the name of the cert here
   ldapsRootCaCertName: Null
+
+  # The (optional) `logLevel` key allows you to set the descriptive detail of the
+  # application log output. The key value must be a string selected from the
+  # following priority-ordered list:
+  #
+  #  - error
+  #  - warn
+  #  - info
+  #  - http
+  #  - debug
+  #
+  # Once set, each level will automatically include the output for any levels
+  # above it—for example, `info` will include the log output for details at the
+  # `warn` and `error` details, whereas `error` will only show error output.
+  #
+  # This value can be overridden by using the `ANCHORE_LOG_LEVEL` environment
+  # variable. When no level is set, either within this configuration file or by the
+  # environment variable, a default level of `http` is used.
+  #
+  logLevel: http
 
   # Specifies whether to trust a reverse proxy when setting secure cookies (via the `X-Forwarded-Proto` header).
   enableProxy: false
@@ -1446,6 +1506,8 @@ anchoreEnterpriseUi:
 
   # kubernetes service configuration for anchore UI
   service:
+    # Override the service name
+    # name: Null
     type: ClusterIP
     port: 80
     annotations: {}
