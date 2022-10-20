@@ -21,7 +21,7 @@ spec:
       containers:
         - name: psql
           image: "{{ (index .Values "anchore-feeds-db" "image" "registry") }}/{{ (index .Values "anchore-feeds-db" "image" "repository") }}:{{ (index .Values "anchore-feeds-db" "image" "tag") }}"
-          securityContext: {{- toYaml (index .Values "anchore-feeds-db" "containerSecurityContext") | nindent 12 }}
+          securityContext: {{- omit (index .Values "anchore-feeds-db" "containerSecurityContext") "enabled" | toYaml | nindent 12 }}
           {{- if or (and .Values.postgresqlSuperUser.postgresUsername .Values.postgresqlSuperUser.postgresPassword) .Values.postgresqlSuperUser.existingSecret }}
           command:
             - /bin/bash

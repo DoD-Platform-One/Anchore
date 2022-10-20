@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.19.7-bb.2]
+### Fixed
+- Added removal of `enabled` from securitycontext on ensure-db jobs
+
 ## [1.19.7-bb.1]
 ### Fixed
 - Fixed indentation issue with securitycontext on ensure-db jobs
