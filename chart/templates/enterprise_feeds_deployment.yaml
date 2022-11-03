@@ -267,6 +267,7 @@ spec:
       port: {{ .Values.anchoreEnterpriseFeeds.service.port }}
       targetPort: {{ .Values.anchoreEnterpriseFeeds.service.port }}
       protocol: TCP
+      appProtocol: http
   selector:
     app: {{ template "anchore-engine.fullname" . }}
     component: {{ $component }}

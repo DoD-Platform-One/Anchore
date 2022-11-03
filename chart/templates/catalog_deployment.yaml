@@ -287,6 +287,7 @@ spec:
       port: {{ .Values.anchoreCatalog.service.port }}
       targetPort: {{ .Values.anchoreCatalog.service.port }}
       protocol: TCP
+      appProtocol: http
   selector:
     app: {{ template "anchore-engine.fullname" . }}
     component: {{ $component }}

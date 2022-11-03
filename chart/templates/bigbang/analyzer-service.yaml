@@ -1,0 +1,37 @@
+{{- $component := "analyzer" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "anchore-engine.analyzer.fullname" . }}
+  labels:
+    app: {{ template "anchore-engine.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: {{ $component }}
+    {{- with .Values.anchoreAnalyzer.labels }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.anchoreGlobal.labels }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.anchoreGlobal.deploymentAnnotations .Values.anchoreAnalyzer.deploymentAnnotations }}
+  annotations:
+  {{- with .Values.anchoreGlobal.deploymentAnnotations }}
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+  {{- with .Values.anchoreAnalyzer.deploymentAnnotations }}
+    {{ toYaml . | indent 4 }}
+  {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.anchoreAnalyzer.serviceType }}
+  ports:
+    - name: analyzer-api
+      port: {{ .Values.anchoreAnalyzer.containerPort }}
+      targetPort: {{ .Values.anchoreAnalyzer.containerPort }}
+      protocol: TCP
+      appProtocol: http
+  selector:
+    app: {{ template "anchore-engine.fullname" . }}
+    component: {{ $component }}

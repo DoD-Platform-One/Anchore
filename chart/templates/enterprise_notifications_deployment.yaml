@@ -306,6 +306,7 @@ spec:
       port: {{ .Values.anchoreEnterpriseNotifications.service.port }}
       targetPort: {{ .Values.anchoreEnterpriseNotifications.service.port }}
       protocol: TCP
+      appProtocol: http
   selector:
     app: {{ template "anchore-engine.fullname" . }}
     component: {{ $component }}

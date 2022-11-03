@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.19.7-bb.2](https://img.shields.io/badge/Version-1.19.7--bb.2-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.19.7-bb.3](https://img.shields.io/badge/Version-1.19.7--bb.3-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -62,6 +62,8 @@ helm install anchore-engine chart/
 | ensureDbJobs.resources.requests.memory | string | `"256Mi"` |  |
 | monitoring.enabled | bool | `false` |  |
 | monitoring.namespace | string | `"monitoring"` |  |
+| monitoring.serviceMonitor.scheme | string | `""` |  |
+| monitoring.serviceMonitor.tlsConfig | object | `{}` |  |
 | enterpriseLicenseYaml | string | `""` |  |
 | sso.enabled | bool | `false` |  |
 | sso.name | string | `"keycloak"` |  |
@@ -183,6 +185,7 @@ helm install anchore-engine chart/
 | anchoreGlobal.probes.readiness.successThreshold | int | `1` |  |
 | anchoreAnalyzer.replicaCount | int | `2` |  |
 | anchoreAnalyzer.containerPort | int | `8084` |  |
+| anchoreAnalyzer.serviceType | string | `"ClusterIP"` |  |
 | anchoreAnalyzer.extraEnv | list | `[]` |  |
 | anchoreAnalyzer.cycleTimers.image_analyzer | int | `1` |  |
 | anchoreAnalyzer.concurrentTasksPerWorker | int | `1` |  |
@@ -522,6 +525,8 @@ helm install anchore-engine chart/
 | ui-redis.auth.password | string | `"anchore-redis,123"` |  |
 | ui-redis.architecture | string | `"standalone"` |  |
 | ui-redis.master.persistence.enabled | bool | `false` |  |
+| ui-redis.metrics.serviceMonitor.scheme | string | `""` |  |
+| ui-redis.metrics.serviceMonitor.tlsConfig | object | `{}` |  |
 | ui-redis.externalEndpoint | string | `nil` |  |
 | ui-redis.commonConfiguration | string | `"maxmemory 200mb\nsave \"\""` |  |
 | anchoreEnterpriseEngineUpgradeJob.enabled | bool | `true` |  |
