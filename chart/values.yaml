@@ -65,6 +65,9 @@ ensureDbJobs:
 monitoring:
   enabled: false
   namespace: monitoring
+  serviceMonitor:
+    scheme: ""
+    tlsConfig: {}
 
 # Enterprise license: Specify your multiline license
 # enterpriseLicenseYaml: |
@@ -436,6 +439,7 @@ anchoreGlobal:
 anchoreAnalyzer:
   replicaCount: 2
   containerPort: 8084
+  serviceType: ClusterIP
 
   # Set extra environment variables. These will be set only on analyzer containers.
   extraEnv: []
@@ -1535,6 +1539,7 @@ anchoreEnterpriseUi:
   tolerations: []
   affinity: {}
 
+
 # Anchore Engine Enterprise UI is dependent on redis for storing sessions
 # Only utilized if 'anchoreEnterpriseUi.enabled: true'
 ui-redis:
@@ -1546,6 +1551,10 @@ ui-redis:
   master:
     persistence:
       enabled: false
+  metrics:
+    serviceMonitor:
+      scheme: ""
+      tlsConfig: {}
 
   # To use an external redis endpoint, uncomment to set 'enabled: false'
   # enabled: false

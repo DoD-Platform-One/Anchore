@@ -48,6 +48,9 @@ networkPolicies:
 monitoring:
   enabled: false
   namespace: monitoring
+  serviceMonitor:
+    scheme: ""
+    tlsConfig: {}
 
 # Enterprise license: Specify your multiline license
 # enterpriseLicenseYaml: |
@@ -79,6 +82,8 @@ All chart changes are located under the `chart/templates/bigbang` directory. In 
 - Automated creation of an OAuth cert secret if needed (and this secret name is referenced under `anchoreGlobal.saml`)
 - Creation of secrets with database credentials from postgres and anchore-feeds-db values
 - Automated creation and synchronization of the Postgres databases, database users, and passwords through k8s jobs
+- Added analyzerService.yaml to support metrics for analyzer
+- Added service monitors for all exposed metrics
 
 As additional Big Bang changes are made they should be added in these spots and this doc updated to reflect that.
 
@@ -259,6 +264,8 @@ keys:
   secret: ${ANCHORE_SAML_SECRET}
   {{- end }}
 ```
+
+To support metrics mTLS added `appPotocol: http` to the Service port spec found in `./chart/templates/*_deployment.yaml`
 
 ### PostgreSQL Modifications
 

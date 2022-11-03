@@ -20,7 +20,13 @@ spec:
         format:
           - prometheus
       port: anchore-external-api
-      scheme: http
+      {{- if .Values.monitoring.serviceMonitor.scheme }}
+      scheme: {{ .Values.monitoring.serviceMonitor.scheme }}
+      {{- end }}
+      {{- if .Values.monitoring.serviceMonitor.tlsConfig }}
+      tlsConfig:
+        {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
+      {{- end }}
       #jobLabel: anchore-metrics-external-api
     
     - interval: 30s
@@ -29,7 +35,13 @@ spec:
         format:
           - prometheus
       port: anchore-rbac-manager
-      scheme: http
+      {{- if .Values.monitoring.serviceMonitor.scheme }}
+      scheme: {{ .Values.monitoring.serviceMonitor.scheme }}
+      {{- end }}
+      {{- if .Values.monitoring.serviceMonitor.tlsConfig }}
+      tlsConfig:
+        {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
+      {{- end }}
       #jobLabel: anchore-metrics-rbac-manager
     
     - interval: 30s
@@ -38,7 +50,13 @@ spec:
         format:
           - prometheus
       port: anchore-catalog-api
-      scheme: http
+      {{- if .Values.monitoring.serviceMonitor.scheme }}
+      scheme: {{ .Values.monitoring.serviceMonitor.scheme }}
+      {{- end }}
+      {{- if .Values.monitoring.serviceMonitor.tlsConfig }}
+      tlsConfig:
+        {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
+      {{- end }}
       #jobLabel: anchore-metrics-catalog-api
 
     - interval: 30s
@@ -47,7 +65,13 @@ spec:
         format:
           - prometheus
       port: anchore-policy-api
-      scheme: http
+      {{- if .Values.monitoring.serviceMonitor.scheme }}
+      scheme: {{ .Values.monitoring.serviceMonitor.scheme }}
+      {{- end }}
+      {{- if .Values.monitoring.serviceMonitor.tlsConfig }}
+      tlsConfig:
+        {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
+      {{- end }}
       #jobLabel: anchore-metrics-policy-api
 
     - interval: 30s
@@ -56,7 +80,13 @@ spec:
         format:
           - prometheus
       port: anchore-simplequeue-api
-      scheme: http
+      {{- if .Values.monitoring.serviceMonitor.scheme }}
+      scheme: {{ .Values.monitoring.serviceMonitor.scheme }}
+      {{- end }}
+      {{- if .Values.monitoring.serviceMonitor.tlsConfig }}
+      tlsConfig:
+        {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
+      {{- end }}
       #jobLabel: anchore-metrics-simplequeue-api
 
     {{- if .Values.anchoreEnterpriseGlobal.enabled }}
@@ -67,7 +97,13 @@ spec:
         format:
           - prometheus
       port: feeds-api
-      scheme: http
+      {{- if .Values.monitoring.serviceMonitor.scheme }}
+      scheme: {{ .Values.monitoring.serviceMonitor.scheme }}
+      {{- end }}
+      {{- if .Values.monitoring.serviceMonitor.tlsConfig }}
+      tlsConfig:
+        {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
+      {{- end }}
       #jobLabel: anchore-metrics-feeds-api
     {{- end }}
     {{- if .Values.anchoreEnterpriseRbac.enabled }}
@@ -77,7 +113,13 @@ spec:
         format:
           - prometheus
       port: rbac
-      scheme: http
+      {{- if .Values.monitoring.serviceMonitor.scheme }}
+      scheme: {{ .Values.monitoring.serviceMonitor.scheme }}
+      {{- end }}
+      {{- if .Values.monitoring.serviceMonitor.tlsConfig }}
+      tlsConfig:
+        {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
+      {{- end }}
       #jobLabel: anchore-metrics-enterprise-rbac
     {{- end }}
     {{- if .Values.anchoreEnterpriseReports.enabled }}
@@ -87,7 +129,13 @@ spec:
         format:
           - prometheus
       port: reports
-      scheme: http
+      {{- if .Values.monitoring.serviceMonitor.scheme }}
+      scheme: {{ .Values.monitoring.serviceMonitor.scheme }}
+      {{- end }}
+      {{- if .Values.monitoring.serviceMonitor.tlsConfig }}
+      tlsConfig:
+        {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
+      {{- end }}
       #jobLabel: anchore-metrics-enterprise-reports
     {{- end }}
     {{- if .Values.anchoreEnterpriseNotifications.enabled }}
@@ -97,32 +145,29 @@ spec:
         format:
           - prometheus
       port: notify
-      scheme: http
+      {{- if .Values.monitoring.serviceMonitor.scheme }}
+      scheme: {{ .Values.monitoring.serviceMonitor.scheme }}
+      {{- end }}
+      {{- if .Values.monitoring.serviceMonitor.tlsConfig }}
+      tlsConfig:
+        {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
+      {{- end }}
       #jobLabel: anchore-metrics-enterprise-notifications
     {{- end }}
+    ## Big Bang replaced PodMonitor with this ServiceMonitor endpoint
+    - interval: 30s
+      path: /metrics
+      params:
+        format:
+          - prometheus
+      port: analyzer-api
+      {{- if .Values.monitoring.serviceMonitor.scheme }}
+      scheme: {{ .Values.monitoring.serviceMonitor.scheme }}
+      {{- end }}
+      {{- if .Values.monitoring.serviceMonitor.tlsConfig }}
+      tlsConfig:
+        {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
+      {{- end }}
+      #jobLabel: anchore-anchor-analyzer-metrics-mtls
   {{- end }}
----
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  labels:
-    prometheus: k8s
-  name: anchore-pod-monitor
-  namespace: {{ .Release.Namespace }}
-spec:
-  selector:
-    matchLabels:
-      app: {{ template "anchore-engine.fullname" . }}
-  namespaceSelector:
-    matchNames:
-      - {{ .Release.Namespace }}
-  podMetricsEndpoints:
-  - interval: 30s
-    path: /metrics
-    params:
-      format:
-        - prometheus
-    port: analyzer-api
-    scheme: http
-    #jobLabel: anchore-metrics-analyzer-api
 {{- end }}
