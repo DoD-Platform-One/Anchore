@@ -1,6 +1,6 @@
 apiVersion: v2
 name: anchore-engine
-version: 1.19.7-bb.3
+version: 1.20.0-bb.0
 appVersion: 1.1.0
 description: Anchore container analysis and policy evaluation engine service
 keywords:
@@ -47,5 +47,5 @@ dependencies:
    repository: oci://registry.dso.mil/platform-one/big-bang/apps/library-charts/gluon
 annotations:
   bigbang.dev/applicationVersions: |
-    - Enterprise: 4.1.1
+    - Enterprise: 4.2.0
     - Engine: 1.1.0

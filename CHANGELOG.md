@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.20.0-bb.0]
+### Changed
+- Bumped chart version to `1.20.0`
+- Bumped Anchore Enterprise image tag to `4.2.0`
+- Bumped Anchore Enterprise UI image tag to `4.2.0`
+
 ## [1.19.7-bb.3]
 ### Changed
 - Added support for metrics mTLS
