@@ -78,8 +78,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
     {{- print .Values.anchoreCatalog.serviceAccountName | trunc 63 | trimSuffix "-" -}}
 {{- else if .Values.anchoreGlobal.serviceAccountName -}}
     {{- print .Values.anchoreGlobal.serviceAccountName | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-    {{- include "anchore-engine.catalog.fullname" . -}}
 {{- end -}}
 {{- end -}}
 
@@ -411,4 +409,10 @@ Create database hostname string from supplied values file. Used for the enterpri
     {{- $db_host := include "postgres.fullname" . }}
     {{- printf "%s:5432" $db_host -}}
   {{- end }}
+{{- end }}
+
+{{- define "doSourceFile" }}
+{{- if .Values.anchoreGlobal.doSourceAtEntry.enabled }}
+    {{- printf "source %v;" .Values.anchoreGlobal.doSourceAtEntry.filePath }}
+{{- end }}
 {{- end }}

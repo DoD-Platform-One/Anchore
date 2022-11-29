@@ -88,6 +88,9 @@ spec:
         image: {{ .Values.anchoreEnterpriseUi.image }}
         imagePullPolicy: {{ .Values.anchoreEnterpriseUi.imagePullPolicy }}
         securityContext: {{- toYaml .Values.anchoreEnterpriseUi.containerSecurityContext | nindent 10 }}
+        command: ["/bin/sh", "-c"]
+        args:
+        - {{ print (include "doSourceFile" .) }} /docker-entrypoint.sh node /home/node/aui/build/server.js
         env:
         {{- if and (not (index .Values "anchoreEnterpriseUi" "existingSecret")) (not (index .Values "ui-redis" "externalEndpoint")) }}
         - name: ANCHORE_REDIS_URI
@@ -135,6 +138,9 @@ spec:
           mountPath: /home/anchore/certs/
           readOnly: true
         {{- end }}
+        {{- with .Values.anchoreGlobal.extraVolumeMounts }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         livenessProbe:
           tcpSocket:
             port: enterprise-ui
@@ -169,6 +175,9 @@ spec:
       - name: {{ .Values.cloudsql.serviceAccSecretName }}
         secret:
           secretName: {{ .Values.cloudsql.serviceAccSecretName }}
+      {{- end }}
+      {{- with .Values.anchoreGlobal.extraVolumes }}
+      {{- toYaml . | nindent 6 }}
       {{- end }}
       {{- with .Values.anchoreEnterpriseUi.nodeSelector }}
       nodeSelector:
