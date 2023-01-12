@@ -49,3 +49,19 @@ annotations:
   bigbang.dev/applicationVersions: |
     - Enterprise: 4.3.0
     - Engine: 1.1.0
+  # Note engine image won't be used at all if enterprise is enabled
+  helm.sh/images: |
+    - name: engine
+      image: registry1.dso.mil/ironbank/anchore/engine/engine:1.1.0
+    - name: enterprise
+      condition: anchoreEnterpriseGlobal.enabled
+      image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.3.0
+    - name: postgresql12
+      condition: postgresql.enabled
+      image: registry1.dso.mil/ironbank/opensource/postgres/postgresql12:12.12
+    - name: enterpriseui
+      condition: anchoreEnterpriseGlobal.enabled
+      image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.3.0
+
+
+
