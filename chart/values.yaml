@@ -1608,7 +1608,7 @@ bbtests:
     envs:
       ANCHORE_CLI_URL: "http://{{ template \"anchore-engine.api.fullname\" . }}:{{ .Values.anchoreApi.service.port }}/v1"
       ANCHORE_CLI_USER: admin
-      ANCHORE_SCAN_IMAGE: registry.dso.mil/platform-one/big-bang/apps/security-tools/anchore-enterprise/centos:latest
+      ANCHORE_SCAN_IMAGE: quay.io/prometheus/node-exporter:latest
     secretEnvs:
       - name: ANCHORE_CLI_PASS
         valueFrom:

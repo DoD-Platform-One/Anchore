@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.20.1-bb.0](https://img.shields.io/badge/Version-1.20.1--bb.0-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.20.1-bb.1](https://img.shields.io/badge/Version-1.20.1--bb.1-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -544,7 +544,7 @@ helm install anchore-engine chart/
 | bbtests.scripts.image | string | `"registry1.dso.mil/ironbank/anchore/cli/cli:0.9.4"` |  |
 | bbtests.scripts.envs.ANCHORE_CLI_URL | string | `"http://{{ template \"anchore-engine.api.fullname\" . }}:{{ .Values.anchoreApi.service.port }}/v1"` |  |
 | bbtests.scripts.envs.ANCHORE_CLI_USER | string | `"admin"` |  |
-| bbtests.scripts.envs.ANCHORE_SCAN_IMAGE | string | `"registry.dso.mil/platform-one/big-bang/apps/security-tools/anchore-enterprise/centos:latest"` |  |
+| bbtests.scripts.envs.ANCHORE_SCAN_IMAGE | string | `"quay.io/prometheus/node-exporter:latest"` |  |
 | bbtests.scripts.secretEnvs[0].name | string | `"ANCHORE_CLI_PASS"` |  |
 | bbtests.scripts.secretEnvs[0].valueFrom.secretKeyRef.name | string | `"{{ template \"anchore-engine.fullname\" . }}-admin-pass"` |  |
 | bbtests.scripts.secretEnvs[0].valueFrom.secretKeyRef.key | string | `"ANCHORE_ADMIN_PASSWORD"` |  |
