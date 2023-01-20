@@ -52,6 +52,11 @@ spec:
         securityContext: {{- toYaml  .Values.anchoreEngineUpgradeJob.containerSecurityContext | nindent 10 }}
         command: ["/cloud_sql_proxy"]
         args:
+        {{- if .Values.cloudsql.extraArgs }}
+        {{- range $arg := .Values.cloudsql.extraArgs }}
+        - {{ quote $arg }}
+        {{- end }}
+        {{- end }}
         - "-instances={{ .Values.cloudsql.instance }}=tcp:5432"
         {{- if .Values.cloudsql.useExistingServiceAcc }}
         - "-credential_file=/var/{{ .Values.cloudsql.serviceAccSecretName }}/{{ .Values.cloudsql.serviceAccJsonName }}"
@@ -94,7 +99,7 @@ spec:
             curl -X POST http://localhost:15020/quitquitquit
         {{- end }}
         {{- if .Values.cloudsql.enabled }}
-            sql_proxy_pid=$(pgrep cloud_sql_proxy) && kill -INT $sql_proxy_pid;
+          - sql_proxy_pid=$(pgrep cloud_sql_proxy) && kill -INT $sql_proxy_pid;
         securityContext:
           capabilities:
             drop:
@@ -104,9 +109,9 @@ spec:
         {{- end }}
         {{- if not .Values.inject_secrets_via_env }}
         envFrom:
-        {{- if .Values.anchoreGlobal.existingSecret }}
+        {{- if .Values.anchoreGlobal.useExistingSecrets }}
         - secretRef:
-            name: {{ .Values.anchoreGlobal.existingSecret }}
+            name: {{ .Values.anchoreGlobal.existingSecretName }}
         {{- else }}
         - secretRef:
             name: {{ include "anchore-engine.fullname" . }}
@@ -114,8 +119,6 @@ spec:
             name: {{ print (include "anchore-engine.fullname" .) "-admin-pass" }}
         {{- end }}
         {{- end }}
-        - configMapRef:
-            name: {{ template "anchore-engine.fullname" . }}-env
         env:
         {{- with .Values.anchoreGlobal.extraEnv }}
         {{- toYaml . | nindent 8 }}
