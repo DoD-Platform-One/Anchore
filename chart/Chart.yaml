@@ -1,27 +1,27 @@
 apiVersion: v2
 name: anchore-engine
-version: 1.20.1-bb.1
+version: 1.21.1-bb.0
 appVersion: 1.1.0
 description: Anchore container analysis and policy evaluation engine service
 keywords:
- - analysis
- - docker
- - anchore
- - "anchore-engine"
- - image
- - security
- - vulnerability
- - scanner
+  - analysis
+  - docker
+  - anchore
+  - "anchore-engine"
+  - image
+  - security
+  - vulnerability
+  - scanner
 home: https://anchore.com
 sources:
- - https://github.com/anchore/anchore-engine
+  - https://github.com/anchore/anchore-engine
 maintainers:
- - name: zhill
-   email: zach@anchore.com
- - name: btodhunter
-   email: bradyt@anchore.com
+  - name: zhill
+    email: zach@anchore.com
+  - name: btodhunter
+    email: bradyt@anchore.com
 engine: gotpl
-icon: https://anchore.com/wp-content/uploads/2016/08/anchore.png
+icon: https://anchoreprd.wpengine.com/wp-content/uploads/2021/12/favicon.png
 dependencies:
  - name: postgresql
    version: "10.3.13"

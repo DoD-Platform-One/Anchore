@@ -1,6 +1,6 @@
 # anchore-engine
 
-![Version: 1.20.1-bb.1](https://img.shields.io/badge/Version-1.20.1--bb.1-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.21.1-bb.0](https://img.shields.io/badge/Version-1.21.1--bb.0-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -83,6 +83,7 @@ helm install anchore-engine chart/
 | sso.resources.requests.cpu | string | `"100m"` |  |
 | sso.resources.requests.memory | string | `"256Mi"` |  |
 | sso.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| fullnameOverride | string | `nil` |  |
 | postgresql.image.registry | string | `"registry1.dso.mil"` |  |
 | postgresql.image.repository | string | `"ironbank/opensource/postgres/postgresql12"` |  |
 | postgresql.image.tag | float | `12.12` |  |
@@ -115,6 +116,7 @@ helm install anchore-engine chart/
 | postgresql.postgresConfiguration.listen_addresses | string | `"*"` |  |
 | postgresql.pgHbaConfiguration | string | `"local all all md5\nhost all all all md5"` |  |
 | cloudsql.enabled | bool | `false` |  |
+| cloudsql.extraArgs | list | `[]` |  |
 | cloudsql.instance | string | `""` |  |
 | cloudsql.image.repository | string | `"gcr.io/cloudsql-docker/gce-proxy"` |  |
 | cloudsql.image.tag | string | `"1.22.0"` |  |
@@ -133,7 +135,8 @@ helm install anchore-engine chart/
 | anchoreGlobal.annotations | object | `{}` |  |
 | anchoreGlobal.deploymentAnnotations | object | `{}` |  |
 | anchoreGlobal.extraEnv | list | `[]` |  |
-| anchoreGlobal.existingSecret | string | `nil` |  |
+| anchoreGlobal.useExistingSecrets | bool | `false` |  |
+| anchoreGlobal.existingSecretName | string | `"anchore-engine-env"` |  |
 | anchoreGlobal.doSourceAtEntry.enabled | bool | `false` |  |
 | anchoreGlobal.doSourceAtEntry.filePath | string | `"/vault/secrets/config"` |  |
 | anchoreGlobal.extraVolumes | list | `[]` |  |
@@ -382,7 +385,7 @@ helm install anchore-engine chart/
 | anchoreEnterpriseFeeds.rhelDriverConcurrency | int | `5` |  |
 | anchoreEnterpriseFeeds.extraEnv | list | `[]` |  |
 | anchoreEnterpriseFeeds.cycleTimers.driver_sync | int | `7200` |  |
-| anchoreEnterpriseFeeds.existingSecret | string | `nil` |  |
+| anchoreEnterpriseFeeds.existingSecretName | string | `"anchore-enterprise-feeds-env"` |  |
 | anchoreEnterpriseFeeds.dbConfig.timeout | int | `120` |  |
 | anchoreEnterpriseFeeds.dbConfig.ssl | bool | `false` |  |
 | anchoreEnterpriseFeeds.dbConfig.sslMode | string | `"verify-full"` |  |
@@ -490,7 +493,7 @@ helm install anchore-engine chart/
 | anchoreEnterpriseUi.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseUi.imagePullSecretName | string | `"private-registry"` |  |
 | anchoreEnterpriseUi.extraEnv | list | `[]` |  |
-| anchoreEnterpriseUi.existingSecret | string | `nil` |  |
+| anchoreEnterpriseUi.existingSecretName | string | `"anchore-enterprise-ui-env"` |  |
 | anchoreEnterpriseUi.appDBConfig.native | bool | `true` |  |
 | anchoreEnterpriseUi.appDBConfig.pool.max | int | `10` |  |
 | anchoreEnterpriseUi.appDBConfig.pool.min | int | `0` |  |
