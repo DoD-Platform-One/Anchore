@@ -67,12 +67,15 @@ spec:
         args:
         {{- if not .Values.anchoreEnterpriseFeeds.dbConfig.ssl }}
           - |
+            sleep 60
             {{ print (include "doSourceFile" .) }} anchore-enterprise-manager db --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST}"/"${ANCHORE_FEEDS_DB_NAME}" upgrade --dontask;
         {{- else if eq .Values.anchoreEnterpriseFeeds.dbConfig.sslMode "require" }}
           - |
+            sleep 60
             {{ print (include "doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST}"/"${ANCHORE_FEEDS_DB_NAME}"?sslmode={{- .Values.anchoreEnterpriseFeeds.dbConfig.sslMode }} upgrade --dontask;
         {{- else }}
           - |
+            sleep 60
             {{ print (include "doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST}"/"${ANCHORE_FEEDS_DB_NAME}"?sslmode={{- .Values.anchoreEnterpriseFeeds.dbConfig.sslMode -}}\&sslrootcert=/home/anchore/certs/{{- .Values.anchoreEnterpriseFeeds.dbConfig.sslRootCertName }} upgrade --dontask;
         {{- end }}
         {{- if eq .Values.istio.injection "enabled" }}
