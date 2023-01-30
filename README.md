@@ -1,6 +1,6 @@
-# anchore-engine
+# anchore
 
-![Version: 1.21.1-bb.1](https://img.shields.io/badge/Version-1.21.1--bb.1-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.21.1-bb.2](https://img.shields.io/badge/Version-1.21.1--bb.2-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -28,7 +28,7 @@ https://helm.sh/docs/intro/install/
 * Clone down the repository
 * cd into directory
 ```bash
-helm install anchore-engine chart/
+helm install anchore chart/
 ```
 
 ## Values
@@ -83,6 +83,7 @@ helm install anchore-engine chart/
 | sso.resources.requests.cpu | string | `"100m"` |  |
 | sso.resources.requests.memory | string | `"256Mi"` |  |
 | sso.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| nameOverride | string | `"anchore-engine"` |  |
 | fullnameOverride | string | `nil` |  |
 | postgresql.image.registry | string | `"registry1.dso.mil"` |  |
 | postgresql.image.repository | string | `"ironbank/opensource/postgres/postgresql12"` |  |

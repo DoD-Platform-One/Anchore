@@ -71,6 +71,9 @@ sso:
   requireSignedAssertions: false
   requireSignedResponse: true
   idpMetadataUrl: "https://login.dso.mil/auth/realms/baby-yoda/protocol/saml/descriptor"
+
+# Default name override to upstream chart name
+nameOverride: "anchore-engine"
 ```
 
 All chart changes are located under the `chart/templates/bigbang` directory. In summary:
@@ -151,6 +154,10 @@ anchoreEnterpriseRbac:
 ```
 
 ## Other Modifications
+
+For consistency in naming the chart name in `Chart.yaml` should be changed to `anchore`.
+
+---
 
 The following block needs to be added to the end of the _helpers.tpl file:
 
