@@ -105,6 +105,9 @@ sso:
       drop:
         - ALL
 
+# Default name override to upstream chart name
+nameOverride: "anchore-engine"
+
 # Upstream Anchore Values
 #
 fullnameOverride: Null
