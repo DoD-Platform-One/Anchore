@@ -1,6 +1,6 @@
-# anchore
+# anchore-engine
 
-![Version: 1.21.1-bb.2](https://img.shields.io/badge/Version-1.21.1--bb.2-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.22.3-bb.0](https://img.shields.io/badge/Version-1.22.3--bb.0-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -28,7 +28,7 @@ https://helm.sh/docs/intro/install/
 * Clone down the repository
 * cd into directory
 ```bash
-helm install anchore chart/
+helm install anchore-engine chart/
 ```
 
 ## Values
@@ -87,7 +87,7 @@ helm install anchore chart/
 | fullnameOverride | string | `nil` |  |
 | postgresql.image.registry | string | `"registry1.dso.mil"` |  |
 | postgresql.image.repository | string | `"ironbank/opensource/postgres/postgresql12"` |  |
-| postgresql.image.tag | float | `12.12` |  |
+| postgresql.image.tag | float | `12.14` |  |
 | postgresql.global.imagePullSecrets[0] | string | `"private-registry"` |  |
 | postgresql.externalEndpoint | string | `nil` |  |
 | postgresql.postgresUser | string | `"anchoreengine"` |  |
@@ -164,6 +164,7 @@ helm install anchore chart/
 | anchoreGlobal.saml.publicKeyName | string | `nil` |  |
 | anchoreGlobal.oauthEnabled | bool | `true` |  |
 | anchoreGlobal.oauthTokenExpirationSeconds | int | `3600` |  |
+| anchoreGlobal.oauthRefreshTokenExpirationSeconds | int | `86400` |  |
 | anchoreGlobal.ssoRequireExistingUsers | bool | `false` |  |
 | anchoreGlobal.hashedPasswords | bool | `true` |  |
 | anchoreGlobal.dbConfig.timeout | int | `120` |  |
@@ -283,6 +284,7 @@ helm install anchore chart/
 | anchorePolicyEngine.cycleTimers.feed_sync | int | `14400` |  |
 | anchorePolicyEngine.cycleTimers.feed_sync_checker | int | `3600` |  |
 | anchorePolicyEngine.cycleTimers.grypedb_sync | int | `60` |  |
+| anchorePolicyEngine.enablePackageDbLoad | bool | `true` |  |
 | anchorePolicyEngine.cacheTTL | int | `3600` |  |
 | anchorePolicyEngine.service.type | string | `"ClusterIP"` |  |
 | anchorePolicyEngine.service.port | int | `8087` |  |
@@ -328,12 +330,12 @@ helm install anchore chart/
 | anchoreEngineUpgradeJob.annotations | object | `{}` |  |
 | anchoreEnterpriseGlobal.enabled | bool | `false` |  |
 | anchoreEnterpriseGlobal.licenseSecretName | string | `"anchore-enterprise-license"` |  |
-| anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.3.0"` |  |
+| anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.4.1"` |  |
 | anchoreEnterpriseGlobal.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseGlobal.imagePullSecretName | string | `"private-registry"` |  |
 | anchore-feeds-db.image.registry | string | `"registry1.dso.mil"` |  |
 | anchore-feeds-db.image.repository | string | `"ironbank/opensource/postgres/postgresql12"` |  |
-| anchore-feeds-db.image.tag | float | `12.12` |  |
+| anchore-feeds-db.image.tag | float | `12.14` |  |
 | anchore-feeds-db.global.imagePullSecrets[0] | string | `"private-registry"` |  |
 | anchore-feeds-db.externalEndpoint | string | `nil` |  |
 | anchore-feeds-db.postgresUser | string | `"anchoreengine"` |  |
@@ -383,7 +385,11 @@ helm install anchore chart/
 | anchoreEnterpriseFeeds.githubDriverEnabled | bool | `false` |  |
 | anchoreEnterpriseFeeds.githubDriverToken | string | `nil` |  |
 | anchoreEnterpriseFeeds.msrcDriverEnabled | bool | `false` |  |
+| anchoreEnterpriseFeeds.ubuntuExtraReleases | object | `{}` |  |
+| anchoreEnterpriseFeeds.debianExtraReleases | object | `{}` |  |
 | anchoreEnterpriseFeeds.rhelDriverConcurrency | int | `5` |  |
+| anchoreEnterpriseFeeds.ubuntuDriverGitUrl | string | `"https://git.launchpad.net/ubuntu-cve-tracker"` |  |
+| anchoreEnterpriseFeeds.ubuntuDriverGitBranch | string | `"master"` |  |
 | anchoreEnterpriseFeeds.extraEnv | list | `[]` |  |
 | anchoreEnterpriseFeeds.cycleTimers.driver_sync | int | `7200` |  |
 | anchoreEnterpriseFeeds.existingSecretName | string | `"anchore-enterprise-feeds-env"` |  |
@@ -490,7 +496,7 @@ helm install anchore chart/
 | anchoreEnterpriseNotifications.tolerations | list | `[]` |  |
 | anchoreEnterpriseNotifications.affinity | object | `{}` |  |
 | anchoreEnterpriseUi.enabled | bool | `true` |  |
-| anchoreEnterpriseUi.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.3.0"` |  |
+| anchoreEnterpriseUi.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.4.0"` |  |
 | anchoreEnterpriseUi.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseUi.imagePullSecretName | string | `"private-registry"` |  |
 | anchoreEnterpriseUi.extraEnv | list | `[]` |  |

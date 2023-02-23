@@ -425,8 +425,42 @@ Create database hostname string from supplied values file. Used for setting the 
   {{- end }}
 {{- end }}
 
+{{/*
+Allows sourcing of a specified file in the entrypoint of all containers when .Values.anchoreGlobal.doSourceAtEntry.enabled=true
+*/}}
 {{- define "doSourceFile" }}
 {{- if .Values.anchoreGlobal.doSourceAtEntry.enabled }}
     {{- printf "source %v;" .Values.anchoreGlobal.doSourceAtEntry.filePath }}
+{{- end }}
+{{- end }}
+
+{{/*
+Upon upgrades, checks if .Values.existingSecret=true and fails the upgrade if .Values.useExistingSecret is not set.
+*/}}
+{{- define "checkUpgradeForExistingSecret" }}
+{{- if and .Release.IsUpgrade .Values.anchoreGlobal.existingSecret (not .Values.anchoreGlobal.useExistingSecrets) }}
+    {{- fail "WARNING: As of chart v1.21.0 `.Values.anchoreGlobal.existingSecret` is no longer a valid configuration value. See the chart README for more instructions on configuring existing secrets - https://github.com/anchore/anchore-charts/blob/main/stable/anchore-engine/README.md#chart-version-1210" }}
+{{- end }}
+{{- end }}
+
+{{/*
+Upon upgrade, check if user is upgrading to chart v1.22.0+ (Enterprise v4.4.0). If they are, ensure that they are
+upgrading from Enterprise 4.2.0 or higher and error out if they're upgrading from an older version.
+*/}}
+{{- define "checkUpgradeCompatibility" }}
+{{- if and .Release.IsUpgrade (regexMatch "1.22.[0-9]+" .Chart.Version) }}
+    {{- $apiDeploymentContainers := (lookup "apps/v1" "Deployment" .Release.Namespace (include "anchore-engine.api.fullname" .)).spec.template.spec.containers }}
+    {{- range $index, $container := $apiDeploymentContainers }}
+        {{- if eq $container.name "anchore-engine-api" }}
+            {{- $apiContainerImage := $container.image }}
+            {{- $installedAnchoreVersion := (regexFind "v[0-9]+\\.[0-9]+\\.[0-9]+$" $apiContainerImage) }}
+
+            {{- if $installedAnchoreVersion }}
+                {{- if not (regexMatch "v4\\.[2-9]\\.[0-9]" ($installedAnchoreVersion | quote)) }}
+                {{- fail "WARNING - Anchore Enterprise v4.4.0 and v4.4.1 only supports upgrades from Enterprise v4.2.0 and higher. See release notes for more information - https://docs.anchore.com/current/docs/releasenotes/440/" }}
+                {{- end }}
+            {{- end }}
+        {{- end }}
+    {{- end }}
 {{- end }}
 {{- end }}

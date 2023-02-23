@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.22.3-bb.0]
+### Changed
+- Bumped chart version to `1.22.3`
+- Bumped Anchore Enterprise image tag to `4.4.1`
+- Bumped Anchore Enterprise UI image tag to `4.4.0`
+
 ## [1.21.1-bb.2]
 ### Changed
 - Renamed chart to `anchore` for OCI consistency

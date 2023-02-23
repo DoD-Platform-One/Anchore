@@ -65,6 +65,7 @@ data:
       oauth:
         enabled: {{ .Values.anchoreGlobal.oauthEnabled }}
         default_token_expiration_seconds: {{ .Values.anchoreGlobal.oauthTokenExpirationSeconds }}
+        refresh_token_expiration_seconds: {{ .Values.anchoreGlobal.oauthRefreshTokenExpirationSeconds }}
 
       # Set this to True to enable storing user passwords only as secure hashes in the db. This can dramatically increase CPU usage if you
       # don't also use oauth and tokens for internal communications (which requires keys/secret to be configured as well)
@@ -128,10 +129,20 @@ data:
             enabled: {{ default "true" (.Values.anchoreEnterpriseFeeds.centosDriverEnabled | quote) }}
           debian:
             enabled: {{ default "true" (.Values.anchoreEnterpriseFeeds.debianDriverEnabled | quote) }}
+          {{- if .Values.anchoreEnterpriseFeeds.debianExtraReleases }}
+            releases:
+            {{- toYaml .Values.anchoreEnterpriseFeeds.debianExtraReleases | nindent 14 }}
+          {{- end }}
           ol:
             enabled: {{ default "true" (.Values.anchoreEnterpriseFeeds.olDriverEnabled | quote) }}
           ubuntu:
             enabled: {{ default "true" (.Values.anchoreEnterpriseFeeds.ubuntuDriverEnabled | quote) }}
+          {{- if .Values.anchoreEnterpriseFeeds.ubuntuExtraReleases }}
+            releases:
+            {{- toYaml .Values.anchoreEnterpriseFeeds.ubuntuExtraReleases | nindent 14 }}
+          {{- end }}
+            git_url: {{ (.Values.anchoreEnterpriseFeeds.ubuntuDriverGitUrl | quote) }}
+            git_branch: {{ (.Values.anchoreEnterpriseFeeds.ubuntuDriverGitBranch | quote) }}
           rhel:
             enabled: {{ default "true" (.Values.anchoreEnterpriseFeeds.rhelDriverEnabled | quote) }}
             concurrency: {{ .Values.anchoreEnterpriseFeeds.rhelDriverConcurrency }}
