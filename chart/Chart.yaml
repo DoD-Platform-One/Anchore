@@ -1,6 +1,6 @@
 apiVersion: v2
 name: anchore
-version: 1.22.3-bb.0
+version: 1.23.0-bb.0
 appVersion: 1.1.0
 description: Anchore container analysis and policy evaluation engine service
 keywords:
@@ -47,7 +47,7 @@ dependencies:
    repository: oci://registry.dso.mil/platform-one/big-bang/apps/library-charts/gluon
 annotations:
   bigbang.dev/applicationVersions: |
-    - Enterprise: 4.4.1
+    - Enterprise: 4.5.0
     - Engine: 1.1.0
   # Note engine image won't be used at all if enterprise is enabled
   helm.sh/images: |
@@ -55,10 +55,10 @@ annotations:
       image: registry1.dso.mil/ironbank/anchore/engine/engine:1.1.0
     - name: enterprise
       condition: anchoreEnterpriseGlobal.enabled
-      image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.4.1
+      image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.5.0
     - name: postgresql12
       condition: postgresql.enabled
       image: registry1.dso.mil/ironbank/opensource/postgres/postgresql12:12.14
     - name: enterpriseui
       condition: anchoreEnterpriseGlobal.enabled
-      image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.4.0
+      image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.5.0
