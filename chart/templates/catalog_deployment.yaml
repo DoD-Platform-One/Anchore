@@ -119,6 +119,7 @@ spec:
         image: {{ .Values.anchoreGlobal.image }}
         imagePullPolicy: {{ .Values.anchoreGlobal.imagePullPolicy }}
         {{- end }}
+        securityContext: {{- toYaml .Values.anchoreCatalog.containerSecurityContext | nindent 10 }}
         command: ["/bin/sh", "-c"]
         {{- if .Values.anchoreEnterpriseGlobal.enabled }}
         args:
@@ -127,7 +128,6 @@ spec:
         args:
         - {{ print (include "doSourceFile" .) }} /docker-entrypoint.sh anchore-manager service start --no-auto-upgrade catalog
         {{- end }}
-        securityContext: {{- toYaml .Values.anchoreCatalog.containerSecurityContext | nindent 10 }}
         envFrom:
         {{- if not .Values.inject_secrets_via_env }}
         {{- if .Values.anchoreGlobal.useExistingSecrets }}
