@@ -1,6 +1,6 @@
 # anchore
 
-![Version: 1.23.0-bb.0](https://img.shields.io/badge/Version-1.23.0--bb.0-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.24.1-bb.0](https://img.shields.io/badge/Version-1.24.1--bb.0-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -93,6 +93,7 @@ helm install anchore chart/
 | postgresql.postgresUser | string | `"anchoreengine"` |  |
 | postgresql.postgresPassword | string | `"anchore-postgres,123"` |  |
 | postgresql.postgresDatabase | string | `"anchore"` |  |
+| postgresql.postgresPort | int | `5432` |  |
 | postgresql.securityContext.enabled | bool | `true` |  |
 | postgresql.securityContext.fsGroup | int | `26` |  |
 | postgresql.securityContext.runAsUser | int | `26` |  |
@@ -139,7 +140,7 @@ helm install anchore chart/
 | anchoreGlobal.useExistingSecrets | bool | `false` |  |
 | anchoreGlobal.existingSecretName | string | `"anchore-engine-env"` |  |
 | anchoreGlobal.doSourceAtEntry.enabled | bool | `false` |  |
-| anchoreGlobal.doSourceAtEntry.filePath | string | `"/vault/secrets/config"` |  |
+| anchoreGlobal.doSourceAtEntry.filePaths[0] | string | `"/vault/secrets/config"` |  |
 | anchoreGlobal.extraVolumes | list | `[]` |  |
 | anchoreGlobal.extraVolumeMounts | list | `[]` |  |
 | anchoreGlobal.scratchVolume.fixGroupPermissions | bool | `false` |  |
@@ -149,6 +150,7 @@ helm install anchore chart/
 | anchoreGlobal.securityContext.runAsUser | int | `1000` |  |
 | anchoreGlobal.securityContext.runAsGroup | int | `1000` |  |
 | anchoreGlobal.securityContext.fsGroup | int | `1000` |  |
+| anchoreGlobal.containerSecurityContext | object | `{}` |  |
 | anchoreGlobal.serviceDir | string | `"/anchore_service"` |  |
 | anchoreGlobal.logLevel | string | `"INFO"` |  |
 | anchoreGlobal.imageAnalyzeTimeoutSeconds | int | `36000` |  |
@@ -330,7 +332,7 @@ helm install anchore chart/
 | anchoreEngineUpgradeJob.annotations | object | `{}` |  |
 | anchoreEnterpriseGlobal.enabled | bool | `false` |  |
 | anchoreEnterpriseGlobal.licenseSecretName | string | `"anchore-enterprise-license"` |  |
-| anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.5.0"` |  |
+| anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.6.0"` |  |
 | anchoreEnterpriseGlobal.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseGlobal.imagePullSecretName | string | `"private-registry"` |  |
 | anchore-feeds-db.image.registry | string | `"registry1.dso.mil"` |  |
@@ -341,6 +343,7 @@ helm install anchore chart/
 | anchore-feeds-db.postgresUser | string | `"anchoreengine"` |  |
 | anchore-feeds-db.postgresPassword | string | `"anchore-postgres,123"` |  |
 | anchore-feeds-db.postgresDatabase | string | `"anchore-feeds"` |  |
+| anchore-feeds-db.postgresPort | int | `5432` |  |
 | anchore-feeds-db.persistence.resourcePolicy | string | `"keep"` |  |
 | anchore-feeds-db.persistence.size | string | `"20Gi"` |  |
 | anchore-feeds-db.persistence.subPath | string | `"pgdata"` |  |
@@ -368,6 +371,7 @@ helm install anchore chart/
 | anchore-feeds-gem-db.postgresUser | string | `"postgres"` |  |
 | anchore-feeds-gem-db.postgresPassword | string | `"anchore-postgres,123"` |  |
 | anchore-feeds-gem-db.postgresDatabase | string | `"gems"` |  |
+| anchore-feeds-gem-db.postgresPort | int | `5432` |  |
 | anchore-feeds-gem-db.persistence.enabled | bool | `false` |  |
 | anchore-feeds-gem-db.postgresqlDataDir | string | `"/var/lib/postgresql/data"` |  |
 | anchore-feeds-gem-db.securityContext.enabled | bool | `true` |  |
@@ -496,7 +500,7 @@ helm install anchore chart/
 | anchoreEnterpriseNotifications.tolerations | list | `[]` |  |
 | anchoreEnterpriseNotifications.affinity | object | `{}` |  |
 | anchoreEnterpriseUi.enabled | bool | `true` |  |
-| anchoreEnterpriseUi.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.5.0"` |  |
+| anchoreEnterpriseUi.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.6.0"` |  |
 | anchoreEnterpriseUi.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseUi.imagePullSecretName | string | `"private-registry"` |  |
 | anchoreEnterpriseUi.extraEnv | list | `[]` |  |

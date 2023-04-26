@@ -122,14 +122,15 @@ postgresql:
     imagePullSecrets:
       - private-registry
   # To use an external DB or Google CloudSQL in GKE, uncomment & set 'enabled: false'
-  # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
+  # externalEndpoint, postgresUser, postgresPassword, postgresDatabase, & postgresPort are required values for external postgres
   # enabled: false
   # If enabled=false specify an external (already existing) postgres deployment for use.
-  # Set to the host and port. eg. mypostgres.myserver.io:5432
+  # Set to the hostname eg. mypostgres.myserver.io
   externalEndpoint: Null
   postgresUser: anchoreengine
   postgresPassword: anchore-postgres,123
   postgresDatabase: anchore
+  postgresPort: 5432
 
   securityContext:
     enabled: true
@@ -305,7 +306,8 @@ anchoreGlobal:
   # does `source {{ filePath }}` before starting services
   doSourceAtEntry:
     enabled: false
-    filePath: "/vault/secrets/config"
+    filePaths:
+      - "/vault/secrets/config"
 
   extraVolumes: []
   # - name: config
@@ -339,6 +341,9 @@ anchoreGlobal:
     runAsUser: 1000
     runAsGroup: 1000
     fsGroup: 1000
+
+  # Specify your container securityContext here
+  containerSecurityContext: {}
 
   ###
   # Start of General Anchore Configurations (populates /config/config.yaml)
@@ -927,7 +932,7 @@ anchoreEnterpriseGlobal:
   # Create this secret with the following command - kubectl create secret generic anchore-enterprise-license --from-file=license.yaml=<PATH TO LICENSE.YAML>
   licenseSecretName: anchore-enterprise-license
 
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.5.0
+  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.6.0
   imagePullPolicy: IfNotPresent
   # Name of the kubernetes secret containing your dockerhub creds with access to the anchore enterprise images.
   # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
@@ -945,14 +950,15 @@ anchore-feeds-db:
     imagePullSecrets:
       - private-registry
   # To use an external DB or Google CloudSQL, uncomment & set 'enabled: false'
-  # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
+  # externalEndpoint, postgresUser, postgresPassword, postgresDatabase, & postgresPort are required values for external postgres
   # enabled: false
   # if enabled=false specify an external (already existing) postgres deployment for use.
-  # Set to the host and port. eg. mypostgres.myserver.io:5432
+  # Set to the hostname eg. mypostgres.myserver.io
   externalEndpoint: Null
   postgresUser: anchoreengine
   postgresPassword: anchore-postgres,123
   postgresDatabase: anchore-feeds
+  postgresPort: 5432
 
   # Configure size of the persistent volume used with helm managed chart.
   # This should be commented out if using an external endpoint.
@@ -1024,14 +1030,15 @@ anchore-feeds-db:
 # Database is used for temporarily loading the Ruby gem vulnerability data by the Enterprise Feeds service.
 anchore-feeds-gem-db:
   # To use an external DB uncomment & set 'enabled: false'
-  # externalEndpoint, postgresUser, postgresPassword & postgresDatabase are required values for external postgres
+  # externalEndpoint, postgresUser, postgresPassword, postgresDatabase, & postgresPort are required values for external postgres
   # enabled: false
   # If enabled=false specify an external (already existing) postgres deployment for use.
-  # Set to the host and port. eg. mypostgres.myserver.io:5432
+  # Set to the hostname eg. mypostgres.myserver.io
   externalEndpoint: Null
   postgresUser: postgres
   postgresPassword: anchore-postgres,123
   postgresDatabase: gems
+  postgresPort: 5432
   persistence:
     enabled: false
   postgresqlDataDir: /var/lib/postgresql/data
@@ -1376,7 +1383,7 @@ anchoreEnterpriseNotifications:
 anchoreEnterpriseUi:
   # If enabled is set to false, set ui-redis.enabled to false to ensure that helm doesn't stand up a unneccessary redis instance.
   enabled: true
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.5.0
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.6.0
   imagePullPolicy: IfNotPresent
   imagePullSecretName: private-registry
 
