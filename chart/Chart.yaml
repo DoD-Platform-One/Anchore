@@ -1,6 +1,6 @@
 apiVersion: v2
 name: anchore
-version: 1.24.1-bb.3
+version: 1.24.1-bb.4
 appVersion: 1.1.0
 description: Anchore container analysis and policy evaluation engine service
 keywords:
@@ -38,13 +38,13 @@ dependencies:
    condition: anchore-feeds-gem-db.enabled,anchoreEnterpriseFeeds.gemDriverEnabled
    alias: anchore-feeds-gem-db
  - name: redis
-   version: "16.12.3-bb.3"
+   version: 17.10.2-bb.0
    repository: "oci://registry1.dso.mil/bigbang"
    condition: ui-redis.enabled,anchoreEnterpriseGlobal.enabled
    alias: ui-redis
  - name: gluon
-   version: "0.3.1"
-   repository: oci://registry.dso.mil/platform-one/big-bang/apps/library-charts/gluon
+   version: "0.3.2"
+   repository: "oci://registry1.dso.mil/bigbang"
 annotations:
   bigbang.dev/applicationVersions: |
     - Enterprise: 4.6.0
