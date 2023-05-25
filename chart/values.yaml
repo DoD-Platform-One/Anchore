@@ -116,8 +116,8 @@ postgresql:
   # Use Ironbank image + pull secrets
   image:
     registry: registry1.dso.mil
-    repository: ironbank/opensource/postgres/postgresql12
-    tag: 12.14
+    repository: ironbank/opensource/postgres/postgresql
+    tag: "13.10"
   global:
     imagePullSecrets:
       - private-registry
@@ -126,33 +126,22 @@ postgresql:
   # enabled: false
   # If enabled=false specify an external (already existing) postgres deployment for use.
   # Set to the hostname eg. mypostgres.myserver.io
+
   externalEndpoint: Null
-  postgresUser: anchoreengine
-  postgresPassword: anchore-postgres,123
-  postgresDatabase: anchore
-  postgresPort: 5432
+  # auth:
+  #   postgresUser: anchoreengine
+  #   postgresPassword: anchore-postgres,123
+  #   postgresDatabase: anchore
+  #   postgresPort: 5432
 
-  securityContext:
-    enabled: true
-    fsGroup: 26
-    runAsUser: 26
-    runAsGroup: 26
+  auth:
+    postgresPassword: ""
+    username: "anchoreengine"
+    password: "anchore-postgres,123"
+    database: "anchore"
 
-  containerSecurityContext:
-    enabled: true
-    runAsUser: 26
-    runAsGroup: 26
-    capabilities:
-      drop:
-        - ALL
-  # Configure size of the persistent volume used with helm managed chart.
-  # This should be commented out if using an external endpoint.
-  persistence:
-    resourcePolicy: keep
-    size: 20Gi
-    subPath: "data/pgdata"
-    mountPath: /var/lib/postgresql
-  postgresqlDataDir: /var/lib/postgresql/data
+  containerPorts:
+    postgresql: 5432
 
   # Configure resource limits and requests for the postgresql deployment
   resources:
@@ -173,11 +162,35 @@ postgresql:
         cpu: 100m
         memory: 256Mi
 
-  # Set the configs to allow listening and connecting from other pods
-  postgresConfiguration: {"listen_addresses": "*"}
-  pgHbaConfiguration: |-
-    local all all md5
-    host all all all md5
+  primary:
+    podSecurityContext:
+      enabled: true
+      fsGroup: 26
+      runAsUser: 26
+      runAsGroup: 26
+
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 26
+      runAsGroup: 26
+      capabilities:
+        drop:
+              - ALL
+
+    # Set the configs to allow listening and connecting from other pods
+    postgresConfiguration: {"listen_addresses": "*"}
+    pgHbaConfiguration: |-
+      local all all md5
+      host all all all md5
+
+    # Configure size of the persistent volume used with helm managed chart.
+    # This should be commented out if using an external endpoint.
+    persistence:
+      resourcePolicy: keep
+      size: 20Gi
+      subPath: "data/pgdata"
+      mountPath: /var/lib/postgresql
+    postgresqlDataDir: /var/lib/postgresql/data
 
   # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
@@ -944,8 +957,8 @@ anchore-feeds-db:
   # Use Ironbank image + pull secrets
   image:
     registry: registry1.dso.mil
-    repository: ironbank/opensource/postgres/postgresql12
-    tag: 12.14
+    repository: ironbank/opensource/postgres/postgresql
+    tag: "13.10"
   global:
     imagePullSecrets:
       - private-registry
@@ -955,19 +968,14 @@ anchore-feeds-db:
   # if enabled=false specify an external (already existing) postgres deployment for use.
   # Set to the hostname eg. mypostgres.myserver.io
   externalEndpoint: Null
-  postgresUser: anchoreengine
-  postgresPassword: anchore-postgres,123
-  postgresDatabase: anchore-feeds
-  postgresPort: 5432
+  auth:
+    postgresPassword: ""
+    username: "anchoreengine"
+    password: "anchore-postgres,123"
+    database: "anchore"
 
-  # Configure size of the persistent volume used with helm managed chart.
-  # This should be commented out if using an external endpoint.
-  persistence:
-    resourcePolicy: keep
-    size: 20Gi
-    subPath: "pgdata"
-    mountPath: /var/lib/postgresql
-  postgresqlDataDir: /var/lib/postgresql/data
+  containerPorts:
+    postgresql: 5432
 
   # Configure resource limits and requests for the postgresql deployment
   resources:
@@ -988,25 +996,35 @@ anchore-feeds-db:
         cpu: 100m
         memory: 256Mi
 
-  securityContext:
-    enabled: true
-    fsGroup: 26
-    runAsUser: 26
-    runAsGroup: 26
+  primary:
+    # Configure size of the persistent volume used with helm managed chart.
+    # This should be commented out if using an external endpoint.
+    persistence:
+      resourcePolicy: keep
+      size: 20Gi
+      subPath: "pgdata"
+      mountPath: /var/lib/postgresql
+    postgresqlDataDir: /var/lib/postgresql/data
 
-  containerSecurityContext:
-    enabled: true
-    runAsUser: 26
-    runAsGroup: 26
-    capabilities:
-      drop:
-        - ALL
+    podSecurityContext:
+      enabled: true
+      fsGroup: 26
+      runAsUser: 26
+      runAsGroup: 26
 
-  # Set the configs to allow listening and connecting from other pods
-  postgresqlConfiguration: {"listen_addresses": "*"}
-  pgHbaConfiguration: |-
-    local all all md5
-    host all all all md5
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 26
+      runAsGroup: 26
+      capabilities:
+        drop:
+          - ALL
+
+    # Set the configs to allow listening and connecting from other pods
+    postgresqlConfiguration: {"listen_addresses": "*"}
+    pgHbaConfiguration: |-
+      local all all md5
+      host all all all md5
 
   # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
@@ -1035,27 +1053,34 @@ anchore-feeds-gem-db:
   # If enabled=false specify an external (already existing) postgres deployment for use.
   # Set to the hostname eg. mypostgres.myserver.io
   externalEndpoint: Null
-  postgresUser: postgres
-  postgresPassword: anchore-postgres,123
-  postgresDatabase: gems
-  postgresPort: 5432
-  persistence:
-    enabled: false
-  postgresqlDataDir: /var/lib/postgresql/data
 
-  securityContext:
-    enabled: true
-    fsGroup: 26
-    runAsUser: 26
-    runAsGroup: 26
+  auth:
+    postgresPassword: ""
+    username: "anchoreengine"
+    password: "anchore-postgres,123"
+    database: "anchore"
 
-  containerSecurityContext:
-    enabled: true
-    runAsUser: 26
-    runAsGroup: 26
-    capabilities:
-      drop:
-        - ALL
+  containerPorts:
+    postgresql: 5432
+
+  primary:
+    persistence:
+      enabled: false
+    postgresqlDataDir: /var/lib/postgresql/data
+
+    podSecurityContext:
+      enabled: true
+      fsGroup: 26
+      runAsUser: 26
+      runAsGroup: 26
+
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 26
+      runAsGroup: 26
+      capabilities:
+        drop:
+          - ALL
 
 # Configure & enable the Anchore Enterprise on-prem feeds service.
 anchoreEnterpriseFeeds:
