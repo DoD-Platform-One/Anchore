@@ -14,8 +14,8 @@ metadata:
     {{ toYaml . | nindent 4 }}
     {{- end }}
 data:
-  ANCHORE_DB_NAME: {{ index .Values "anchore-feeds-db" "postgresDatabase" | quote }}
-  ANCHORE_DB_USER: {{ index .Values "anchore-feeds-db" "postgresUser"  | quote }}
+  ANCHORE_DB_NAME: {{ index .Values "anchore-feeds-db" "auth" "database" | quote }}
+  ANCHORE_DB_USER: {{ index .Values "anchore-feeds-db" "auth" "username"  | quote }}
   {{- if and (index .Values "anchore-feeds-db" "externalEndpoint") (not (index .Values "anchore-feeds-db" "enabled")) }}
   ANCHORE_DB_HOST: {{ index .Values "anchore-feeds-db" "externalEndpoint" | quote }}
   {{- else if and (index .Values "cloudsql" "enabled") (not (index .Values "anchore-feeds-db" "enabled")) }}
@@ -24,8 +24,8 @@ data:
   ANCHORE_DB_HOST: "{{ template "postgres.anchore-feeds-db.fullname" . }}:5432"
   {{- end }}
   {{- if .Values.anchoreEnterpriseFeeds.gemDriverEnabled }}
-  ANCHORE_GEM_DB_NAME: {{ index .Values "anchore-feeds-gem-db" "postgresDatabase" | quote }}
-  ANCHORE_GEM_DB_USER: {{ index .Values "anchore-feeds-gem-db" "postgresUser" | quote }}
+  ANCHORE_GEM_DB_NAME: {{ index .Values "anchore-feeds-gem-db" "auth" "database" | quote }}
+  ANCHORE_GEM_DB_USER: {{ index .Values "anchore-feeds-gem-db" "auth" "username" | quote }}
   ANCHORE_GEM_DB_HOST: "{{ default (include "postgres.anchore-feeds-gem-db.fullname" .) (index .Values "anchore-feeds-gem-db" "externalEndpoint") }}:5432"
   {{- end }}
 {{- end }}
