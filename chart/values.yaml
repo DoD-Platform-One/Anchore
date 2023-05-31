@@ -984,6 +984,12 @@ anchore-feeds-db:
   containerPorts:
     postgresql: 5432
 
+  securityContext:
+    enabled: true
+    fsGroup: 26
+    runAsUser: 26
+    runAsGroup: 26
+
   # Configure resource limits and requests for the postgresql deployment
   resources:
     limits:
@@ -1060,6 +1066,12 @@ anchore-feeds-gem-db:
   # If enabled=false specify an external (already existing) postgres deployment for use.
   # Set to the hostname eg. mypostgres.myserver.io
   externalEndpoint: Null
+
+  securityContext:
+    enabled: true
+    fsGroup: 26
+    runAsUser: 26
+    runAsGroup: 26
 
   auth:
     postgresPassword: ""
