@@ -1,6 +1,6 @@
 # anchore
 
-![Version: 1.24.1-bb.7](https://img.shields.io/badge/Version-1.24.1--bb.7-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.24.1-bb.8](https://img.shields.io/badge/Version-1.24.1--bb.8-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -350,6 +350,10 @@ helm install anchore chart/
 | anchore-feeds-db.auth.password | string | `"anchore-postgres,123"` |  |
 | anchore-feeds-db.auth.database | string | `"anchore"` |  |
 | anchore-feeds-db.containerPorts.postgresql | int | `5432` |  |
+| anchore-feeds-db.securityContext.enabled | bool | `true` |  |
+| anchore-feeds-db.securityContext.fsGroup | int | `26` |  |
+| anchore-feeds-db.securityContext.runAsUser | int | `26` |  |
+| anchore-feeds-db.securityContext.runAsGroup | int | `26` |  |
 | anchore-feeds-db.resources.limits.cpu | string | `"100m"` |  |
 | anchore-feeds-db.resources.limits.memory | string | `"256Mi"` |  |
 | anchore-feeds-db.resources.requests.cpu | string | `"100m"` |  |
@@ -374,6 +378,10 @@ helm install anchore chart/
 | anchore-feeds-db.primary.postgresqlConfiguration.listen_addresses | string | `"*"` |  |
 | anchore-feeds-db.primary.pgHbaConfiguration | string | `"local all all md5\nhost all all all md5"` |  |
 | anchore-feeds-gem-db.externalEndpoint | string | `nil` |  |
+| anchore-feeds-gem-db.securityContext.enabled | bool | `true` |  |
+| anchore-feeds-gem-db.securityContext.fsGroup | int | `26` |  |
+| anchore-feeds-gem-db.securityContext.runAsUser | int | `26` |  |
+| anchore-feeds-gem-db.securityContext.runAsGroup | int | `26` |  |
 | anchore-feeds-gem-db.auth.postgresPassword | string | `""` |  |
 | anchore-feeds-gem-db.auth.username | string | `"anchoreengine"` |  |
 | anchore-feeds-gem-db.auth.password | string | `"anchore-postgres,123"` |  |
