@@ -162,13 +162,21 @@ postgresql:
         cpu: 100m
         memory: 256Mi
 
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 26
+    runAsGroup: 26
+    capabilities:
+      drop:
+            - ALL
+
   primary:
     podSecurityContext:
       enabled: true
       fsGroup: 26
       runAsUser: 26
       runAsGroup: 26
-
+      
     containerSecurityContext:
       enabled: true
       runAsUser: 26
@@ -176,7 +184,6 @@ postgresql:
       capabilities:
         drop:
               - ALL
-
     # Set the configs to allow listening and connecting from other pods
     postgresConfiguration: {"listen_addresses": "*"}
     pgHbaConfiguration: |-
