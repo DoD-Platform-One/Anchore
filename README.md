@@ -1,6 +1,6 @@
 # anchore
 
-![Version: 1.24.1-bb.6](https://img.shields.io/badge/Version-1.24.1--bb.6-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.24.1-bb.7](https://img.shields.io/badge/Version-1.24.1--bb.7-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -103,21 +103,25 @@ helm install anchore chart/
 | postgresql.metrics.resources.limits.memory | string | `"256Mi"` |  |
 | postgresql.metrics.resources.requests.cpu | string | `"100m"` |  |
 | postgresql.metrics.resources.requests.memory | string | `"256Mi"` |  |
-| postgresql.primary.podSecurityContext.enabled | bool | `true` |  |
-| postgresql.primary.podSecurityContext.fsGroup | int | `26` |  |
-| postgresql.primary.podSecurityContext.runAsUser | int | `26` |  |
-| postgresql.primary.podSecurityContext.runAsGroup | int | `26` |  |
 | postgresql.containerSecurityContext.enabled | bool | `true` |  |
 | postgresql.containerSecurityContext.runAsUser | int | `26` |  |
 | postgresql.containerSecurityContext.runAsGroup | int | `26` |  |
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| postgresql.containerSecurityContext.postgresConfiguration.listen_addresses | string | `"*"` |  |
-| postgresql.containerSecurityContext.pgHbaConfiguration | string | `"local all all md5\nhost all all all md5"` |  |
-| postgresql.containerSecurityContext.persistence.resourcePolicy | string | `"keep"` |  |
-| postgresql.containerSecurityContext.persistence.size | string | `"20Gi"` |  |
-| postgresql.containerSecurityContext.persistence.subPath | string | `"data/pgdata"` |  |
-| postgresql.containerSecurityContext.persistence.mountPath | string | `"/var/lib/postgresql"` |  |
-| postgresql.containerSecurityContext.postgresqlDataDir | string | `"/var/lib/postgresql/data"` |  |
+| postgresql.primary.podSecurityContext.enabled | bool | `true` |  |
+| postgresql.primary.podSecurityContext.fsGroup | int | `26` |  |
+| postgresql.primary.podSecurityContext.runAsUser | int | `26` |  |
+| postgresql.primary.podSecurityContext.runAsGroup | int | `26` |  |
+| postgresql.primary.containerSecurityContext.enabled | bool | `true` |  |
+| postgresql.primary.containerSecurityContext.runAsUser | int | `26` |  |
+| postgresql.primary.containerSecurityContext.runAsGroup | int | `26` |  |
+| postgresql.primary.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| postgresql.primary.postgresConfiguration.listen_addresses | string | `"*"` |  |
+| postgresql.primary.pgHbaConfiguration | string | `"local all all md5\nhost all all all md5"` |  |
+| postgresql.primary.persistence.resourcePolicy | string | `"keep"` |  |
+| postgresql.primary.persistence.size | string | `"20Gi"` |  |
+| postgresql.primary.persistence.subPath | string | `"data/pgdata"` |  |
+| postgresql.primary.persistence.mountPath | string | `"/var/lib/postgresql"` |  |
+| postgresql.primary.postgresqlDataDir | string | `"/var/lib/postgresql/data"` |  |
 | cloudsql.enabled | bool | `false` |  |
 | cloudsql.extraArgs | list | `[]` |  |
 | cloudsql.instance | string | `""` |  |
