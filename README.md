@@ -1,6 +1,6 @@
 # anchore
 
-![Version: 1.24.1-bb.8](https://img.shields.io/badge/Version-1.24.1--bb.8-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.24.1-bb.5](https://img.shields.io/badge/Version-1.24.1--bb.5-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -90,11 +90,11 @@ helm install anchore chart/
 | postgresql.image.tag | string | `"13.10"` |  |
 | postgresql.global.imagePullSecrets[0] | string | `"private-registry"` |  |
 | postgresql.externalEndpoint | string | `nil` |  |
-| postgresql.auth.postgresPassword | string | `""` |  |
-| postgresql.auth.username | string | `"anchoreengine"` |  |
-| postgresql.auth.password | string | `"anchore-postgres,123"` |  |
-| postgresql.auth.database | string | `"anchore"` |  |
-| postgresql.containerPorts.postgresql | int | `5432` |  |
+| postgresql.externalEndpoint | string | `nil` |  |
+| postgresql.postgresUser | string | `"anchoreengine"` |  |
+| postgresql.postgresPassword | string | `"anchore-postgres,123"` |  |
+| postgresql.postgresDatabase | string | `"anchore"` |  |
+| postgresql.postgresPort | int | `5432` |  |
 | postgresql.resources.limits.cpu | string | `"200m"` |  |
 | postgresql.resources.limits.memory | string | `"1024Mi"` |  |
 | postgresql.resources.requests.cpu | string | `"200m"` |  |
@@ -345,11 +345,11 @@ helm install anchore chart/
 | anchore-feeds-db.image.tag | string | `"13.10"` |  |
 | anchore-feeds-db.global.imagePullSecrets[0] | string | `"private-registry"` |  |
 | anchore-feeds-db.externalEndpoint | string | `nil` |  |
-| anchore-feeds-db.auth.postgresPassword | string | `""` |  |
-| anchore-feeds-db.auth.username | string | `"anchoreengine"` |  |
-| anchore-feeds-db.auth.password | string | `"anchore-postgres,123"` |  |
-| anchore-feeds-db.auth.database | string | `"anchore"` |  |
-| anchore-feeds-db.containerPorts.postgresql | int | `5432` |  |
+| anchore-feeds-db.externalEndpoint | string | `nil` |  |
+| anchore-feeds-db.postgresUser | string | `"anchoreengine"` |  |
+| anchore-feeds-db.postgresPassword | string | `"anchore-postgres,123"` |  |
+| anchore-feeds-db.postgresDatabase | string | `"anchore"` |  |
+| anchore-feeds-db.postgresPort | int | `5432` |  |
 | anchore-feeds-db.securityContext.enabled | bool | `true` |  |
 | anchore-feeds-db.securityContext.fsGroup | int | `26` |  |
 | anchore-feeds-db.securityContext.runAsUser | int | `26` |  |
@@ -382,11 +382,11 @@ helm install anchore chart/
 | anchore-feeds-gem-db.securityContext.fsGroup | int | `26` |  |
 | anchore-feeds-gem-db.securityContext.runAsUser | int | `26` |  |
 | anchore-feeds-gem-db.securityContext.runAsGroup | int | `26` |  |
-| anchore-feeds-gem-db.auth.postgresPassword | string | `""` |  |
-| anchore-feeds-gem-db.auth.username | string | `"anchoreengine"` |  |
-| anchore-feeds-gem-db.auth.password | string | `"anchore-postgres,123"` |  |
-| anchore-feeds-gem-db.auth.database | string | `"anchore"` |  |
-| anchore-feeds-gem-db.containerPorts.postgresql | int | `5432` |  |
+| anchore-feeds-gem-db.externalEndpoint | string | `nil` |  |
+| anchore-feeds-gem-db.postgresUser | string | `"anchoreengine"` |  |
+| anchore-feeds-gem-db.postgresPassword | string | `"anchore-postgres,123"` |  |
+| anchore-feeds-gem-db.postgresDatabase | string | `"anchore"` |  |
+| anchore-feeds-gem-db.postgresPort | int | `5432` |  |
 | anchore-feeds-gem-db.primary.persistence.enabled | bool | `false` |  |
 | anchore-feeds-gem-db.primary.postgresqlDataDir | string | `"/var/lib/postgresql/data"` |  |
 | anchore-feeds-gem-db.primary.podSecurityContext.enabled | bool | `true` |  |
