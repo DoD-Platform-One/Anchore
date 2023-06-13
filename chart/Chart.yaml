@@ -1,6 +1,6 @@
 apiVersion: v2
 name: anchore
-version: 1.24.1-bb.8
+version: 1.24.1-bb.5
 appVersion: 1.1.0
 description: Anchore container analysis and policy evaluation engine service
 keywords:
@@ -24,16 +24,16 @@ engine: gotpl
 icon: https://anchoreprd.wpengine.com/wp-content/uploads/2021/12/favicon.png
 dependencies:
  - name: postgresql
-   version: "12.4.3"
+   version: "10.3.13"
    repository: "file://./deps/postgresql"
    condition: postgresql.enabled
  - name: postgresql
-   version: "12.4.3"
+   version: "10.3.13"
    repository: "file://./deps/postgresql"
    condition: anchore-feeds-db.enabled,anchoreEnterpriseGlobal.enabled
    alias: anchore-feeds-db
  - name: postgresql
-   version: "12.4.3"
+   version: "10.3.13"
    repository: "file://./deps/postgresql"
    condition: anchore-feeds-gem-db.enabled,anchoreEnterpriseFeeds.gemDriverEnabled
    alias: anchore-feeds-gem-db
@@ -43,7 +43,7 @@ dependencies:
    condition: ui-redis.enabled,anchoreEnterpriseGlobal.enabled
    alias: ui-redis
  - name: gluon
-   version: "0.3.2"
+   version: "0.4.0"
    repository: "oci://registry1.dso.mil/bigbang"
 annotations:
   bigbang.dev/applicationVersions: |

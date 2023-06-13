@@ -128,20 +128,11 @@ postgresql:
   # Set to the hostname eg. mypostgres.myserver.io
 
   externalEndpoint: Null
-  # auth:
-  #   postgresUser: anchoreengine
-  #   postgresPassword: anchore-postgres,123
-  #   postgresDatabase: anchore
-  #   postgresPort: 5432
-
-  auth:
-    postgresPassword: ""
-    username: "anchoreengine"
-    password: "anchore-postgres,123"
-    database: "anchore"
-
-  containerPorts:
-    postgresql: 5432
+  externalEndpoint: Null
+  postgresUser: anchoreengine
+  postgresPassword: anchore-postgres,123
+  postgresDatabase: anchore
+  postgresPort: 5432
 
   # Configure resource limits and requests for the postgresql deployment
   resources:
@@ -975,14 +966,11 @@ anchore-feeds-db:
   # if enabled=false specify an external (already existing) postgres deployment for use.
   # Set to the hostname eg. mypostgres.myserver.io
   externalEndpoint: Null
-  auth:
-    postgresPassword: ""
-    username: "anchoreengine"
-    password: "anchore-postgres,123"
-    database: "anchore"
-
-  containerPorts:
-    postgresql: 5432
+  externalEndpoint: Null
+  postgresUser: anchoreengine
+  postgresPassword: anchore-postgres,123
+  postgresDatabase: anchore
+  postgresPort: 5432
 
   securityContext:
     enabled: true
@@ -1073,14 +1061,11 @@ anchore-feeds-gem-db:
     runAsUser: 26
     runAsGroup: 26
 
-  auth:
-    postgresPassword: ""
-    username: "anchoreengine"
-    password: "anchore-postgres,123"
-    database: "anchore"
-
-  containerPorts:
-    postgresql: 5432
+  externalEndpoint: Null
+  postgresUser: anchoreengine
+  postgresPassword: anchore-postgres,123
+  postgresDatabase: anchore
+  postgresPort: 5432
 
   primary:
     persistence:
