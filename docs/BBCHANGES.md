@@ -1,19 +1,15 @@
 # Changes needed for Big Bang and Ironbank Images
 
-Due to how Big Bang is making use of Anchore (from within Umbrella) there were values and chart changes that needed to be made.
-Additionally, the Ironbank images function in slightly different ways than upstream Dockerhub images, so additional
-modifications were made to support their use.
-
-This provides a log of these changes to make updates from upstream faster.
+The Big Bang team had to change some values from upstream because of how Big Bang makes use of Anchore from within Umbrella. We also made some additional modifications that were necessary because the Ironbank images our implementation of Anchore uses function slightly differently from the coresponding upstream Dockerhub images. This document outlines these changes so that you can verify that none of them have been overwritten by an update. 
 
 ## Big Bang Modifications
 
-Added at the top of the values file are changes to support Istio, optional network policies, automated license creation, monitoring, and SSO.
+1) To support Istio optional network policies, automated license creation, monitoring, and SSO, the following changes should be present at the top of chart/values.yaml:
 
 ```yaml
 # Big Bang Values
 # ---------------
-hostname: bigbang.dev
+domain: bigbang.dev
 
 istio:
   # Toggle istio integration
@@ -76,23 +72,21 @@ sso:
 nameOverride: "anchore-engine"
 ```
 
-All chart changes are located under the `chart/templates/bigbang` directory. In summary:
+2) All chart changes are located under the `chart/templates/bigbang` directory. These are currently:
 
-- Creation of virtual services for the UI and API
 - Automated creation of the license secret
 - Creation of an SSO secret with the above SSO values
 - Automation of SSO configuration through a k8s job
-- Automated creation of an OAuth cert secret if needed (and this secret name is referenced under `anchoreGlobal.saml`)
 - Creation of secrets with database credentials from postgres and anchore-feeds-db values
 - Automated creation and synchronization of the Postgres databases, database users, and passwords through k8s jobs
 - Added analyzerService.yaml to support metrics for analyzer
 - Added service monitors for all exposed metrics
 
-As additional Big Bang changes are made they should be added in these spots and this doc updated to reflect that.
+Verify that these are present. As additional Big Bang changes are made, add them to this directory and update this document to reflect that.
 
 ## Ironbank Modifications
 
-All images were updated to be from Ironbank. Additionally, an image pull secret was specified to enable Umbrella to pull them correctly. In the values file:
+3) Check chart/values.yaml and verify that all the following images are actually being pulled from registry1.dso.mil and not from the external upstream (note: the version numbers will be different from what is in this document):
 
 ```yaml
 postgresql:
@@ -115,36 +109,41 @@ anchoreEnterpriseUi:
   image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:2.4.1
   imagePullSecretName: private-registry
 ```
+4) An image pull secret should be specified so that Umbrella can pull the images above correctly. To check this, make sure you see this section in chart/values.yaml:
+```
+    imagePullSecrets:
+      - private-registry
+```
 
-To support the Ironbank Postgres image, additional configuration has to be set in the values file:
+5) To support the Ironbank Postgres image, additional configuration has to be set in chart/values.yaml:
 
 ```yaml
 postgresql:
   persistence:
-    resourcePolicy: nil
+    resourcePolicy: keep
     size: 20Gi
-    subPath: "pgdata"
+    subPath: "data/pgdata"
     mountPath: /var/lib/postgresql
   # Set the configs to allow listening and connecting from other pods
-  postgresConfig: {"listen_addresses": "*"}
-  pgHbaConf: |-
+  postgresConfiguration: {"listen_addresses": "*"}
+  pgHbaConfiguration: |-
     local all all md5
     host all all all md5
 
 anchore-feeds-db:
   persistence:
-    resourcePolicy: nil
+    resourcePolicy: keep
     size: 20Gi
     subPath: "pgdata"
     mountPath: /var/lib/postgresql
   # Set the configs to allow listening and connecting from other pods
-  postgresConfig: {"listen_addresses": "*"}
-  pgHbaConf: |-
+  postgresConfiguration: {"listen_addresses": "*"}
+  pgHbaConfiguration: |-
     local all all md5
     host all all all md5
 ```
 
-To support SSO + Istio the RBAC container needs an additional env set:
+6) To support SSO + Istio the RBAC container needs an additional environment variable set:
 
 ```yaml
 anchoreEnterpriseRbac:
@@ -155,11 +154,11 @@ anchoreEnterpriseRbac:
 
 ## Other Modifications
 
-For consistency in naming the chart name in `Chart.yaml` should be changed to `anchore`.
+7) For consistency in naming, the chart name in `Chart.yaml` should be `anchore`.
 
 ---
 
-The following block needs to be added to the end of the _helpers.tpl file:
+8) The following block needs to be present at the end of /chart/templates/_helpers.tpl (do not add this block to any other _helpers.tpl files elsewhere in the project):
 
 ```yaml
 {{/*
@@ -179,7 +178,7 @@ Create chart name and version as used by the chart label.
 
 ---
 
-In `chart/templates/engine_configmap.yaml`, modify the metrics lines as such:
+9) In `chart/templates/engine_configmap.yaml`, the metrics lines should be modified to:
 
 ```yaml
     metrics:
@@ -187,7 +186,7 @@ In `chart/templates/engine_configmap.yaml`, modify the metrics lines as such:
       auth_disabled: {{ .Values.monitoring.enabled }}
 ```
 
-Do the same in `chart/templates/enterprise_configmap.yaml`:
+10) The same should be done in `chart/templates/enterprise_configmap.yaml`:
 
 ```yaml
     metrics:
@@ -195,7 +194,7 @@ Do the same in `chart/templates/enterprise_configmap.yaml`:
       auth_disabled: {{ .Values.monitoring.enabled }}
 ```
 
-Do the same in `chart/templates/enterprise_feeds_configmap.yaml`:
+11) And in `chart/templates/enterprise_feeds_configmap.yaml`:
 
 ```yaml
     metrics:
@@ -203,7 +202,7 @@ Do the same in `chart/templates/enterprise_feeds_configmap.yaml`:
       auth_disabled: {{ .Values.monitoring.enabled }}
 ```
 
-And set required environment variables in `chart/templates/enterprise_feed_deployment.yaml`:
+12) Required environment variables should be set in `chart/templates/enterprise_feed_deployment.yaml`:
 
 ```yaml
     - name: ANCHORE_ENABLE_METRICS
@@ -214,7 +213,7 @@ And set required environment variables in `chart/templates/enterprise_feed_deplo
 
 ---
 
-To resolve a race condition in Big Bang CI pipelines, an additional sleep argument was added in `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml`:
+13) To resolve a race condition in Big Bang CI pipelines, an additional sleep argument should be present in `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml`:
 
 ```yaml
 - |
@@ -224,7 +223,7 @@ To resolve a race condition in Big Bang CI pipelines, an additional sleep argume
 
 ---
 
-To resolve OPA Gatekeeper violations around container resources and ratios, a field was added to `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml` to allow users to specify container resource requests and limits for the jobs:
+14) To resolve OPA Gatekeeper violations around container resources and ratios, a field should have been added to `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml` to allow users to specify container resource requests and limits for the jobs:
 
 ```yaml
 resources:
@@ -233,7 +232,7 @@ resources:
 
 ---
 
-To resolve OPA Gatekeeper violations around istio sidecar injection, a curl command was added to `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml` to allow the istio sidecar container to cleanly terminate after jobs complete.
+15) To resolve OPA Gatekeeper violations around istio sidecar injection, a curl should have been added to `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml` to allow the istio sidecar container to cleanly terminate after jobs complete.
 
 ```yaml
 {{- if eq .Values.istio.injection "enabled" }}
@@ -249,7 +248,7 @@ To resolve OPA Gatekeeper violations around istio sidecar injection, a curl comm
 
 ---
 
-To resolve an issue where Anchore would redeploy after every update, `./chart/templates/engine_secret.yaml` and `./chart/templates/enterprise_feeds_secret.yaml` were modified to set `ANCHORE_SAML_SECRET` to a randomly generated value if not set and the previous secret does not exist:
+16) To resolve an issue where Anchore would redeploy after every update, `./chart/templates/engine_secret.yaml` and `./chart/templates/enterprise_feeds_secret.yaml` should be modified to set `ANCHORE_SAML_SECRET` to a randomly generated value if not set and the previous secret does not exist:
 
 ```yaml
   {{- $anchorefullname := include "anchore-engine.fullname" . -}}
@@ -265,7 +264,7 @@ To resolve an issue where Anchore would redeploy after every update, `./chart/te
   {{- end }}
 ```
 
-Additionally, `./chart/templates/engine_configmap.yaml`, `./chart/templates/enterprise_configmap.yaml`, and `./chart/templates/enterprise_feeds_confimap.yaml` were modified to set appropriate saml secret credentials when the saml secret has been randomly generated but left `Null` by the user at `.Values.anchoreGlobal.saml.secret`:
+17) Additionally, `./chart/templates/engine_configmap.yaml`, `./chart/templates/enterprise_configmap.yaml`, and `./chart/templates/enterprise_feeds_confimap.yaml` should be modified to set appropriate saml secret credentials when the saml secret has been randomly generated but left `Null` by the user at `.Values.anchoreGlobal.saml.secret`:
 
 ```yaml
 keys:
@@ -273,31 +272,11 @@ keys:
   secret: ${ANCHORE_SAML_SECRET}
   {{- end }}
 ```
-
-To support metrics mTLS added `appPotocol: http` to the Service port spec found in `./chart/templates/*_deployment.yaml`
-
-### PostgreSQL Modifications
-
-To prevent the postgresql container from writing to local disk, volumes, volume mounts, and a security context were added to the postgresql deployment:
-
-```yaml
-        volumeMounts:
-        - name: init
-          mountPath: /var/run/postgresql
-        - name: tmp
-          mountPath: /tmp
-        securityContext:
-          readOnlyRootFilesystem: true
-      volumes:
-      - name: init
-        emptyDir: {}
-      - name: tmp
-        emptyDir: {}
-```
+18) To support metrics mTLS added `appPotocol: http` to the Service port spec found in `./chart/templates/*_deployment.yaml`
 
 ### Container Security Context Additions
 
-To set all containers to run without additional capabilities, and instead to add explicit drops, several containerSecurityContext sections have been added.  Each of these sections look like the following (other sections with additional securityContext settings may have been modified to include explicit drops, but were already part of the chart) and are referenced in the template files:
+19) To set all containers to run without additional capabilities, and instead to add explicit drops, several containerSecurityContext sections have been added to chart/values.yaml.  Each of these sections look like the following and are referenced in the template files:
 
 ```yaml
   containerSecurityContext:
@@ -305,3 +284,4 @@ To set all containers to run without additional capabilities, and instead to add
       drop:
         - ALL
 ```
+Note that other sections with additional securityContext settings may have been modified to include explicit drops, but these were already part of the chart.
