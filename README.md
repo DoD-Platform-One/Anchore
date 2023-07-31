@@ -1,6 +1,6 @@
 # anchore
 
-![Version: 1.24.1-bb.5](https://img.shields.io/badge/Version-1.24.1--bb.5-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.26.1-bb.0](https://img.shields.io/badge/Version-1.26.1--bb.0-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -200,6 +200,7 @@ helm install anchore chart/
 | anchoreGlobal.probes.readiness.periodSeconds | int | `10` |  |
 | anchoreGlobal.probes.readiness.failureThreshold | int | `3` |  |
 | anchoreGlobal.probes.readiness.successThreshold | int | `1` |  |
+| anchoreGlobal.usePreupgradeHook | bool | `false` |  |
 | anchoreAnalyzer.replicaCount | int | `2` |  |
 | anchoreAnalyzer.containerPort | int | `8084` |  |
 | anchoreAnalyzer.serviceType | string | `"ClusterIP"` |  |
@@ -271,6 +272,7 @@ helm install anchore chart/
 | anchoreCatalog.object_store.storage_driver.name | string | `"db"` |  |
 | anchoreCatalog.object_store.storage_driver.config | object | `{}` |  |
 | anchoreCatalog.runtimeInventory.imageTTLDays | int | `1` |  |
+| anchoreCatalog.downAnalyzerTaskRequeue | bool | `true` |  |
 | anchoreCatalog.service.type | string | `"ClusterIP"` |  |
 | anchoreCatalog.service.port | int | `8082` |  |
 | anchoreCatalog.service.annotations | object | `{}` |  |
@@ -292,6 +294,7 @@ helm install anchore chart/
 | anchorePolicyEngine.cycleTimers.feed_sync_checker | int | `3600` |  |
 | anchorePolicyEngine.cycleTimers.grypedb_sync | int | `60` |  |
 | anchorePolicyEngine.enablePackageDbLoad | bool | `true` |  |
+| anchorePolicyEngine.enableImagesByVulnerabilityAPI | bool | `true` |  |
 | anchorePolicyEngine.cacheTTL | int | `3600` |  |
 | anchorePolicyEngine.service.type | string | `"ClusterIP"` |  |
 | anchorePolicyEngine.service.port | int | `8087` |  |
@@ -335,9 +338,10 @@ helm install anchore chart/
 | anchoreEngineUpgradeJob.tolerations | list | `[]` |  |
 | anchoreEngineUpgradeJob.affinity | object | `{}` |  |
 | anchoreEngineUpgradeJob.annotations | object | `{}` |  |
+| anchoreEngineUpgradeJob.labels | object | `{}` |  |
 | anchoreEnterpriseGlobal.enabled | bool | `false` |  |
 | anchoreEnterpriseGlobal.licenseSecretName | string | `"anchore-enterprise-license"` |  |
-| anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.6.0"` |  |
+| anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.8.0"` |  |
 | anchoreEnterpriseGlobal.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseGlobal.imagePullSecretName | string | `"private-registry"` |  |
 | anchore-feeds-db.image.registry | string | `"registry1.dso.mil"` |  |
@@ -403,6 +407,8 @@ helm install anchore chart/
 | anchoreEnterpriseFeeds.gemDriverEnabled | bool | `false` |  |
 | anchoreEnterpriseFeeds.githubDriverEnabled | bool | `false` |  |
 | anchoreEnterpriseFeeds.githubDriverToken | string | `nil` |  |
+| anchoreEnterpriseFeeds.useNvdDriverApiKey | bool | `false` |  |
+| anchoreEnterpriseFeeds.nvdDriverApiKey | string | `nil` |  |
 | anchoreEnterpriseFeeds.msrcDriverEnabled | bool | `false` |  |
 | anchoreEnterpriseFeeds.ubuntuExtraReleases | object | `{}` |  |
 | anchoreEnterpriseFeeds.debianExtraReleases | object | `{}` |  |
@@ -450,6 +456,7 @@ helm install anchore chart/
 | anchoreEnterpriseFeedsUpgradeJob.tolerations | list | `[]` |  |
 | anchoreEnterpriseFeedsUpgradeJob.affinity | object | `{}` |  |
 | anchoreEnterpriseFeedsUpgradeJob.annotations | object | `{}` |  |
+| anchoreEnterpriseFeedsUpgradeJob.labels | object | `{}` |  |
 | anchoreEnterpriseRbac.enabled | bool | `true` |  |
 | anchoreEnterpriseRbac.extraEnv[0].name | string | `"AUTHLIB_INSECURE_TRANSPORT"` |  |
 | anchoreEnterpriseRbac.extraEnv[0].value | string | `"true"` |  |
@@ -515,7 +522,7 @@ helm install anchore chart/
 | anchoreEnterpriseNotifications.tolerations | list | `[]` |  |
 | anchoreEnterpriseNotifications.affinity | object | `{}` |  |
 | anchoreEnterpriseUi.enabled | bool | `true` |  |
-| anchoreEnterpriseUi.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.6.0"` |  |
+| anchoreEnterpriseUi.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.8.0"` |  |
 | anchoreEnterpriseUi.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseUi.imagePullSecretName | string | `"private-registry"` |  |
 | anchoreEnterpriseUi.extraEnv | list | `[]` |  |
@@ -569,6 +576,7 @@ helm install anchore chart/
 | anchoreEnterpriseEngineUpgradeJob.tolerations | list | `[]` |  |
 | anchoreEnterpriseEngineUpgradeJob.affinity | object | `{}` |  |
 | anchoreEnterpriseEngineUpgradeJob.annotations | object | `{}` |  |
+| anchoreEnterpriseEngineUpgradeJob.labels | object | `{}` |  |
 | bbtests.enabled | bool | `false` |  |
 | bbtests.scripts.image | string | `"registry1.dso.mil/ironbank/anchore/cli/cli:0.9.4"` |  |
 | bbtests.scripts.envs.ANCHORE_CLI_URL | string | `"http://{{ template \"anchore-engine.api.fullname\" . }}:{{ .Values.anchoreApi.service.port }}/v1"` |  |

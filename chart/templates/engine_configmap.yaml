@@ -100,11 +100,11 @@ data:
     credentials:
       database:
       {{- if .Values.anchoreEnterpriseGlobal.enabled }}
-        user: ${ANCHORE_DB_USER}
-        password: ${ANCHORE_DB_PASSWORD}
-        host: ${ANCHORE_DB_HOST}
-        port: ${ANCHORE_DB_PORT}
-        name: ${ANCHORE_DB_NAME}
+        user: "${ANCHORE_DB_USER}"
+        password: "${ANCHORE_DB_PASSWORD}"
+        host: "${ANCHORE_DB_HOST}"
+        port: "${ANCHORE_DB_PORT}"
+        name: "${ANCHORE_DB_NAME}"
       {{- else }}
         db_connect: "postgresql://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_HOST}:${ANCHORE_DB_PORT}/${ANCHORE_DB_NAME}"
       {{- end }}
@@ -178,6 +178,7 @@ data:
         ssl_key: "/home/anchore/certs/{{- .Values.anchoreGlobal.internalServicesSsl.certSecretKeyName }}"
         {{- end }}
         enable_owned_package_filtering: {{ .Values.anchoreAnalyzer.enableOwnedPackageFiltering }}
+        keep_image_analysis_tmpfiles: {{ default false .Values.anchoreAnalyzer.keepImageAnalysisTmpfiles }}
       catalog:
         enabled: true
         require_auth: true
@@ -230,6 +231,7 @@ data:
         {{- end }}
         runtime_inventory:
           image_ttl_days: {{ .Values.anchoreCatalog.runtimeInventory.imageTTLDays }}
+        down_analyzer_task_requeue: {{ .Values.anchoreCatalog.downAnalyzerTaskRequeue }}
       simplequeue:
         enabled: true
         require_auth: true
@@ -254,6 +256,7 @@ data:
         cycle_timers:
           {{- toYaml .Values.anchorePolicyEngine.cycleTimers | nindent 10 }}
         enable_package_db_load: {{ .Values.anchorePolicyEngine.enablePackageDbLoad }}
+        enable_images_by_vulnerability_api: {{ .Values.anchorePolicyEngine.enableImagesByVulnerabilityAPI }}
         vulnerabilities:
           provider: grype
           sync:
