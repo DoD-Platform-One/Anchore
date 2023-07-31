@@ -153,6 +153,12 @@ postgresql:
         cpu: 100m
         memory: 256Mi
 
+  securityContext:
+    enabled: true
+    fsGroup: 26
+    runAsUser: 26
+    runAsGroup: 26
+
   containerSecurityContext:
     enabled: true
     runAsUser: 26
@@ -167,19 +173,14 @@ postgresql:
       fsGroup: 26
       runAsUser: 26
       runAsGroup: 26
-      
+
     containerSecurityContext:
       enabled: true
       runAsUser: 26
       runAsGroup: 26
       capabilities:
         drop:
-              - ALL
-    # Set the configs to allow listening and connecting from other pods
-    postgresConfiguration: {"listen_addresses": "*"}
-    pgHbaConfiguration: |-
-      local all all md5
-      host all all all md5
+          - ALL
 
     # Configure size of the persistent volume used with helm managed chart.
     # This should be commented out if using an external endpoint.
@@ -189,6 +190,12 @@ postgresql:
       subPath: "data/pgdata"
       mountPath: /var/lib/postgresql
     postgresqlDataDir: /var/lib/postgresql/data
+
+  # Set the configs to allow listening and connecting from other pods
+  postgresqlConfiguration: {"listen_addresses": "*"}
+  pgHbaConfiguration: |-
+    local all all md5
+    host all all all md5
 
   # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
@@ -785,6 +792,10 @@ anchoreCatalog:
     # Note: if a runtime inventory image's digest is also in anchore for regular image analysis, it won't be removed.
     imageTTLDays: 1
 
+  # checks image status and detects that an 'analyzing' state image is being processed by an analyzer that is no
+  # longer in the 'up' state and will revert the state of the image back to 'not_analyzed' to allow fast re-queueing.
+  downAnalyzerTaskRequeue: true
+
   # kubernetes service configuration for anchore catalog api
   service:
     # Override the service name
@@ -839,6 +850,9 @@ anchorePolicyEngine:
   # Controls the load of the Image Package DB Entries and disables the packages.verify gate.
   # Reduces significant DB load as a result.
   enablePackageDbLoad: true
+
+  # Reduces load by not requiring a re-scan of every sbom for vulnerabilities after each feed sync
+  enableImagesByVulnerabilityAPI: true
 
   cacheTTL: 3600  # 1 hour
 
@@ -935,6 +949,7 @@ anchoreEngineUpgradeJob:
   tolerations: []
   affinity: {}
   annotations: {}
+  labels: {}
 
 # This section is used for configuring anchore enterprise.
 anchoreEnterpriseGlobal:
@@ -943,7 +958,7 @@ anchoreEnterpriseGlobal:
   # Create this secret with the following command - kubectl create secret generic anchore-enterprise-license --from-file=license.yaml=<PATH TO LICENSE.YAML>
   licenseSecretName: anchore-enterprise-license
 
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.6.0
+  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.8.0
   imagePullPolicy: IfNotPresent
   # Name of the kubernetes secret containing your dockerhub creds with access to the anchore enterprise images.
   # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
@@ -1021,11 +1036,11 @@ anchore-feeds-db:
         drop:
           - ALL
 
-    # Set the configs to allow listening and connecting from other pods
-    postgresqlConfiguration: {"listen_addresses": "*"}
-    pgHbaConfiguration: |-
-      local all all md5
-      host all all all md5
+  # Set the configs to allow listening and connecting from other pods
+  postgresqlConfiguration: {"listen_addresses": "*"}
+  pgHbaConfiguration: |-
+    local all all md5
+    host all all all md5
 
   # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
@@ -1106,6 +1121,10 @@ anchoreEnterpriseFeeds:
   # GitHub advisory feeds require a github developer personal access token with no permission scopes selected.
   githubDriverToken: null
 
+  # The NVD API allows for an API key to reduce rate limiting.  Request one from https://nvd.nist.gov/developers/request-an-api-key
+  useNvdDriverApiKey: false
+  nvdDriverApiKey: null
+
   # Enable microsoft feeds
   msrcDriverEnabled: false
   # Uncomment to add MSRC product IDs for generating their feed data, this extends the pre-defined list of product IDs
@@ -1142,13 +1161,6 @@ anchoreEnterpriseFeeds:
   # Time delay in seconds between consecutive driver runs for processing data
   cycleTimers:
     driver_sync: 7200
-
-  # Specifies an existing secret to be used for anchore admin and db passwords
-  # The secret should define the following environment vars:
-  # ANCHORE_ADMIN_PASSWORD
-  # ANCHORE_FEEDS_DB_PASSWORD
-  # ANCHORE_SAML_SECRET (if applicable)
-  # ANCHORE_GITHUB_TOKEN (if applicable)
 
   # Set the name of your existing secret for Anchore Enterprise Feeds
   existingSecretName: anchore-enterprise-feeds-env
@@ -1242,6 +1254,7 @@ anchoreEnterpriseFeedsUpgradeJob:
   tolerations: []
   affinity: {}
   annotations: {}
+  labels: {}
 
 # Configure the Anchore Enterprise role based access control component.
 # This component consists of 2 containers that run as side-cars in the Anchore api pod.
@@ -1412,7 +1425,7 @@ anchoreEnterpriseNotifications:
 anchoreEnterpriseUi:
   # If enabled is set to false, set ui-redis.enabled to false to ensure that helm doesn't stand up a unneccessary redis instance.
   enabled: true
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.6.0
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.8.0
   imagePullPolicy: IfNotPresent
   imagePullSecretName: private-registry
 
@@ -1664,6 +1677,7 @@ anchoreEnterpriseEngineUpgradeJob:
   tolerations: []
   affinity: {}
   annotations: {}
+  labels: {}
 
 # To inject secrets ( credentails data ) via env, rather k8s secrets please set this flag to true.
 # This feature will be useful, especially to inject secrets directly into k8s pods from hashicorp vault
