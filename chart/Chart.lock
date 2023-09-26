@@ -1,18 +1,18 @@
 dependencies:
 - name: postgresql
   repository: file://./deps/postgresql
-  version: 12.4.3
+  version: 10.3.13
 - name: postgresql
   repository: file://./deps/postgresql
-  version: 12.4.3
+  version: 10.3.13
 - name: postgresql
   repository: file://./deps/postgresql
-  version: 12.4.3
+  version: 10.3.13
 - name: redis
   repository: oci://registry1.dso.mil/bigbang
-  version: 17.10.2-bb.0
+  version: 18.0.4-bb.0
 - name: gluon
   repository: oci://registry1.dso.mil/bigbang
-  version: 0.4.0
-digest: sha256:cff6e3bc5b41e9a313b2efff1ad8c039123f85ff8dee9d461fac4685ac98fa6d
-generated: "2023-06-09T16:40:04.572839-05:00"
+  version: 0.4.1
+digest: sha256:47cf67b34f4aaab825db764465e7aee9acc7cc25a7350b1de4fef3ab7d62ef6b
+generated: "2023-09-22T19:14:29.295246156+05:00"

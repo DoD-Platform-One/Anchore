@@ -318,6 +318,9 @@ spec:
       targetPort: {{ .Values.anchoreEnterpriseRbac.service.managerPort }}
       protocol: TCP
       appProtocol: http
+      {{- with .Values.anchoreEnterpriseRbac.service.nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
   selector:
     app: {{ template "anchore-engine.fullname" . }}
     component: {{ $component }}

@@ -198,7 +198,11 @@ postgresql:
     host all all all md5
 
   # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
+  # For upgrades from previous deployments on PG9.6, use this
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
+
+  # For new installs, please use PG v13 instead of 9.6
+  # image: registry.redhat.io/rhel9/postgresql-13
   # imageTag: latest
   # extraEnv:
   # - name: POSTGRESQL_USER
@@ -486,6 +490,11 @@ anchoreGlobal:
       failureThreshold: 3
       successThreshold: 1
 
+  # Using the preupgrade hook will use a job annotated with helm's pre-upgrade hook. This job utilizes a service account that will be created to call kubectl to scale down the deployment before running the upgrade job.
+  # The service account is granted deployment, deployment/scale, and pod permissions. See templates/hooks/pre-upgrade/anchore_upgrade_role.yaml for the full list.
+  # This can be useful for deployments using helm upgrade --wait or ArgoCD.
+  usePreupgradeHook: false
+
 # Configuration for the analyzer pods that perform image analysis
 # There may be many of these analyzers but best practice is to not have more than one per node since analysis
 # is very IO intensive. Use of affinity/anti-affinity rules for scheduling the analyzers is future work.
@@ -609,6 +618,7 @@ anchoreApi:
     port: 8228
     annotations: {}
     label: {}
+    nodePort: null
 
   # Specify the service account name utilized to run the API pods
   # serviceAccountName: Null
@@ -804,6 +814,7 @@ anchoreCatalog:
     port: 8082
     annotations: {}
     labels: {}
+    nodePort: null
 
   resources:
    limits:
@@ -864,6 +875,7 @@ anchorePolicyEngine:
     port: 8087
     annotations: {}
     labels: {}
+    nodePort: null
 
   resources:
     limits:
@@ -906,6 +918,7 @@ anchoreSimpleQueue:
     port: 8083
     annotations: {}
     labels: {}
+    nodePort: null
 
   resources:
     limits:
@@ -958,7 +971,7 @@ anchoreEnterpriseGlobal:
   # Create this secret with the following command - kubectl create secret generic anchore-enterprise-license --from-file=license.yaml=<PATH TO LICENSE.YAML>
   licenseSecretName: anchore-enterprise-license
 
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.8.0
+  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.9.1
   imagePullPolicy: IfNotPresent
   # Name of the kubernetes secret containing your dockerhub creds with access to the anchore enterprise images.
   # Create this secret with the following command - kubectl create secret docker-registry anchore-dockerhub-creds --docker-server=docker.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL_ADDRESS>
@@ -1043,7 +1056,11 @@ anchore-feeds-db:
     host all all all md5
 
   # If running on OpenShift - uncomment the image, imageTag & extraEnv values below.
+  # For upgrades from previous deployments on PG9.6, use this
   # image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
+
+  # For new installs, please use PG v13 instead of 9.6
+  # image: registry.redhat.io/rhel9/postgresql-13
   # imageTag: latest
   # extraEnv:
   # - name: POSTGRESQL_USER
@@ -1211,6 +1228,7 @@ anchoreEnterpriseFeeds:
     port: 8448
     annotations: {}
     labels: {}
+    nodePort: null
 
   resources:
     limits:
@@ -1278,6 +1296,7 @@ anchoreEnterpriseRbac:
     type: ClusterIP
     annotations: {}
     labels: {}
+    nodePort: null
 
   authResources:
     limits:
@@ -1352,6 +1371,8 @@ anchoreEnterpriseReports:
     workerPort: 8778
     annotations: {}
     labels: {}
+    nodePort: null
+    apinodePort: null
 
   resources:
     limits:
@@ -1399,6 +1420,7 @@ anchoreEnterpriseNotifications:
     port: 8668
     annotations: {}
     labels: {}
+    nodePort: null
 
   resources:
     limits:
@@ -1425,7 +1447,7 @@ anchoreEnterpriseNotifications:
 anchoreEnterpriseUi:
   # If enabled is set to false, set ui-redis.enabled to false to ensure that helm doesn't stand up a unneccessary redis instance.
   enabled: true
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.8.0
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.9.0
   imagePullPolicy: IfNotPresent
   imagePullSecretName: private-registry
 
@@ -1595,6 +1617,7 @@ anchoreEnterpriseUi:
     annotations: {}
     labels: {}
     sessionAffinity: ClientIP
+    nodePort: null
 
   # The (optional) `enrich_inventory_view` key allows you to set whether the
   # Kubernetes tab should aggregate and include compliance and vulnerability data
