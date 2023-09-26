@@ -1,5 +1,5 @@
 {{- template "checkUpgradeCompatibility" . }}
-{{- if and .Values.anchoreEnterpriseGlobal.enabled .Values.anchoreEnterpriseFeeds.enabled .Values.anchoreEnterpriseFeedsUpgradeJob.enabled }}
+{{- if and .Values.anchoreEnterpriseGlobal.enabled .Values.anchoreEnterpriseFeeds.enabled .Values.anchoreEnterpriseFeedsUpgradeJob.enabled (not .Values.anchoreGlobal.usePreupgradeHook) }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -82,15 +82,15 @@ spec:
         {{- if not .Values.anchoreEnterpriseFeeds.dbConfig.ssl }}
           - |
             sleep 60
-            {{ print (include "doSourceFile" .) }} anchore-enterprise-manager db --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST}:${ANCHORE_FEEDS_DB_PORT}"/"${ANCHORE_FEEDS_DB_NAME}" upgrade --dontask; anchore-enterprise-manager db --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST}:${ANCHORE_FEEDS_DB_PORT}"/"${ANCHORE_FEEDS_DB_NAME}" pre-upgrade-check;
+            {{ print (include "doSourceFile" .) }} anchore-enterprise-manager db --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST/:5432}:${ANCHORE_FEEDS_DB_PORT:-5432}"/"${ANCHORE_FEEDS_DB_NAME}" upgrade --dontask; anchore-enterprise-manager db --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST/:5432}:${ANCHORE_FEEDS_DB_PORT:-5432}"/"${ANCHORE_FEEDS_DB_NAME}" pre-upgrade-check;
         {{- else if eq .Values.anchoreEnterpriseFeeds.dbConfig.sslMode "require" }}
           - |
             sleep 60
-            {{ print (include "doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST}:${ANCHORE_FEEDS_DB_PORT}"/"${ANCHORE_FEEDS_DB_NAME}"?sslmode={{- .Values.anchoreGlobal.dbConfig.sslMode }} upgrade --dontask; anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST}:${ANCHORE_FEEDS_DB_PORT}"/"${ANCHORE_FEEDS_DB_NAME}"?sslmode={{- .Values.anchoreGlobal.dbConfig.sslMode }} pre-upgrade-check;
+            {{ print (include "doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST/:5432}:${ANCHORE_FEEDS_DB_PORT:-5432}"/"${ANCHORE_FEEDS_DB_NAME}"?sslmode={{- .Values.anchoreEnterpriseFeeds.dbConfig.sslMode }} upgrade --dontask; anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST/:5432}:${ANCHORE_FEEDS_DB_PORT:-5432}"/"${ANCHORE_FEEDS_DB_NAME}"?sslmode={{- .Values.anchoreEnterpriseFeeds.dbConfig.sslMode }} pre-upgrade-check;
         {{- else }}
           - |
             sleep 60
-            {{ print (include "doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST}:${ANCHORE_FEEDS_DB_PORT}"/"${ANCHORE_FEEDS_DB_NAME}"?sslmode={{- .Values.anchoreGlobal.dbConfig.sslMode -}}\&sslrootcert=/home/anchore/certs/{{- .Values.anchoreGlobal.dbConfig.sslRootCertName }} upgrade --dontask; anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST}:${ANCHORE_FEEDS_DB_PORT}"/"${ANCHORE_FEEDS_DB_NAME}"?sslmode={{- .Values.anchoreGlobal.dbConfig.sslMode -}}\&sslrootcert=/home/anchore/certs/{{- .Values.anchoreGlobal.dbConfig.sslRootCertName }} pre-upgrade-check;
+            {{ print (include "doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST/:5432}:${ANCHORE_FEEDS_DB_PORT:-5432}"/"${ANCHORE_FEEDS_DB_NAME}"?sslmode={{- .Values.anchoreEnterpriseFeeds.dbConfig.sslMode -}}\&sslrootcert=/home/anchore/certs/{{- .Values.anchoreEnterpriseFeeds.dbConfig.sslRootCertName }} upgrade --dontask; anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST/:5432}:${ANCHORE_FEEDS_DB_PORT:-5432}"/"${ANCHORE_FEEDS_DB_NAME}"?sslmode={{- .Values.anchoreEnterpriseFeeds.dbConfig.sslMode -}}\&sslrootcert=/home/anchore/certs/{{- .Values.anchoreEnterpriseFeeds.dbConfig.sslRootCertName }} pre-upgrade-check;
           - |
             sleep 60
             anchore-manager db --db-connect postgresql://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_HOST}/${ANCHORE_DB_NAME} upgrade --dontask;

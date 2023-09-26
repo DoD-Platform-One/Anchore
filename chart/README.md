@@ -127,7 +127,7 @@ postgresql:
   - name: POSTGRESQL_USER
     value: anchoreengine
   - name: POSTGRESQL_PASSWORD
-    value: anchore-postgres,123
+    value: <PGPASSWORD>
   - name: POSTGRESQL_DATABASE
     value: anchore
   - name: PGUSER
@@ -136,7 +136,7 @@ postgresql:
     value: /opt/rh/rh-postgresql96/root/usr/lib64
   - name: PATH
      value: /opt/rh/rh-postgresql96/root/usr/bin:/opt/app-root/src/bin:/opt/app-root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-    postgresPassword: <PASSWORD>
+    postgresPassword: <PGPASSWORD>
     persistence:
       size: 20Gi
 
@@ -145,6 +145,10 @@ anchoreGlobal:
   defaultAdminEmail: <EMAIL>
   enableMetrics: True
   openShiftDeployment: True
+  securityContext:
+    runAsUser: null
+    runAsGroup: null
+    fsGroup: null
 
 anchore-feeds-db:
   image: registry.access.redhat.com/rhscl/postgresql-96-rhel7
@@ -153,7 +157,7 @@ anchore-feeds-db:
   - name: POSTGRESQL_USER
     value: anchoreengine
   - name: POSTGRESQL_PASSWORD
-    value: anchore-postgres,123
+    value: <PGPASSWORD>
   - name: POSTGRESQL_DATABASE
     value: anchore
   - name: PGUSER
@@ -162,13 +166,26 @@ anchore-feeds-db:
     value: /opt/rh/rh-postgresql96/root/usr/lib64
   - name: PATH
      value: /opt/rh/rh-postgresql96/root/usr/bin:/opt/app-root/src/bin:/opt/app-root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-    postgresPassword: <PASSWORD>
+    postgresPassword: <PGPASSWORD>
     persistence:
       size: 50Gi
 
 ui-redis:
   auth:
     password: <PASSWORD>
+  master:
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1000670000
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 1000670000
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      seccompProfile:
+        type: "RuntimeDefault"
 ```
 
 # Chart Updates
@@ -180,6 +197,32 @@ See the Anchore [Release Notes](https://docs.anchore.com/current/docs/releasenot
 A Helm post-upgrade hook job will shut down all previously running Anchore services and perform the Anchore database upgrade process using a Kubernetes job.
 
 The upgrade will only be considered successful when this job completes successfully. Performing an upgrade will cause the Helm client to block until the upgrade job completes and the new Anchore service pods are started. To view progress of the upgrade process, tail the logs of the upgrade jobs `anchore-engine-upgrade` and `anchore-enterprise-upgrade`. These job resources will be removed upon a successful Helm upgrade.
+
+# Chart Version 1.27.3
+
+* Added option to allow nodePorts to each service created as part of an anchore deployment. For more information about nodePorts, see [The Kubernetes Docs](https://kubernetes.io/docs/concepts/services-networking/service/#nodeport-custom-port)
+
+# Chart Version 1.27.2
+
+* Anchore Enterprise image updated to v4.9.1 - [Release Notes](https://docs.anchore.com/current/docs/releasenotes/491/)
+* Bumped Redis chart to the latest version.
+* Reverted the change in v1.27.1 to use an alias for the bitnami dependency. This dependency is now using an OCI url which is supported by the latest version of chart-releaser-action.
+
+# Chart Version 1.27.1
+
+* Updating chart-releaser-action to v1.5.0 required using an alias for the bitnami dependency because chart-releaser doesn't currently support using a url directly in the dependency declaration. You may be required to add bitnami as an alias to the bitnami repos. eg `helm repo add bitnami https://charts.bitnami.com/bitnami`
+
+# Chart Version 1.27.0
+
+* Anchore Enterprise image updated to v4.9.0 - [Release Notes](https://docs.anchore.com/current/docs/releasenotes/490/)
+
+# Chart Version 1.26.3
+
+* Anchore Enterprise image updated to v4.8.1 - [Release Notes](https://docs.anchore.com/current/docs/releasenotes/481/)
+
+# Chart version 1.26.1
+
+* Added `.Values.anchoreGlobal.usePreupgradeHook` to enable doing the enterprise and feeds upgrade jobs using a helm pre-upgrade hook. This is useful when doing helm upgrade with the --wait flag, or for ArgoCD. Enabling this option will create a service account and role with permissions to get/update/patch deployments and list pods. See templates/hooks/pre-upgrade/anchore_upgrade_role.yaml for a complete list of roles. This is disabled by default.
 
 # Chart version 1.26.0
 
@@ -204,7 +247,7 @@ The upgrade will only be considered successful when this job completes successfu
           - /path/to/file2
     ```
 
-* Updated the configuration for Anchore Enterprise database connections. This will ensure that special characters are handled properly in database passwords. Also allows configuring the db hostname and port separately. 
+* Updated the configuration for Anchore Enterprise database connections. This will ensure that special characters are handled properly in database passwords. Also allows configuring the db hostname and port separately.
 
   * If your postgresql connection is using a non-standard port, you will need to update your values file to include the hostname and port. For example:
 
@@ -502,6 +545,7 @@ metadata:
   name: anchore-enterprise-ui-env
 type: Opaque
 stringData:
+  # if using TLS to connect to Postgresql you must add the ?ssl=[require|verify-ca|verify-full] parameter to the end of the URI
   ANCHORE_APPDB_URI: postgresql://anchoreengine:anchore-postgres,123@anchore-postgresql:5432/anchore
   ANCHORE_REDIS_URI: redis://nouser:anchore-redis,123@anchore-ui-redis-master:6379
 ```
@@ -636,7 +680,7 @@ anchoreCatalog:
 ```yaml
 anchoreCatalog:
   archive:
-    storage_driver:    
+    storage_driver:
       name: swift
       config:
         auth_version: '2'
@@ -687,7 +731,7 @@ know about each pod, and the ports it provides to scrape the metrics.
 
 ## Using custom certificates
 
-A secret needs to be created in the same namespace as the anchore-engine chart installation. This secret should contain all custom certs, including CA certs & any certs used for internal TLS communication. 
+A secret needs to be created in the same namespace as the anchore-engine chart installation. This secret should contain all custom certs, including CA certs & any certs used for internal TLS communication.
 This secret will be mounted to all Anchore pods at /home/anchore/certs to be utilized by the system.
 
 ## Event Notifications
