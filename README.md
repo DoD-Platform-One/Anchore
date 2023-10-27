@@ -1,6 +1,6 @@
 # anchore
 
-![Version: 1.27.4-bb.0](https://img.shields.io/badge/Version-1.27.4--bb.0-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.27.4-bb.2](https://img.shields.io/badge/Version-1.27.4--bb.2-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -366,6 +366,10 @@ helm install anchore chart/
 | anchore-feeds-db.securityContext.fsGroup | int | `26` |  |
 | anchore-feeds-db.securityContext.runAsUser | int | `26` |  |
 | anchore-feeds-db.securityContext.runAsGroup | int | `26` |  |
+| anchore-feeds-db.containerSecurityContext.enabled | bool | `true` |  |
+| anchore-feeds-db.containerSecurityContext.runAsUser | int | `26` |  |
+| anchore-feeds-db.containerSecurityContext.runAsGroup | int | `26` |  |
+| anchore-feeds-db.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | anchore-feeds-db.resources.limits.cpu | string | `"100m"` |  |
 | anchore-feeds-db.resources.limits.memory | string | `"256Mi"` |  |
 | anchore-feeds-db.resources.requests.cpu | string | `"100m"` |  |
