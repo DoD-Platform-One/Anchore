@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.27.4-bb.2]
+### Changed
+- Added missing `containerSecurityContext` to `anchore-feeds-db`.
+- Bumped postgresql's `common` dependency to `2.x.x`.
+
 ## [1.27.4-bb.1]
 ### Changed
 - Updated contributing.md

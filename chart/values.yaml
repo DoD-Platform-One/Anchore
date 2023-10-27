@@ -1006,6 +1006,14 @@ anchore-feeds-db:
     runAsUser: 26
     runAsGroup: 26
 
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 26
+    runAsGroup: 26
+    capabilities:
+      drop:
+        - ALL
+
   # Configure resource limits and requests for the postgresql deployment
   resources:
     limits:
