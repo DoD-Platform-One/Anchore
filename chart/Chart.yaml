@@ -1,6 +1,6 @@
 apiVersion: v2
 name: anchore
-version: 1.27.4-bb.2
+version: 1.27.4-bb.3
 appVersion: 1.1.0
 description: Anchore container analysis and policy evaluation engine service
 keywords:
@@ -43,11 +43,11 @@ dependencies:
    condition: ui-redis.enabled,anchoreEnterpriseGlobal.enabled
    alias: ui-redis
  - name: gluon
-   version: "0.4.1"
+   version: "0.4.4"
    repository: "oci://registry1.dso.mil/bigbang"
 annotations:
   bigbang.dev/applicationVersions: |
-    - Enterprise: 4.9.1
+    - Enterprise: 4.9.2
     - Engine: 1.1.0
   # Note engine image won't be used at all if enterprise is enabled
   helm.sh/images: |
@@ -55,8 +55,8 @@ annotations:
       image: registry1.dso.mil/ironbank/anchore/engine/engine:1.1.0
     - name: enterprise
       condition: anchoreEnterpriseGlobal.enabled
-      image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.9.1
-    - name: postgresql12
+      image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.9.2
+    - name: postgresql
       condition: postgresql.enabled
       image: registry1.dso.mil/ironbank/opensource/postgres/postgresql:13.10
     - name: enterpriseui
