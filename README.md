@@ -1,6 +1,6 @@
 # anchore
 
-![Version: 1.27.4-bb.3](https://img.shields.io/badge/Version-1.27.4--bb.3-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.27.4-bb.4](https://img.shields.io/badge/Version-1.27.4--bb.4-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
@@ -87,7 +87,7 @@ helm install anchore chart/
 | fullnameOverride | string | `nil` |  |
 | postgresql.image.registry | string | `"registry1.dso.mil"` |  |
 | postgresql.image.repository | string | `"ironbank/opensource/postgres/postgresql"` |  |
-| postgresql.image.tag | string | `"13.10"` |  |
+| postgresql.image.tag | string | `"13.12"` |  |
 | postgresql.global.imagePullSecrets[0] | string | `"private-registry"` |  |
 | postgresql.externalEndpoint | string | `nil` |  |
 | postgresql.externalEndpoint | string | `nil` |  |
@@ -96,9 +96,9 @@ helm install anchore chart/
 | postgresql.postgresDatabase | string | `"anchore"` |  |
 | postgresql.postgresPort | int | `5432` |  |
 | postgresql.resources.limits.cpu | string | `"200m"` |  |
-| postgresql.resources.limits.memory | string | `"1024Mi"` |  |
+| postgresql.resources.limits.memory | string | `"2048Mi"` |  |
 | postgresql.resources.requests.cpu | string | `"200m"` |  |
-| postgresql.resources.requests.memory | string | `"1024Mi"` |  |
+| postgresql.resources.requests.memory | string | `"2048Mi"` |  |
 | postgresql.metrics.resources.limits.cpu | string | `"100m"` |  |
 | postgresql.metrics.resources.limits.memory | string | `"256Mi"` |  |
 | postgresql.metrics.resources.requests.cpu | string | `"100m"` |  |
@@ -349,12 +349,12 @@ helm install anchore chart/
 | anchoreEngineUpgradeJob.labels | object | `{}` |  |
 | anchoreEnterpriseGlobal.enabled | bool | `false` |  |
 | anchoreEnterpriseGlobal.licenseSecretName | string | `"anchore-enterprise-license"` |  |
-| anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.9.2"` |  |
+| anchoreEnterpriseGlobal.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.9.3"` |  |
 | anchoreEnterpriseGlobal.imagePullPolicy | string | `"IfNotPresent"` |  |
 | anchoreEnterpriseGlobal.imagePullSecretName | string | `"private-registry"` |  |
 | anchore-feeds-db.image.registry | string | `"registry1.dso.mil"` |  |
 | anchore-feeds-db.image.repository | string | `"ironbank/opensource/postgres/postgresql"` |  |
-| anchore-feeds-db.image.tag | string | `"13.10"` |  |
+| anchore-feeds-db.image.tag | string | `"13.12"` |  |
 | anchore-feeds-db.global.imagePullSecrets[0] | string | `"private-registry"` |  |
 | anchore-feeds-db.externalEndpoint | string | `nil` |  |
 | anchore-feeds-db.externalEndpoint | string | `nil` |  |
