@@ -1,6 +1,6 @@
 apiVersion: v2
 name: anchore
-version: 1.27.4-bb.4
+version: 1.27.4-bb.5
 appVersion: 1.1.0
 description: Anchore container analysis and policy evaluation engine service
 keywords:
@@ -54,7 +54,7 @@ annotations:
     - name: engine
       image: registry1.dso.mil/ironbank/anchore/engine/engine:1.1.0
     - name: redis
-      image: registry1.dso.mil/ironbank/bitnami/redis:7.2.1
+      image: registry1.dso.mil/ironbank/bitnami/redis:7.2.3
     - name: enterprise
       condition: anchoreEnterpriseGlobal.enabled
       image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.9.3

@@ -101,6 +101,8 @@ sso:
       memory: 256Mi
 
   containerSecurityContext:
+    runAsUser: 26
+    runAsGroup: 26
     capabilities:
       drop:
         - ALL
@@ -127,7 +129,6 @@ postgresql:
   # If enabled=false specify an external (already existing) postgres deployment for use.
   # Set to the hostname eg. mypostgres.myserver.io
 
-  externalEndpoint: Null
   externalEndpoint: Null
   postgresUser: anchoreengine
   postgresPassword: anchore-postgres,123
@@ -1094,7 +1095,7 @@ anchore-feeds-gem-db:
   # If enabled=false specify an external (already existing) postgres deployment for use.
   # Set to the hostname eg. mypostgres.myserver.io
   externalEndpoint: Null
-
+  
   securityContext:
     enabled: true
     fsGroup: 26

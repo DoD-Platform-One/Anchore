@@ -3,10 +3,15 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.27.4-bb.5]
+### Changed
+- Update sso securityContext
+- Bumped Redis to `7.2.3`
+
 ## [1.27.4-bb.4]
 ### Changed
 - Bumped Anchore Enterprise tag to  `4.9.3`
-- Bumped Redis chard dependency to `18.3.2-bb.0`
+- Bumped Redis chart dependency to `18.3.2-bb.0`
 - Bumped Postgres to `13.12`
 - Added missing image annotation for Redis
 
