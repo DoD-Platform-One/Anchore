@@ -14,6 +14,11 @@ kpt pkg update chart@anchore-engine-${chart.version} --strategy alpha-git-patch
 ### Modifications made to upstream
 Review the list of [Big Bang Changes](https://repo1.dso.mil/big-bang/product/packages/anchore-enterprise/-/blob/main/docs/BBCHANGES.md) to this chart and ensure they weren't overwritten in the update.
 
+### automountServiceAccountToken
+The mutating Kyverno policy named `update-automountserviceaccounttokens` is leveraged to harden all ServiceAccounts in this package with `automountServiceAccountToken: false`. This policy is configured by namespace in the Big Bang umbrella chart repository at [chart/templates/kyverno-policies/values.yaml](https://repo1.dso.mil/big-bang/bigbang/-/blob/master/chart/templates/kyverno-policies/values.yaml?ref_type=heads). 
+
+This policy revokes access to the K8s API for Pods utilizing said ServiceAccounts. If a Pod truly requires access to the K8s API (for app functionality), the Pod is added to the `pods:` array of the same mutating policy. This grants the Pod access to the API, and creates a Kyverno PolicyException to prevent an alert.
+
 # Testing New Anchore Version
 
 ### Deploy Anchore as part of Big Bang
