@@ -1,6 +1,6 @@
 # anchore
 
-![Version: 1.27.4-bb.6](https://img.shields.io/badge/Version-1.27.4--bb.6-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 1.27.4-bb.7](https://img.shields.io/badge/Version-1.27.4--bb.7-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
 Anchore container analysis and policy evaluation engine service
 
