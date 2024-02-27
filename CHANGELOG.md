@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.27.4-bb.8] - 2024-02-23
+### Updated
+- Added allow-intranamespace policy
+- Added allow-nothing-policy
+- Added ingressgateway-authz-policy
+- Added template for adding user defined policies
+
 ## [1.27.4-bb.7] - 2024-01-04
 ### Changed
 - Bumped Redis chart dependency to `18.3.2-bb.2`

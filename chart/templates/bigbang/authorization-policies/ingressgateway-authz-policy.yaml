@@ -1,0 +1,53 @@
+{{- if and .Values.istio.enabled .Values.istio.hardened.enabled .Values.istio.api.enabled -}}
+{{- range .Values.istio.api.gateways -}}
+{{- $gatewayParts := split "/" . }}
+{{- $namespace := $gatewayParts._0 }}
+{{- $name := $gatewayParts._1 }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ $name }}-ingressgateway-authz-api-policy
+  namespace: {{ $.Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: anchore-anchore-engine
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces:
+        - {{ $namespace }}
+        principals:
+        - "cluster.local/ns/{{ $namespace }}/sa/{{ $name }}-ingressgateway-service-account"
+---
+{{ end -}}
+{{- end }}
+
+---
+
+{{- if and .Values.istio.enabled .Values.istio.hardened.enabled .Values.istio.ui.enabled -}}
+{{- range .Values.istio.ui.gateways -}}
+{{- $gatewayParts := split "/" . }}
+{{- $namespace := $gatewayParts._0 }}
+{{- $name := $gatewayParts._1 }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ $name }}-ingressgateway-authz-ui-policy
+  namespace: {{ $.Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: anchore-anchore-engine
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces:
+        - {{ $namespace }}
+        principals:
+        - "cluster.local/ns/{{ $namespace }}/sa/{{ $name }}-ingressgateway-service-account"
+---
+{{ end -}}
+{{- end }}
