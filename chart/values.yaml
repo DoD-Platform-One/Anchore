@@ -7,6 +7,9 @@ domain: bigbang.dev
 istio:
   # Toggle istio integration
   enabled: false
+  hardened:
+    enabled: false
+    customAuthorizationPolicies: []
   injection: "disabled"
   ui:
     # Toggle vs creation
