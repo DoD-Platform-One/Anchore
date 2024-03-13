@@ -17,32 +17,22 @@ spec:
         matchLabels:
           app: prometheus
     ports:
-    - port: {{ .Values.anchoreApi.service.port }} # anchore engine api (default: 8228)
+    - port: {{ .Values.api.service.port }} # anchore engine api (default: 8228)
       protocol: TCP
-    - port: {{ .Values.anchoreCatalog.service.port }} # anchore catalog api (default: 8082)
+    - port: {{ .Values.catalog.service.port }} # anchore catalog api (default: 8082)
       protocol: TCP
-    - port: {{ .Values.anchorePolicyEngine.service.port }} # anchore policy engine api (default: 8087)
+    - port: {{ .Values.policyEngine.service.port }} # anchore policy engine api (default: 8087)
       protocol: TCP
-    - port: {{ .Values.anchoreSimpleQueue.service.port }} # anchore simplequeue api (default: 8083)
+    - port: {{ .Values.simpleQueue.service.port }} # anchore simplequeue api (default: 8083)
       protocol: TCP
-    - port: {{ .Values.anchoreAnalyzer.containerPort }} # anchore analyzer (default: 8084)
+    - port: {{ .Values.analyzer.service.port }} # anchore analyzer (default: 8084)
       protocol: TCP
-    {{- if .Values.anchoreEnterpriseGlobal.enabled }}
-    {{- if .Values.anchoreEnterpriseFeeds.enabled }}
-    - port: {{ .Values.anchoreEnterpriseFeeds.service.port }} # anchore enterprise feeds api (default: 8448)
+    - port: {{ .Values.feeds.service.port }} # anchore enterprise feeds api (default: 8448)
       protocol: TCP
-    {{- end }}
-    {{- if .Values.anchoreEnterpriseRbac.enabled }}
-    - port: {{ .Values.anchoreEnterpriseRbac.service.managerPort }} # anchore enterprise rbac manager (default: 8229)
+    - port: {{ .Values.rbacManager.service.port }} # anchore enterprise rbac manager (default: 8229)
       protocol: TCP
-    {{- end }}
-    {{- if .Values.anchoreEnterpriseReports.enabled }}
-    - port: {{ .Values.anchoreEnterpriseReports.service.workerPort }} # anchore enterprise reports (default: 8778)
+    - port: {{ .Values.reports.service.port }} # anchore enterprise reports (default: 8778)
       protocol: TCP
-    {{- end }}
-    {{- if .Values.anchoreEnterpriseNotifications.enabled }}
-    - port: {{ .Values.anchoreEnterpriseNotifications.service.port }} # anchore enterprise notifications (default: 8668)
+    - port: {{ .Values.notifications.service.port }} # anchore enterprise notifications (default: 8668)
       protocol: TCP
-    {{- end }}
-  {{- end }}
 {{- end }}

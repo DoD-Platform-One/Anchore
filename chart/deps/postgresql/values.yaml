@@ -13,9 +13,9 @@ global:
 ## ref: https://hub.docker.com/r/bitnami/postgresql/tags/
 ##
 image:
-  registry: docker.io
-  repository: bitnami/postgresql
-  tag: 11.11.0-debian-10-r31
+  registry: registry1.dso.mil
+  repository: ironbank/opensource/postgres/postgresql
+  tag: 13.12
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -25,8 +25,8 @@ image:
   ## Secrets must be manually created in the namespace.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   ##
-  # pullSecrets:
-  #   - myRegistryKeySecretName
+  pullSecrets:
+    - private-registry
 
   ## Set to true if you would like to see extra information on logs
   ## It turns BASH and/or NAMI debugging in the image
@@ -87,14 +87,15 @@ volumePermissions:
 ##
 securityContext:
   enabled: true
-  fsGroup: 1001
+  fsGroup: 26
 
 ## Container Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 ##
 containerSecurityContext:
   enabled: true
-  runAsUser: 1001
+  runAsUser: 26
+  runAsGroup: 26
   capabilities:
     drop:
       - ALL
@@ -163,7 +164,7 @@ postgresqlUsername: postgres
 ## PostgreSQL data dir
 ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md
 ##
-postgresqlDataDir: /bitnami/postgresql/data
+postgresqlDataDir: /var/lib/postgresql/pgdata/data
 
 ## An array to add extra environment variables
 ## For example:
@@ -400,7 +401,7 @@ persistence:
   ## The path the volume will be mounted at, useful when using different
   ## PostgreSQL images.
   ##
-  mountPath: /bitnami/postgresql
+  mountPath: /var/lib/postgresql
 
   ## The subdirectory of the volume to mount to, useful in dev environments
   ## and one PV for multiple services.
@@ -805,7 +806,8 @@ metrics:
   ##
   securityContext:
     enabled: false
-    runAsUser: 1001
+    runAsUser: 26
+    runAsGroup: 26
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
   ## Configure extra options for liveness and readiness probes
   ##

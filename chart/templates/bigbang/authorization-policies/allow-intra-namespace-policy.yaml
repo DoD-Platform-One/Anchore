@@ -8,7 +8,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: anchore-anchore-engine
+      app: anchore-anchore-enterprise
   action: ALLOW
   rules:
   - from:

@@ -2,36 +2,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "anchore-engine.analyzer.fullname" . }}
-  labels:
-    app: {{ template "anchore-engine.fullname" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    component: {{ $component }}
-    {{- with .Values.anchoreAnalyzer.labels }}
-    {{ toYaml . | nindent 4 }}
-    {{- end }}
-    {{- with .Values.anchoreGlobal.labels }}
-    {{ toYaml . | nindent 4 }}
-    {{- end }}
-  {{- if or .Values.anchoreGlobal.deploymentAnnotations .Values.anchoreAnalyzer.deploymentAnnotations }}
-  annotations:
-  {{- with .Values.anchoreGlobal.deploymentAnnotations }}
-    {{ toYaml . | indent 4 }}
-  {{- end }}
-  {{- with .Values.anchoreAnalyzer.deploymentAnnotations }}
-    {{ toYaml . | indent 4 }}
-  {{- end }}
-  {{- end }}
+  name: {{ template "enterprise.analyzer.fullname" . }}
+  labels: {{- include "enterprise.common.labels" (merge (dict "component" $component) .) | nindent 4 }}
+  annotations: {{- include "enterprise.common.annotations" (merge (dict "component" $component "nil" true) .) | nindent 8 }}
 spec:
-  type: {{ .Values.anchoreAnalyzer.serviceType }}
+  type: {{ .Values.analyzer.serviceType }}
   ports:
     - name: analyzer-api
-      port: {{ .Values.anchoreAnalyzer.containerPort }}
-      targetPort: {{ .Values.anchoreAnalyzer.containerPort }}
+      port: {{ .Values.analyzer.service.port }}
+      targetPort: {{ .Values.analyzer.service.port }}
       protocol: TCP
       appProtocol: http
   selector:
-    app: {{ template "anchore-engine.fullname" . }}
-    component: {{ $component }}
+    app.kubernetes.io/name: {{ template "enterprise.analyzer.fullname" . }}
+    app.kubernetes.io/component: {{ $component }}

@@ -1,66 +1,62 @@
-apiVersion: v2
 name: anchore
-version: 1.27.4-bb.8
-appVersion: 1.1.0
-description: Anchore container analysis and policy evaluation engine service
+version: 2.0.2-bb.0
+apiVersion: v2
+appVersion: 4.9.3
+kubeVersion: 1.23.x - 1.28.x || 1.23.x-x - 1.28.x-x
+description: |
+  Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
+  it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
+  It is based on Anchore Engine, an open-source image inspection and scanning tool.
 keywords:
   - analysis
   - docker
   - anchore
   - "anchore-engine"
+  - "anchore-enterprise"
   - image
   - security
   - vulnerability
   - scanner
 home: https://anchore.com
 sources:
-  - https://github.com/anchore/anchore-engine
+  - https://github.com/anchore/anchore-charts/tree/master/stable/enterprise
 maintainers:
   - name: zhill
     email: zach@anchore.com
   - name: btodhunter
     email: bradyt@anchore.com
-engine: gotpl
-icon: https://anchoreprd.wpengine.com/wp-content/uploads/2021/12/favicon.png
+  - name: hnguyen
+    email: hung.nguyen@anchore.com
+icon: https://anchore.com/wp-content/uploads/2016/08/anchore.png
 dependencies:
- - name: postgresql
-   version: "10.3.13"
-   repository: "file://./deps/postgresql"
-   condition: postgresql.enabled
- - name: postgresql
-   version: "10.3.13"
-   repository: "file://./deps/postgresql"
-   condition: anchore-feeds-db.enabled,anchoreEnterpriseGlobal.enabled
-   alias: anchore-feeds-db
- - name: postgresql
-   version: "10.3.13"
-   repository: "file://./deps/postgresql"
-   condition: anchore-feeds-gem-db.enabled,anchoreEnterpriseFeeds.gemDriverEnabled
-   alias: anchore-feeds-gem-db
- - name: redis
-   version: 18.3.2-bb.2
-   repository: "oci://registry1.dso.mil/bigbang"
-   condition: ui-redis.enabled,anchoreEnterpriseGlobal.enabled
-   alias: ui-redis
- - name: gluon
-   version: "0.4.4"
-   repository: "oci://registry1.dso.mil/bigbang"
+  - name: postgresql
+    version: "10.3.13"
+    repository: "file://./deps/postgresql"
+    condition: postgresql.enabled
+  - name: feeds
+    version: "1.0.2"
+    repository: "file://./deps/feeds"
+    condition: feeds.enabled
+    alias: feeds
+  - name: redis
+    version: 18.3.2-bb.2
+    repository: "oci://registry1.dso.mil/bigbang"
+    condition: ui-redis.enabled
+    alias: ui-redis
+  - name: gluon
+    version: "0.4.4"
+    repository: "oci://registry1.dso.mil/bigbang"
 annotations:
   bigbang.dev/applicationVersions: |
     - Enterprise: 4.9.3
-    - Engine: 1.1.0
   # Note engine image won't be used at all if enterprise is enabled
   helm.sh/images: |
-    - name: engine
-      image: registry1.dso.mil/ironbank/anchore/engine/engine:1.1.0
     - name: redis
       image: registry1.dso.mil/ironbank/bitnami/redis:7.2.3
     - name: enterprise
-      condition: anchoreEnterpriseGlobal.enabled
       image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.9.3
     - name: postgresql
       condition: postgresql.enabled
       image: registry1.dso.mil/ironbank/opensource/postgres/postgresql:13.12
     - name: enterpriseui
-      condition: anchoreEnterpriseGlobal.enabled
       image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.9.0

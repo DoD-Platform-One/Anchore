@@ -1,14 +1,14 @@
 # To upgrade the Anchore Package
 
-Check the [upstream release notes](https://docs.anchore.com/current/docs/releasenotes/) and the [helm chart upgrade notes](https://github.com/anchore/anchore-charts/tree/main/stable/anchore-engine#upgrading-from-previous-chart-versions).
+Check the [upstream release notes](https://docs.anchore.com/current/docs/releasenotes/) and the [helm chart upgrade notes](https://github.com/anchore/anchore-charts/tree/main/stable/enterprise#upgrading-the-chart).
 
 ### Upgrading
 
-Find the latest anchore-engine chart version that corresponds with the Anchore Enterprise version identified by Renovate.
+Find the latest enterprise chart version that corresponds with the Anchore Enterprise version identified by Renovate.
 
 Update the chart with KPT
 ```shell
-kpt pkg update chart@anchore-engine-${chart.version} --strategy alpha-git-patch
+kpt pkg update chart@enterprise-${chart.version} --strategy alpha-git-patch
 ```
 
 ### Modifications made to upstream

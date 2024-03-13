@@ -1,19 +1,15 @@
 {{- $component := "analyzer" -}}
+
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: {{ template "anchore-engine.analyzer.fullname" . }}
-  labels:
-    app: {{ template "anchore-engine.fullname" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    component: {{ $component }}
-    {{- with .Values.anchoreGlobal.labels }}
-    {{ toYaml . | nindent 4 }}
-    {{- end }}
+  name: {{ template "enterprise.analyzer.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "enterprise.common.labels" (merge (dict "component" $component) .) | nindent 4 }}
+  annotations: {{- include "enterprise.common.annotations" (merge (dict "component" $component) .) | nindent 4 }}
 data:
   analyzer_config.yaml: |
-{{- with .Values.anchoreAnalyzer.configFile }}
-{{- toYaml . | nindent 4 }}
-{{- end }}
+    # Anchore analyzer configuration
+  {{- with .Values.anchoreConfig.analyzer.configFile }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}

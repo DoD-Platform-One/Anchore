@@ -48,8 +48,8 @@ spec:
             - name: ANCHORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  {{- if .Values.anchoreGlobal.existingSecret }}
-                  name: {{ .Values.anchoreGlobal.existingSecret }}
+                  {{- if .Values.global.existingSecret }}
+                  name: {{ .Values.global.existingSecret }}
                   key: ANCHORE_DB_PASSWORD
                   {{- else }}
                   name: anchore-db-credentials
@@ -81,12 +81,12 @@ spec:
               echo "Stopping the istio proxy..."
               curl -X POST http://localhost:15020/quitquitquit
               {{- end }}
-          {{- if .Values.anchoreGlobal.existingSecret }}
+          {{- if .Values.global.existingSecret }}
           env:
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.anchoreGlobal.existingSecret }}
+                  name: {{ .Values.global.existingSecret }}
                   key: ANCHORE_DB_PASSWORD
           {{- end }}
           envFrom:

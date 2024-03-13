@@ -1,5 +1,5 @@
 ---
-{{- if and .Values.istio.enabled .Values.istio.ui.enabled .Values.anchoreEnterpriseGlobal.enabled .Values.anchoreEnterpriseUi.enabled }}
+{{- if and .Values.istio.enabled .Values.istio.ui.enabled }}
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
@@ -29,53 +29,7 @@ spec:
       route:
         - destination:
             port:
-              number: {{ .Values.anchoreEnterpriseUi.service.port }}
-            host: {{ .Release.Name }}-anchore-engine-enterprise-ui
-{{- end }}
----
-{{- if and .Values.istio.enabled .Values.istio.api.enabled }}
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: anchore-engine-api-service
-  namespace: {{ .Release.Namespace }}
-  {{- if .Values.istio.api.labels }}
-  labels:
-{{ toYaml .Values.istio.api.labels | indent 4 }}
-  {{- end }}
-  {{- if .Values.istio.api.annotations }}
-  annotations:
-{{ toYaml .Values.istio.api.annotations | indent 4 }}
-  {{- end }}
-spec:
-  gateways:
-  {{- range .Values.istio.api.gateways }}
-    - {{ . }}
-  {{- end }}
-  hosts:
-  {{- range .Values.istio.api.hosts }}
-    - {{ tpl . $ }}
-  {{- end }}
-  http:
-    - match:
-        - uri:
-            prefix: /metrics
-      route:
-        - destination:
-            port:
-              number: {{ .Values.anchoreApi.service.port }} 
-            host: {{ .Release.Name }}-anchore-engine-api
-      fault:
-        abort:
-          percentage:
-            value: 100
-          httpStatus: 403
-    - match:
-        - uri:
-            prefix: /
-      route:
-        - destination:
-            port:
-              number: {{ .Values.anchoreApi.service.port }} 
-            host: {{ .Release.Name }}-anchore-engine-api
+              number: {{ .Values.ui.service.port }}
+            #host: {{ .Release.Name }}-enterprise-ui
+            host: {{ template "enterprise.ui.fullname" . }}
 {{- end }}

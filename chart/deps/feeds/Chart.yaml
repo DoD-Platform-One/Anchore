@@ -1,0 +1,29 @@
+apiVersion: v2
+name: feeds
+type: application
+version: "1.0.2"
+appVersion: "4.9.3"
+kubeVersion: 1.23.x - 1.28.x || 1.23.x-x - 1.28.x-x
+description: Anchore feeds service
+keywords:
+  - "anchore"
+  - "anchore-feeds"
+maintainers:
+  - name: zhill
+    email: zach@anchore.com
+  - name: btodhunter
+    email: bradyt@anchore.com
+  - name: hnguyen
+    email: hung.nguyen@anchore.com
+icon: https://anchore.com/wp-content/uploads/2016/08/anchore.png
+dependencies:
+  - name: postgresql
+    version: "10.3.13"
+    repository: "file://./deps/postgresql"
+    condition: feeds-db.enabled
+    alias: feeds-db
+  - name: postgresql
+    version: "10.3.13"
+    repository: "file://./deps/postgresql"
+    condition: gem-db.enabled
+    alias: gem-db
