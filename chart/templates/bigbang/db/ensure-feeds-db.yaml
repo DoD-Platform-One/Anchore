@@ -1,5 +1,5 @@
 {{- if and (hasKey (index .Values "anchore-feeds-db") "enabled")  }}
-{{- if and (not (index .Values "anchore-feeds-db" "enabled")) .Values.anchoreEnterpriseGlobal.enabled }}
+{{- if (not (index .Values "anchore-feeds-db" "enabled")) }}
 # Job to sync db and db user with external postgres for Anchore's feeds db
 apiVersion: batch/v1
 kind: Job
@@ -48,8 +48,8 @@ spec:
             - name: FEEDS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  {{- if .Values.anchoreEnterpriseFeeds.existingSecret }}
-                  name: {{ .Values.anchoreEnterpriseFeeds.existingSecret }}
+                  {{- if .Values.feeds.existingSecret }}
+                  name: {{ .Values.feeds.existingSecret }}
                   key: ANCHORE_FEEDS_DB_PASSWORD
                   {{- else }}
                   name: feeds-db-credentials
@@ -81,12 +81,12 @@ spec:
               echo "Stopping the istio proxy..."
               curl -X POST http://localhost:15020/quitquitquit
               {{- end }}
-          {{- if .Values.anchoreEnterpriseFeeds.existingSecret }}
+          {{- if .Values.feeds.existingSecret }}
           env:
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.anchoreEnterpriseFeeds.existingSecret }}
+                  name: {{ .Values.feeds.existingSecret }}
                   key: ANCHORE_FEEDS_DB_PASSWORD
           {{- end }}
           envFrom:

@@ -11,7 +11,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      component: api
+      app.kubernetes.io/component: api
   policyTypes:
   - Egress
   egress:
@@ -33,7 +33,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      component: catalog
+      app.kubernetes.io/component: catalog
   policyTypes:
   - Egress
   egress:
@@ -52,7 +52,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      component: analyzer
+      app.kubernetes.io/component: analyzer
   policyTypes:
   - Egress
   egress:
@@ -62,10 +62,8 @@ spec:
         # ONLY Block requests to AWS metadata IP
         except:
         - 169.254.169.254/32
-{{- if or (hasKey .Values.postgresql "enabled") (not .Values.anchoreEnterpriseGlobal.enabled) }}
-{{- if or (not .Values.postgresql.enabled) (not .Values.anchoreEnterpriseGlobal.enabled) }}
 ---
-# if an external db is enabled OR anchore enterprise is disabled, the policy engine pods will require egress to communicate with the db OR pull opensource feed data
+# policy engine pods will require egress to pull opensource feed data
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -74,7 +72,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      component: policy
+      app.kubernetes.io/component: policy
   policyTypes:
   - Egress
   egress:
@@ -84,12 +82,8 @@ spec:
         # ONLY Block requests to AWS metadata IP
         except:
         - 169.254.169.254/32
-{{- end }}
-{{- end }}
-{{- if hasKey .Values.postgresql "enabled" }}
-{{- if (not .Values.postgresql.enabled) }}
 ---
-# if an external db is enabled, the simplequeue pod will require egress to communicate with the db
+# the simplequeue pod will require egress to communicate with catalog
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -98,7 +92,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      component: simplequeue
+      app.kubernetes.io/component: simplequeue
   policyTypes:
   - Egress
   egress:
@@ -108,10 +102,11 @@ spec:
         # ONLY Block requests to AWS metadata IP
         except:
         - 169.254.169.254/32
+{{- if hasKey .Values.postgresql "enabled" }}
+{{- if (not .Values.postgresql.enabled) }}
 ---
-{{- if .Values.anchoreEnterpriseGlobal.enabled }}
-# if an external db and enterprise are enabled, the RBAC, Reports, and Notifications pods will require egress to communicate with the db
-{{- if .Values.anchoreEnterpriseRbac.enabled }}
+# if an external db is enabled, the RBAC, Reports, and Notifications pods will require egress to communicate with the db
+{{- if .Values.rbacAuth.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -120,7 +115,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      component: enterprise-rbac
+      app.kubernetes.io/component: enterprise-rbac
   policyTypes:
   - Egress
   egress:
@@ -132,7 +127,7 @@ spec:
         - 169.254.169.254/32
 ---
 {{- end }}
-{{- if .Values.anchoreEnterpriseReports.enabled }}
+{{- if .Values.reports.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -141,7 +136,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      component: enterprise-reports
+      app.kubernetes.io/component: enterprise-reports
   policyTypes:
   - Egress
   egress:
@@ -153,7 +148,7 @@ spec:
         - 169.254.169.254/32
 ---
 {{- end }}
-{{- if .Values.anchoreEnterpriseNotifications.enabled }}
+{{- if .Values.notifications.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -162,7 +157,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      component: enterprise-notifications
+      app.kubernetes.io/component: enterprise-notifications
   policyTypes:
   - Egress
   egress:
@@ -175,10 +170,8 @@ spec:
 {{- end }}
 {{- end }}
 {{- end }}
-{{- end }}
-{{- if .Values.anchoreEnterpriseGlobal.enabled }}
 ---
-# if anchore enterprise is enabled, the enterprise feeds pod will require egress to pull enterprise feed data
+# enterprise feeds pod will require egress to pull enterprise feed data
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -187,7 +180,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      component: enterprise-feeds
+      app.kubernetes.io/component: feeds
   policyTypes:
   - Egress
   egress:
@@ -197,9 +190,8 @@ spec:
         # ONLY Block requests to AWS metadata IP
         except:
         - 169.254.169.254/32
-{{- end }}
 {{- if or (hasKey (index .Values "ui-redis") "enabled") (hasKey .Values.postgresql "enabled") }}
-{{- if and (or (not (index .Values "ui-redis" "enabled")) (not .Values.postgresql.enabled)) .Values.anchoreEnterpriseGlobal.enabled }}
+{{- if (or (not (index .Values "ui-redis" "enabled")) (not .Values.postgresql.enabled)) }}
 ---
 # if external redis is enabled OR external postgres is enabled, the ui pod will require egress as it depends on redis and interacts with the db to perform specific functions such as SAML
 apiVersion: networking.k8s.io/v1
@@ -210,7 +202,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      component: enterprise-ui
+      app.kubernetes.io/component: ui
   policyTypes:
   - Egress
   egress:

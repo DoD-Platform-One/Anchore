@@ -2,17 +2,14 @@ dependencies:
 - name: postgresql
   repository: file://./deps/postgresql
   version: 10.3.13
-- name: postgresql
-  repository: file://./deps/postgresql
-  version: 10.3.13
-- name: postgresql
-  repository: file://./deps/postgresql
-  version: 10.3.13
+- name: feeds
+  repository: file://./deps/feeds
+  version: 1.0.2
 - name: redis
   repository: oci://registry1.dso.mil/bigbang
   version: 18.3.2-bb.2
 - name: gluon
   repository: oci://registry1.dso.mil/bigbang
   version: 0.4.4
-digest: sha256:e9533c012fc12d9dfc2eb447ff8ed561f0a4f361f314a522bc9c93dfc38e1d1e
-generated: "2024-01-04T11:39:26.111443124-07:00"
+digest: sha256:c7fa2868df47c8f5ba1001bca74725dd921ea22a46e7bdd301c8d729aafa120c
+generated: "2024-03-06T14:58:21.938354319-07:00"

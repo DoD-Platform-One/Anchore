@@ -9,7 +9,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: {{ template "anchore-engine.fullname" . }}
+      app: {{ template "enterprise.fullname" . }}
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
@@ -28,7 +28,6 @@ spec:
         {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
       {{- end }}
       #jobLabel: anchore-metrics-external-api
-    
     - interval: 30s
       path: /metrics
       params:
@@ -43,7 +42,7 @@ spec:
         {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
       {{- end }}
       #jobLabel: anchore-metrics-rbac-manager
-    
+
     - interval: 30s
       path: /metrics
       params:
@@ -89,8 +88,7 @@ spec:
       {{- end }}
       #jobLabel: anchore-metrics-simplequeue-api
 
-    {{- if .Values.anchoreEnterpriseGlobal.enabled }}
-    {{- if .Values.anchoreEnterpriseFeeds.enabled }}
+    {{- if .Values.feeds.enabled }}
     - interval: 30s
       path: /metrics
       params:
@@ -106,7 +104,8 @@ spec:
       {{- end }}
       #jobLabel: anchore-metrics-feeds-api
     {{- end }}
-    {{- if .Values.anchoreEnterpriseRbac.enabled }}
+
+    {{- if .Values.rbacAuth.enabled }}
     - interval: 30s
       path: /metrics
       params:
@@ -122,7 +121,8 @@ spec:
       {{- end }}
       #jobLabel: anchore-metrics-enterprise-rbac
     {{- end }}
-    {{- if .Values.anchoreEnterpriseReports.enabled }}
+
+    {{- if .Values.reports.enabled }}
     - interval: 30s
       path: /metrics
       params:
@@ -138,7 +138,8 @@ spec:
       {{- end }}
       #jobLabel: anchore-metrics-enterprise-reports
     {{- end }}
-    {{- if .Values.anchoreEnterpriseNotifications.enabled }}
+
+    {{- if .Values.notifications.enabled }}
     - interval: 30s
       path: /metrics
       params:
@@ -154,6 +155,7 @@ spec:
       {{- end }}
       #jobLabel: anchore-metrics-enterprise-notifications
     {{- end }}
+
     ## Big Bang replaced PodMonitor with this ServiceMonitor endpoint
     - interval: 30s
       path: /metrics
@@ -169,5 +171,4 @@ spec:
         {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
       {{- end }}
       #jobLabel: anchore-anchor-analyzer-metrics-mtls
-  {{- end }}
 {{- end }}

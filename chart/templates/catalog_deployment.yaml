@@ -1,312 +1,98 @@
 {{- $component := "catalog" -}}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "anchore-engine.catalog.fullname" . }}
-  labels:
-    app: {{ template "anchore-engine.fullname" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    component: {{ $component }}
-    {{- with .Values.anchoreCatalog.labels }}
-    {{ toYaml . | nindent 4 }}
-    {{- end }}
-    {{- with .Values.anchoreGlobal.labels }}
-    {{ toYaml . | nindent 4 }}
-    {{- end }}
-  {{- if or .Values.anchoreGlobal.deploymentAnnotations .Values.anchoreCatalog.deploymentAnnotations }}
-  annotations:
-  {{- with .Values.anchoreGlobal.deploymentAnnotations }}
-    {{ toYaml . | indent 4 }}
-  {{- end }}
-  {{- with .Values.anchoreCatalog.deploymentAnnotations }}
-    {{ toYaml . | indent 4 }}
-  {{- end }}
-  {{- end }}
+  name: {{ template "enterprise.catalog.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "enterprise.common.labels" (merge (dict "component" $component) .) | nindent 4 }}
+  annotations: {{- include "enterprise.common.annotations" (merge (dict "component" $component) .) | nindent 4 }}
 spec:
   selector:
-    matchLabels:
-      app: {{ template "anchore-engine.fullname" . }}
-      component: {{ $component }}
-  replicas: {{ .Values.anchoreCatalog.replicaCount }}
+    matchLabels: {{- include "enterprise.common.matchLabels" (merge (dict "component" $component) .) | nindent 6 }}
+  replicas: {{ .Values.catalog.replicaCount }}
   strategy:
     type: Recreate
-    rollingUpdate: null
   template:
     metadata:
-      labels:
-        app: {{ template "anchore-engine.fullname" . }}
-        component: {{ $component }}
-        {{- with .Values.anchoreCatalog.labels }}
-        {{ toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.anchoreGlobal.labels }}
-        {{ toYaml . | nindent 8 }}
-        {{- end }}
-      annotations:
-      {{- with .Values.anchoreGlobal.annotations }}
-        {{ toYaml . | nindent 8 }}
+      labels: {{- include "enterprise.common.labels" (merge (dict "component" $component) .) | nindent 8 }}
+      annotations: {{- include "enterprise.common.annotations" (merge (dict "component" $component "nil" true) .) | nindent 8 }}
+        checksum/enterprise-config: {{ include (print $.Template.BasePath "/anchore_configmap.yaml") . | sha256sum }}
+      {{- if and (not .Values.injectSecretsViaEnv) (not .Values.useExistingSecrets) }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/anchore_secret.yaml") . | sha256sum }}
       {{- end }}
-      {{- with .Values.anchoreCatalog.annotations }}
-        {{ toYaml . | nindent 8 }}
-      {{- end }}
-      {{- if not .Values.inject_secrets_via_env }}
-        checksum/secrets: {{ include (print $.Template.BasePath "/engine_secret.yaml") . | sha256sum }}
-      {{- end }}
-        checksum/engine-config: {{ include (print $.Template.BasePath "/engine_configmap.yaml") . | sha256sum }}
-      {{- if .Values.anchoreGlobal.policyBundles }}
-        checksum/policy-config: {{ include (print $.Template.BasePath "/policy_bundle_configmap.yaml") . | sha256sum }}
+      {{- if .Values.anchoreConfig.policyBundles }}
+        checksum/policy-config: {{ include (print $.Template.BasePath "/policybundle_configmap.yaml") . | sha256sum }}
       {{- end }}
     spec:
-      {{- with .Values.anchoreGlobal.securityContext }}
-      securityContext:
-        {{ toYaml . | nindent 8 }}
+      {{- include "enterprise.common.podSpec" (merge (dict "component" $component) .) | indent 6 }}
+      volumes: {{- include "enterprise.common.volumes" . | nindent 8 }}
+        - name: anchore-scratch
+        {{- if .Values.scratchVolume.details }}
+          {{- toYaml .Values.scratchVolume.details | nindent 10 }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+      {{- if .Values.anchoreConfig.policyBundles }}
+        - name: policy-bundle-volume
+          configMap:
+            name: {{ template "enterprise.fullname" . }}-policy-bundles
       {{- end }}
-    {{- if .Values.anchoreEnterpriseGlobal.enabled }}
-      imagePullSecrets:
-      - name: {{ .Values.anchoreEnterpriseGlobal.imagePullSecretName }}
-    {{- else }}
-      {{- with .Values.anchoreGlobal.imagePullSecretName }}
-      imagePullSecrets:
-      - name: {{ . }}
-      {{- end }}
-    {{- end }}
-    {{- if and .Values.anchoreGlobal.scratchVolume.fixGroupPermissions .Values.anchoreGlobal.securityContext.fsGroup }}
+    {{- if and .Values.scratchVolume.fixGroupPermissions .Values.securityContext.fsGroup }}
       initContainers:
-        - name: mode-fixer
-          image: alpine
-          securityContext:
-            runAsUser: 0
-            capabilites:
-              drop:
-                - ALL
-          volumeMounts:
-            - name: {{ $component }}-scratch
-              mountPath: {{ .Values.anchoreGlobal.scratchVolume.mountPath }}
-          command:
-            - sh
-            - -c
-            - (chmod 0775 {{ .Values.anchoreGlobal.scratchVolume.mountPath }}; chgrp {{ .Values.anchoreGlobal.securityContext.fsGroup }} {{ .Values.anchoreGlobal.scratchVolume.mountPath }} )
+        {{- include "enterprise.common.fixPermissionsInitContainer" . | nindent 8 }}
     {{- end }}
       containers:
       {{- if .Values.cloudsql.enabled  }}
-      - name: cloudsql-proxy
-        image: {{ .Values.cloudsql.image.repository }}:{{ .Values.cloudsql.image.tag }}
-        imagePullPolicy: {{ .Values.cloudsql.image.pullPolicy }}
-        securityContext: {{- toYaml .Values.anchoreCatalog.containerSecurityContext | nindent 10 }}
-        command: ["/cloud_sql_proxy"]
-        args:
-        {{- if .Values.cloudsql.extraArgs }}
-        {{- range $arg := .Values.cloudsql.extraArgs }}
-        - {{ quote $arg }}
-        {{- end }}
-        {{- end }}
-        - "-instances={{ .Values.cloudsql.instance }}=tcp:5432"
-        {{- if .Values.cloudsql.useExistingServiceAcc }}
-        - "-credential_file=/var/{{ .Values.cloudsql.serviceAccSecretName }}/{{ .Values.cloudsql.serviceAccJsonName }}"
-        volumeMounts:
-        - mountPath: /var/{{ .Values.cloudsql.serviceAccSecretName }}
-          name: {{ .Values.cloudsql.serviceAccSecretName }}
-          readOnly: true
-        {{- end }}
+        {{- include "enterprise.common.cloudsqlContainer" . | nindent 8 }}
       {{- end }}
-      - name: {{ .Chart.Name }}-{{ $component }}
-        {{- if .Values.anchoreEnterpriseGlobal.enabled }}
-        image: {{ .Values.anchoreEnterpriseGlobal.image }}
-        imagePullPolicy: {{ .Values.anchoreEnterpriseGlobal.imagePullPolicy }}
-        {{- else }}
-        image: {{ .Values.anchoreGlobal.image }}
-        imagePullPolicy: {{ .Values.anchoreGlobal.imagePullPolicy }}
+        - name: "{{ .Chart.Name }}-{{ $component | lower }}"
+          image: {{ .Values.image }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+        {{- with .Values.containerSecurityContext }}
+          securityContext:
+            {{ toYaml . | nindent 12 }}
         {{- end }}
-        securityContext: {{- toYaml .Values.anchoreCatalog.containerSecurityContext | nindent 10 }}
-        command: ["/bin/sh", "-c"]
-        {{- if .Values.anchoreEnterpriseGlobal.enabled }}
-        args:
-        - {{ print (include "doSourceFile" .) }} /docker-entrypoint.sh anchore-enterprise-manager service start --no-auto-upgrade catalog
-        {{- else }}
-        args:
-        - {{ print (include "doSourceFile" .) }} /docker-entrypoint.sh anchore-manager service start --no-auto-upgrade catalog
+          command: ["/bin/sh", "-c"]
+          args:
+            - {{ print (include "enterprise.common.dockerEntrypoint" .) }} catalog
+          envFrom: {{- include "enterprise.common.envFrom" . | nindent 12 }}
+          env: {{- include "enterprise.common.environment" (merge (dict "component" $component) .) | nindent 12 }}
+          ports:
+            - name: {{ $component | lower }}
+              containerPort: {{ .Values.catalog.service.port }}
+          volumeMounts: {{- include "enterprise.common.volumeMounts" . | nindent 12 }}
+            - name: anchore-scratch
+              mountPath: {{ .Values.scratchVolume.mountPath }}
+        {{- if .Values.anchoreConfig.policyBundles }}
+          {{- range $key, $value := .Values.anchoreConfig.policyBundles }}
+            - name: policy-bundle-volume
+              mountPath: {{ $.Values.anchoreConfig.service_dir  }}/policies/{{ $key }}
+              subPath: {{ $key }}
+          {{- end }}
         {{- end }}
-        envFrom:
-        {{- if not .Values.inject_secrets_via_env }}
-        {{- if .Values.anchoreGlobal.useExistingSecrets }}
-        - secretRef:
-            name: {{ .Values.anchoreGlobal.existingSecretName }}
-        {{- else }}
-        - secretRef:
-            name: {{ include "anchore-engine.fullname" . }}
-        - secretRef:
-            name: {{ print (include "anchore-engine.fullname" .) "-admin-pass" }}
+          livenessProbe: {{- include "enterprise.common.livenessProbe" (merge (dict "component" $component) .) | nindent 12 }}
+          readinessProbe: {{- include "enterprise.common.readinessProbe" (merge (dict "component" $component) .) | nindent 12 }}
+        {{- with .Values.catalog.resources }}
+          resources: {{- toYaml . | nindent 12 }}
         {{- end }}
-        {{- end }}
-        env:
-        {{- with .Values.anchoreGlobal.extraEnv }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        {{- with .Values.anchoreCatalog.extraEnv }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        - name: ANCHORE_POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        ports:
-        - name: catalog
-          containerPort: {{ .Values.anchoreCatalog.service.port }}
-        volumeMounts:
-        {{- if .Values.anchoreEnterpriseGlobal.enabled }}
-        - name: anchore-license
-          mountPath: /home/anchore/license.yaml
-          subPath: license.yaml
-        {{- end }}
-        - name: config-volume
-          mountPath: /config/config.yaml
-          subPath: config.yaml
-        - name: {{ $component }}-scratch
-          mountPath: {{ .Values.anchoreGlobal.scratchVolume.mountPath }}
-        {{- if .Values.anchoreGlobal.policyBundles }}
-        {{- range $key, $value := .Values.anchoreGlobal.policyBundles }}
-        - name: policy-bundle-volume
-          mountPath: {{ $.Values.anchoreGlobal.serviceDir  }}/bundles/{{ $key }}
-          subPath: {{ $key }}
-        {{- end }}
-        {{- end }}
-        {{- if .Values.anchoreGlobal.openShiftDeployment }}
-        - name: service-config-volume
-          mountPath: /anchore_service_config
-        - name: logs
-          mountPath: /var/log/anchore
-        - name: run
-          mountPath: /var/run/anchore
-        {{- end }}
-        {{- if (.Values.anchoreGlobal.certStoreSecretName) }}
-        - name: certs
-          mountPath: /home/anchore/certs/
-          readOnly: true
-        {{- end }}
-        {{- with .Values.anchoreGlobal.extraVolumeMounts }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: catalog
-            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-            scheme: HTTPS
-            {{- end }}
-          initialDelaySeconds: {{ .Values.anchoreGlobal.probes.liveness.initialDelaySeconds }}
-          timeoutSeconds: {{ .Values.anchoreGlobal.probes.liveness.timeoutSeconds }}
-          periodSeconds: {{ .Values.anchoreGlobal.probes.liveness.periodSeconds }}
-          failureThreshold: {{ .Values.anchoreGlobal.probes.liveness.failureThreshold }}
-          successThreshold: {{ .Values.anchoreGlobal.probes.liveness.successThreshold }}
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: catalog
-            {{- if .Values.anchoreGlobal.internalServicesSsl.enabled }}
-            scheme: HTTPS
-            {{- end }}
-          timeoutSeconds: {{ .Values.anchoreGlobal.probes.readiness.timeoutSeconds }}
-          periodSeconds: {{ .Values.anchoreGlobal.probes.readiness.periodSeconds }}
-          failureThreshold: {{ .Values.anchoreGlobal.probes.readiness.failureThreshold }}
-          successThreshold: {{ .Values.anchoreGlobal.probes.readiness.successThreshold }}
-        resources:
-          {{ toYaml .Values.anchoreCatalog.resources | nindent 10 }}
-      volumes:
-        {{- if .Values.anchoreEnterpriseGlobal.enabled }}
-        - name: anchore-license
-          secret:
-            secretName: {{ .Values.anchoreEnterpriseGlobal.licenseSecretName }}
-        {{- end }}
-        - name: config-volume
-          configMap:
-            name: {{ template "anchore-engine.fullname" . }}
-        - name: {{ $component }}-scratch
-        {{- if .Values.anchoreGlobal.scratchVolume.details }}
-          {{- toYaml .Values.anchoreGlobal.scratchVolume.details | nindent 10 }}
-        {{- else }}
-          emptyDir: {}
-        {{- end }}
-        {{- if .Values.anchoreGlobal.policyBundles }}
-        - name: policy-bundle-volume
-          configMap:
-            name: {{ template "anchore-engine.fullname" . }}-policy-bundles
-        {{- end }}
-        {{- if .Values.anchoreGlobal.openShiftDeployment }}
-        - name: service-config-volume
-          emptyDir: {}
-        - name: logs
-          emptyDir: {}
-        - name: run
-          emptyDir: {}
-        {{- end }}
-        {{- with .Values.anchoreGlobal.certStoreSecretName }}
-        - name: certs
-          secret:
-            secretName: {{ . }}
-        {{- end }}
-        {{- if .Values.cloudsql.useExistingServiceAcc }}
-        - name: {{ .Values.cloudsql.serviceAccSecretName }}
-          secret:
-            secretName: {{ .Values.cloudsql.serviceAccSecretName }}
-        {{- end }}
-        {{- with .Values.anchoreGlobal.extraVolumes }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-      {{- with .Values.anchoreCatalog.nodeSelector }}
-      nodeSelector:
-        {{ toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.anchoreCatalog.affinity }}
-      affinity:
-        {{ toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.anchoreCatalog.tolerations }}
-      tolerations:
-        {{ toYaml . | nindent 8 }}
-      {{- end }}
-      {{- if or .Values.anchoreCatalog.serviceAccountName .Values.anchoreGlobal.serviceAccountName }}
-      serviceAccountName: {{ include "anchore-engine.catalog.serviceAccountName" . }}
-      {{- else if .Release.IsUpgrade }}
-      # Including serviceAccount to remove existing service accounts from all deployments
-      # see - https://github.com/kubernetes/kubernetes/issues/76367
-      serviceAccount: ""
-      serviceAccountName: ""
-      {{- end }}
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "anchore-engine.catalog.serviceName" . }}
-  labels:
-    app: {{ template "anchore-engine.fullname" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    component: {{ $component }}
-    {{- with .Values.anchoreCatalog.service.labels }}
-    {{ toYaml . | nindent 4 }}
-    {{- end }}
-    {{- with .Values.anchoreGlobal.labels }}
-    {{ toYaml . | nindent 4 }}
-    {{- end }}
-  {{- with .Values.anchoreCatalog.service.annotations }}
-  annotations:
-    {{ toYaml . | nindent 4 }}
-  {{- end }}
+  name: {{ template "enterprise.catalog.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "enterprise.common.labels" (merge (dict "component" $component) .) | nindent 4 }}
+  annotations: {{- include "enterprise.common.annotations" (merge (dict "component" $component) .) | nindent 4 }}
 spec:
-  type: {{ .Values.anchoreCatalog.service.type }}
+  type: {{ .Values.catalog.service.type }}
   ports:
-    - name: anchore-catalog-api
-      port: {{ .Values.anchoreCatalog.service.port }}
-      targetPort: {{ .Values.anchoreCatalog.service.port }}
+    - name: {{ $component | lower }}
+      port: {{ .Values.catalog.service.port }}
+      targetPort: {{ .Values.catalog.service.port }}
       protocol: TCP
-      appProtocol: http
-      {{- with .Values.anchoreCatalog.service.nodePort }}
-      nodePort: {{ . }}
-      {{- end }}
+      {{ include "service.nodePort" (merge (dict "component" $component) .) }}
   selector:
-    app: {{ template "anchore-engine.fullname" . }}
-    component: {{ $component }}
+    app.kubernetes.io/name: {{ template "enterprise.fullname" . }}
+    app.kubernetes.io/component: {{ $component | lower }}
