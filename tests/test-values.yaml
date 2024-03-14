@@ -4,6 +4,9 @@ networkPolicies:
 bbtests:
   enabled: true
 
+enterpriseLicenseYaml: |
+  "TBD"
+
 global:
   saml:
     secret: ci-testing-only
