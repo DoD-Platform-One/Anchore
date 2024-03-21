@@ -72,7 +72,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/component: policy
+      app.kubernetes.io/component: policyEngine
   policyTypes:
   - Egress
   egress:
@@ -92,7 +92,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/component: simplequeue
+      app.kubernetes.io/component: simpleQueue
   policyTypes:
   - Egress
   egress:
@@ -115,7 +115,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/component: enterprise-rbac
+      app.kubernetes.io/component: rbacManager
   policyTypes:
   - Egress
   egress:
@@ -136,7 +136,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/component: enterprise-reports
+      app.kubernetes.io/component: reports
   policyTypes:
   - Egress
   egress:
@@ -157,7 +157,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/component: enterprise-notifications
+      app.kubernetes.io/component: notifications
   policyTypes:
   - Egress
   egress:
