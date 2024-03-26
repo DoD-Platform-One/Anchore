@@ -466,7 +466,7 @@ gem-db:
 feedsUpgradeJob:
   ## @param feedsUpgradeJob.enabled Enable the Anchore Feeds database upgrade job
   ##
-  enabled: false
+  enabled: true
 
   ## @param feedsUpgradeJob.force Force the Anchore Feeds database upgrade job to run as a regular job instead of as a Helm hook
   ##

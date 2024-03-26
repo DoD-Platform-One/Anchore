@@ -23,14 +23,14 @@ spec:
             key: ANCHORE_DB_HOST
             name: {{ .Values.migrationAnchoreEngineSecretName }}
       - name: NEW_DB_PASSWORD
-        value: {{ .Values.postgresql.auth.password }}
+        value: {{ .Values.postgresql.postgresPassword }}
       - name: OLD_DB_PASSWORD
         valueFrom:
           secretKeyRef:
             key: ANCHORE_DB_PASSWORD
             name: {{ .Values.migrationAnchoreEngineSecretName }}
       - name: NEW_DB_USERNAME
-        value: {{ .Values.postgresql.auth.username }}
+        value: {{ .Values.postgresql.postgresUser }}
       - name: OLD_DB_USERNAME
         valueFrom:
           secretKeyRef:
@@ -42,5 +42,5 @@ spec:
             key: ANCHORE_DB_NAME
             name: {{ .Values.migrationAnchoreEngineSecretName }}
       - name: NEW_DB_NAME
-        value: {{ .Values.postgresql.auth.database }}
+        value: {{ .Values.postgresql.postgresDatabase }}
 {{- end -}}

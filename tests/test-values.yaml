@@ -13,3 +13,4 @@ global:
 
 anchoreAnalyzer:
   replicaCount: 1
+

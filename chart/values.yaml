@@ -29,6 +29,9 @@ istio:
       - istio-system/main
     hosts:
       - "anchore-api.{{ .Values.domain }}"
+    service:
+      apiVersion: v2
+
   # -- Default peer authentication
   mtls:
     # -- STRICT = Allow only mutual TLS traffic,
@@ -58,11 +61,11 @@ postgresqlSuperUser:
 ensureDbJobs:
   resources:
     limits:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 2
+      memory: 2G
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 2
+      memory: 2G
 
 # Enable Prometheus Monitoring
 monitoring:
@@ -134,7 +137,7 @@ global:
 ## ** Big Bang Change **
 ## @param image Image used for all Anchore Enterprise deployments, excluding Anchore UI
 ##
-image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.9.3
+image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.3.0
 
 ## @param imagePullPolicy Image pull policy used by all deployments
 ## ref: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
@@ -368,6 +371,8 @@ anchoreConfig:
   ## @param anchoreConfig.user_authentication.sso_require_existing_users set to true in order to disable the SSO JIT provisioning during authentication
   ## This provides an additional layer of security and configuration for SSO users to gain access to Anchore.
   ##
+  ## @param anchoreConfig.user_authentication.remove_deleted_user_api_keys_older_than_days
+  ## The number of days elapsed after a user API key is deleted before it is garbage collected (-1 to disable)
   user_authentication:
     oauth:
       enabled: true
@@ -378,6 +383,7 @@ anchoreConfig:
     max_api_keys_per_user: 100
     hashed_passwords: true
     sso_require_existing_users: false
+    remove_deleted_user_api_keys_older_than_days: 365
 
   ## @param anchoreConfig.metrics.enabled Enable Prometheus metrics for all Anchore services
   ## @param anchoreConfig.metrics.auth_disabled Disable auth on Prometheus metrics for all Anchore services
@@ -650,6 +656,19 @@ anchoreConfig:
     ## This may need to be adjusted if the system has large amounts of data and reports are being prematurely timed out.
     ## The value should be a number followed by "w", "d", or "h" to represent weeks, days or hours
     async_execution_timeout: 48h
+
+    ## @param anchoreConfig.reports.cycle_timers.reports_scheduled_queries Interval in seconds to check for scheduled queries that need to be run
+    ##
+    cycle_timers:
+      reports_scheduled_queries: 600
+
+    ## @param anchoreConfig.reports.use_volume Configure the reports service to buffer report generation to disk instead of in memory
+    ## This should be configured in production systems with large amounts of data (10s of thousands of images or more)
+    ## Generally speaking you need to provision 2x the size of the largest report that you expect to generate
+    ## We recommend utilizing an ephemeral PVC for your scratch volume, this makes it easy to provision enough storage for large reports
+    ## Scratch volume can be configured using .Values.reports.scratchVolume.details object
+    ##
+    use_volume: false
 
   reports_worker:
     ## @param anchoreConfig.reports_worker.enable_data_ingress Enable periodically syncing data into the Anchore Reports Service
@@ -986,11 +1005,11 @@ feeds:
 
   service:
     port: 8448
-    apiVersion: v1
+    apiVersion: v2
 
   ## ** Big Bang Feeds Chart Values **
   # See: https://github.com/anchore/anchore-charts/blob/main/stable/feeds/values.yaml
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:4.9.3
+  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.3.0
 
   imagePullSecretName: private-registry
 
@@ -1024,7 +1043,7 @@ feeds:
   # Going to be pass-throughs to a local pg sub-chart...
   feeds-db:
     enabled: true
-  
+
     image:
       registry: registry1.dso.mil
       repository: ironbank/opensource/postgres/postgresql
@@ -1046,13 +1065,13 @@ feeds:
     postgresUser: anchore
     postgresPassword: anchore-postgres,123
     postgresDatabase: anchore
-  
+
     securityContext:
       enabled: true
       fsGroup: 26
       runAsUser: 26
       runAsGroup: 26
-  
+
     containerSecurityContext:
       enabled: true
       runAsUser: 26
@@ -1060,7 +1079,7 @@ feeds:
       capabilities:
         drop:
           - ALL
-  
+
     # Configure resource limits and requests for the postgresql deployment
     resources:
       limits:
@@ -1078,7 +1097,7 @@ feeds:
         requests:
           cpu: 100m
           memory: 256Mi
-  
+
     primary:
       # Configure size of the persistent volume used with helm managed chart.
       # This should be commented out if using an external endpoint.
@@ -1105,10 +1124,10 @@ feeds:
     pgHbaConfiguration: |-
       local all all md5
       host all all all md5
-  
+
   gem-db:
     enabled: false
-  
+
     image:
       registry: registry1.dso.mil
       repository: ironbank/opensource/postgres/postgresql
@@ -1122,18 +1141,18 @@ feeds:
     postgresUser: anchore
     postgresPassword: anchore-postgres,123
     postgresDatabase: anchore
-  
+
     securityContext:
       enabled: true
       fsGroup: 26
       runAsUser: 26
       runAsGroup: 26
-  
+
     primary:
       persistence:
         enabled: false
       postgresqlDataDir: /var/lib/postgresql/data
-  
+
       podSecurityContext:
         enabled: true
         fsGroup: 26
@@ -1485,7 +1504,7 @@ ui:
   ## ** Big Bang Change **
   ## @param ui.image Image used for the Anchore UI container
   ##
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:4.9.0
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.3.2
 
   ## @param ui.imagePullPolicy Image pull policy for Anchore UI image
   ##
@@ -1652,7 +1671,7 @@ ingress:
 
   ## @param ingress.apiHosts List of custom hostnames for the Anchore API
   ##
-  #apiHosts: []
+  apiHosts: []
 
   ## @param ingress.apiPaths The path used for accessing the Anchore API
   ##
@@ -1662,7 +1681,7 @@ ingress:
 
   ## @param ingress.uiHosts List of custom hostnames for the Anchore UI
   ##
-  #uiHosts: []
+  uiHosts: []
 
   ## @param ingress.uiPath The path used for accessing the Anchore UI
   ##
@@ -1670,7 +1689,7 @@ ingress:
 
   ## @param ingress.feedsHosts List of custom hostnames for the Anchore Feeds API
   ##
-  #feedsHosts: []
+  feedsHosts: []
 
   ## @param ingress.feedsPaths The path used for accessing the Anchore Feeds API
   ## Exposing the feeds API is for special cases only, use /v2/feeds for ingress.feedsPath
@@ -1791,14 +1810,9 @@ postgresql:
   externalEndpoint: ""
 
   ## ** Big Bang Change **
-  ## @param postgresql.auth.username Username used to connect to postgresql
-  ## @param postgresql.auth.password Password used to connect to postgresql
-  ## @param postgresql.auth.database Database name used when connecting to postgresql
-  ##
-  # auth:
-  #   username: anchore
-  #   password: anchore-postgres,123
-  #   database: anchore
+  ## @param postgresql.postgresUser Username used to connect to postgresql
+  ## @param postgresql.postgresPassword Password used to connect to postgresql
+  ## @param postgresql.postgresDatabase Database name used when connecting to postgresql
 
   primary:
     ## @param postgresql.primary.service.ports.postgresql Port used to connect to Postgresql
