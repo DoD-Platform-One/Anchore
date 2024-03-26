@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [2.0.2-bb.2] - 2024-03-22
+### Changed
+- Bumped Anchore Enterprise tag to `5.3.0`
+- Bumped Anchore Enterprise UI tag to `5.3.2`
+- Bumped Anchore Enterprise chart to `2.4.2`
+- Bumped Anchore Feeds chart to `2.2.0`
+- Bumped Postgres chart to `12.5.9`
+
 ## [2.0.2-bb.1] - 2024-03-20
 ### Changed
 - BigBang provided NetworkPolicy labels

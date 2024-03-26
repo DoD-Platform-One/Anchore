@@ -1,9 +1,9 @@
 dependencies:
 - name: postgresql
   repository: file://./deps/postgresql
-  version: 10.3.13
+  version: 12.5.9
 - name: postgresql
   repository: file://./deps/postgresql
-  version: 10.3.13
-digest: sha256:06499b5d41e834674af05d2b0f311313b8149d1505f741e874a43ab3be18dd22
-generated: "2024-03-06T14:58:07.285916634-07:00"
+  version: 12.5.9
+digest: sha256:19565a5fce6e6b55d61599aeebae86e7de4c994d35acb3bbbc16e004b338b36f
+generated: "2024-03-22T15:20:25.335026246-04:00"
