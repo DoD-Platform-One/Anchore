@@ -43,4 +43,8 @@ spec:
             name: {{ .Values.migrationAnchoreEngineSecretName }}
       - name: NEW_DB_NAME
         value: {{ .Values.postgresql.postgresDatabase }}
+  {{- with .Values.imagePullSecretName }}
+  imagePullSecrets:
+  - name: {{ . }}
+  {{- end }}
 {{- end -}}
