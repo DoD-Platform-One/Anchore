@@ -153,15 +153,11 @@ imagePullSecretName: private-registry
 
 ## @param startMigrationPod Spin up a Database migration pod to help migrate the database to the new schema
 ##
-startMigrationPod: false
+startMigrationPod: true
 
 ## @param migrationPodImage The image reference to the migration pod
 ##
 migrationPodImage: registry1.dso.mil/ironbank/opensource/postgres/postgresql:13.12
-
-## @param migrationAnchoreEngineSecretName The name of the secret that has anchore-engine values
-##
-migrationAnchoreEngineSecretName: anchore-anchore-enterprise
 
 ## @param serviceAccountName Name of a service account used to run all Anchore pods
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/

@@ -102,7 +102,7 @@ spec:
                 sleep 10
               done
           {{- with .Values.containerSecurityContext }}
-          securityContext: {{ toYaml . | nindent 10 }}
+          securityContext: {{ toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.feedsUpgradeJob.resources }}
           resources: {{- toYaml . | nindent 10 }}
