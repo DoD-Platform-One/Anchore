@@ -1,6 +1,6 @@
 # anchore
 
-![Version: 2.4.2-bb.2](https://img.shields.io/badge/Version-2.4.2--bb.2-informational?style=flat-square) ![AppVersion: 5.3.0](https://img.shields.io/badge/AppVersion-5.3.0-informational?style=flat-square)
+![Version: 2.4.2-bb.3](https://img.shields.io/badge/Version-2.4.2--bb.3-informational?style=flat-square) ![AppVersion: 5.3.0](https://img.shields.io/badge/AppVersion-5.3.0-informational?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -98,9 +98,8 @@ helm install anchore chart/
 | image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.3.0"` |  |
 | imagePullPolicy | string | `"IfNotPresent"` |  |
 | imagePullSecretName | string | `"private-registry"` |  |
-| startMigrationPod | bool | `false` |  |
+| startMigrationPod | bool | `true` |  |
 | migrationPodImage | string | `"registry1.dso.mil/ironbank/opensource/postgres/postgresql:13.12"` |  |
-| migrationAnchoreEngineSecretName | string | `"anchore-anchore-enterprise"` |  |
 | serviceAccountName | string | `""` |  |
 | injectSecretsViaEnv | bool | `false` |  |
 | licenseSecretName | string | `"anchore-enterprise-license"` |  |

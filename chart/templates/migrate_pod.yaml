@@ -8,12 +8,22 @@ metadata:
   labels:
     app.kubernetes.io/component: upgradejob
 spec:
+  {{- with .Values.securityContext }}
+  securityContext: {{ toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.imagePullSecretName }}
+  imagePullSecrets:
+  - name: {{ . }}
+  {{- end }}
   containers:
   - command: [ "/bin/bash", "-c", "--" ]
     args: [ "sleep infinity" ]
     image: {{ .Values.migrationPodImage }}
     imagePullPolicy: {{ .Values.imagePullPolicy }}
     name: enterprise-migrate-db
+    {{- with .Values.containerSecurityContext }}
+    securityContext: {{ toYaml . | nindent 6 }}
+    {{- end }}
     env:
       - name: NEW_DB_HOST
         value: {{ .Release.Name }}-postgresql
@@ -21,30 +31,26 @@ spec:
         valueFrom:
           secretKeyRef:
             key: ANCHORE_DB_HOST
-            name: {{ .Values.migrationAnchoreEngineSecretName }}
+            name: {{ template "enterprise.fullname" . }}
       - name: NEW_DB_PASSWORD
         value: {{ .Values.postgresql.postgresPassword }}
       - name: OLD_DB_PASSWORD
         valueFrom:
           secretKeyRef:
             key: ANCHORE_DB_PASSWORD
-            name: {{ .Values.migrationAnchoreEngineSecretName }}
+            name: {{ template "enterprise.fullname" . }}
       - name: NEW_DB_USERNAME
         value: {{ .Values.postgresql.postgresUser }}
       - name: OLD_DB_USERNAME
         valueFrom:
           secretKeyRef:
             key: ANCHORE_DB_USER
-            name: {{ .Values.migrationAnchoreEngineSecretName }}
+            name: {{ template "enterprise.fullname" . }}
       - name: OLD_DB_NAME
         valueFrom:
           secretKeyRef:
             key: ANCHORE_DB_NAME
-            name: {{ .Values.migrationAnchoreEngineSecretName }}
+            name: {{ template "enterprise.fullname" . }}
       - name: NEW_DB_NAME
         value: {{ .Values.postgresql.postgresDatabase }}
-  {{- with .Values.imagePullSecretName }}
-  imagePullSecrets:
-  - name: {{ . }}
-  {{- end }}
 {{- end -}}
