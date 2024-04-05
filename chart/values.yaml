@@ -989,6 +989,11 @@ catalog:
 ##########################################
 feeds:
   enabled: true
+  
+  # istio values added by BigBang
+  istio:
+    enabled: false
+    injection: "disabled"
 
   ## @param feeds.standalone Sets the Anchore Feeds chart to run into non-standalone mode, for use with Anchore Enterprise.
   ## This should never be set to true when enabled=true.

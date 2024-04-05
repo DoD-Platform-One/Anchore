@@ -64,7 +64,7 @@ spec:
       {{- end }}
       initContainers:
         - name: scale-down-anchore
-          image: bitnami/kubectl:1.27
+          image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.28.6
           command: ["/bin/bash", "-c"]
           args:
             - |
@@ -150,12 +150,30 @@ spec:
           args:
           {{- if not .Values.anchoreConfig.database.ssl }}
             - |
+              # istio quit logic added by BigBang
               {{ print (include "feeds.doSourceFile" .) }} anchore-enterprise-manager db --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST}":"${ANCHORE_FEEDS_DB_PORT}"/"${ANCHORE_FEEDS_DB_NAME}" upgrade --dontask;
+              {{ if and .Values.istio.enabled (eq .Values.istio.injection "enabled") }}
+              sleep 5
+              echo "Stopping the istio proxy..."
+              curl -X POST http://localhost:15020/quitquitquit
+              {{ end }}
           {{- else if eq .Values.anchoreConfig.database.sslMode "require" }}
             - |
+              # istio quit logic added by BigBang
               {{ print (include "feeds.doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST}":"${ANCHORE_FEEDS_DB_PORT}"/"${ANCHORE_FEEDS_DB_NAME}"?sslmode={{- .Values.anchoreConfig.database.sslMode }} upgrade --dontask;
+              {{ if and .Values.istio.enabled (eq .Values.istio.injection "enabled") }}
+              sleep 5
+              echo "Stopping the istio proxy..."
+              curl -X POST http://localhost:15020/quitquitquit
+              {{ end }}
           {{- else }}
             - |
+              # istio quit logic added by BigBang
               {{ print (include "feeds.doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_FEEDS_DB_USER}":"${ANCHORE_FEEDS_DB_PASSWORD}"@"${ANCHORE_FEEDS_DB_HOST}":"${ANCHORE_FEEDS_DB_PORT}"/"${ANCHORE_FEEDS_DB_NAME}"?sslmode={{- .Values.anchoreConfig.database.sslMode -}}\&sslrootcert=/home/anchore/certs/{{- .Values.anchoreConfig.database.sslRootCertFileName }} upgrade --dontask;
+              {{ if and .Values.istio.enabled (eq .Values.istio.injection "enabled") }}
+              sleep 5
+              echo "Stopping the istio proxy..."
+              curl -X POST http://localhost:15020/quitquitquit
+              {{ end }}
           {{- end }}
 {{- end -}}
