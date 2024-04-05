@@ -64,9 +64,11 @@ spec:
                 echo "Waiting for Istio sidecar proxy..."
                 sleep 3
               done
+              {{ if and .Values.istio.enabled (eq .Values.istio.injection "enabled") }}
               sleep 5
               echo "Stopping the istio proxy..."
               curl -X POST http://localhost:15020/quitquitquit
+              {{ end }}
               {{- end }}
           envFrom:
             - secretRef:

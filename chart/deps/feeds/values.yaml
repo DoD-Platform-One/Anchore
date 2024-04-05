@@ -602,3 +602,8 @@ cloudsql:
   ## - "-enable_iam_login"
   ##
   extraArgs: []
+
+# istio values added by BigBang
+istio:
+  enabled: false
+  injection: "disabled"
