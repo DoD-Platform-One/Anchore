@@ -32,4 +32,52 @@ spec:
               number: {{ .Values.ui.service.port }}
             #host: {{ .Release.Name }}-enterprise-ui
             host: {{ template "enterprise.ui.fullname" . }}
+
+{{- end }}
+---
+{{- if and .Values.istio.enabled .Values.istio.api.enabled }}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: anchore-enterprise-api-service
+  namespace: {{ .Release.Namespace }}
+  {{- if .Values.istio.api.labels }}
+  labels:
+{{ toYaml .Values.istio.api.labels | indent 4 }}
+  {{- end }}
+  {{- if .Values.istio.api.annotations }}
+  annotations:
+{{ toYaml .Values.istio.api.annotations | indent 4 }}
+  {{- end }}
+spec:
+  gateways:
+  {{- range .Values.istio.api.gateways }}
+    - {{ . }}
+  {{- end }}
+  hosts:
+  {{- range .Values.istio.api.hosts }}
+    - {{ tpl . $ }}
+  {{- end }}
+  http:
+    - match:
+        - uri:
+            prefix: /metrics
+      route:
+        - destination:
+            port:
+              number: {{ .Values.api.service.port }}
+            host: {{ .Release.Name }}-anchore-enterprise-api
+      fault:
+        abort:
+          percentage:
+            value: 100
+          httpStatus: 403
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            port:
+              number: {{ .Values.api.service.port }}
+            host: {{ .Release.Name }}-anchore-enterprise-api
 {{- end }}

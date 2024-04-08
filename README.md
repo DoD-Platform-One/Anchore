@@ -1,6 +1,6 @@
 # anchore
 
-![Version: 2.4.2-bb.5](https://img.shields.io/badge/Version-2.4.2--bb.5-informational?style=flat-square) ![AppVersion: 5.3.0](https://img.shields.io/badge/AppVersion-5.3.0-informational?style=flat-square)
+![Version: 2.4.2-bb.6](https://img.shields.io/badge/Version-2.4.2--bb.6-informational?style=flat-square) ![AppVersion: 5.3.0](https://img.shields.io/badge/AppVersion-5.3.0-informational?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -300,6 +300,8 @@ helm install anchore chart/
 | catalog.affinity | object | `{}` |  |
 | catalog.serviceAccountName | string | `""` |  |
 | feeds.enabled | bool | `true` |  |
+| feeds.istio.enabled | bool | `false` |  |
+| feeds.istio.injection | string | `"disabled"` |  |
 | feeds.standalone | bool | `false` |  |
 | feeds.url | string | `""` |  |
 | feeds.service.port | int | `8448` |  |
