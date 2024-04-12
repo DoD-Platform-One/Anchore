@@ -2,7 +2,7 @@
 ## @sectionBig Bangs
 ## Big Bang params for domain, sistio, network, etc.
 ###################################################
-domain: bigbang.dev
+domain: dev.bigbang.mil
 
 istio:
   # Toggle istio integration
