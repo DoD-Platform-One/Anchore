@@ -11,7 +11,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: anchore-anchore-enterprise
+      app.kubernetes.io/name: anchore-anchore-enterprise
   action: ALLOW
   rules:
   - from:
@@ -39,7 +39,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: anchore-anchore-enterprise
+      app.kubernetes.io/name: anchore-anchore-enterprise
   action: ALLOW
   rules:
   - from:

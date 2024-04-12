@@ -1,0 +1,17 @@
+{{- if and .Values.istio.enabled .Values.istio.hardened.enabled -}}
+{{- $namespace := $.Release.Namespace -}}
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: anchore-api-policy
+  namespace: {{ $namespace }}
+spec:
+  action: ALLOW
+  rules:
+  - to:
+    - operation:
+        ports: 
+        - "8228"
+        - "8558"
+        - "8089"
+{{- end }}
