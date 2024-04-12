@@ -44,6 +44,9 @@ networkPolicies:
     app: istio-ingressgateway
     istio: ingressgateway
 
+# -- Openshift Container Platform Feature Toggle
+openshift: false
+
 # Use Database instance Superuser to create postgresql.postgresDatabase, postgresql.postgresUser, anchore-feeds-db.postgresDatabase, and anchore-feeds-db.postgresUser
 postgresqlSuperUser:
   postgresUsername: ""
