@@ -1,7 +1,7 @@
 name: anchore
-version: 2.4.2-bb.8
+version: 2.4.2-bb.9
 apiVersion: v2
-appVersion: 5.3.0
+appVersion: 5.4.1
 kubeVersion: 1.23.x - 1.29.x || 1.23.x-x - 1.29.x-x
 description: |
   Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
@@ -39,24 +39,24 @@ dependencies:
     condition: feeds.enabled
     alias: feeds
   - name: redis
-    version: 18.3.2-bb.2
+    version: 18.15.0-bb.0
     repository: "oci://registry1.dso.mil/bigbang"
     condition: ui-redis.enabled
     alias: ui-redis
   - name: gluon
-    version: "0.4.7"
+    version: "0.4.9"
     repository: "oci://registry1.dso.mil/bigbang"
 annotations:
   bigbang.dev/applicationVersions: |
-    - Enterprise: 5.3.0
+    - Enterprise: 5.4.1
   # Note engine image won't be used at all if enterprise is enabled
   helm.sh/images: |
     - name: redis
-      image: registry1.dso.mil/ironbank/bitnami/redis:7.2.3
+      image: registry1.dso.mil/ironbank/bitnami/redis:7.2.4
     - name: enterprise
-      image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.3.0
+      image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.4.1
     - name: postgresql
       condition: postgresql.enabled
       image: registry1.dso.mil/ironbank/opensource/postgres/postgresql:13.12
     - name: enterpriseui
-      image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.3.2
+      image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.4.0

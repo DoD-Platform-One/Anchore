@@ -1,6 +1,6 @@
 # anchore
 
-![Version: 2.4.2-bb.8](https://img.shields.io/badge/Version-2.4.2--bb.8-informational?style=flat-square) ![AppVersion: 5.3.0](https://img.shields.io/badge/AppVersion-5.3.0-informational?style=flat-square)
+![Version: 2.4.2-bb.9](https://img.shields.io/badge/Version-2.4.2--bb.9-informational?style=flat-square) ![AppVersion: 5.4.1](https://img.shields.io/badge/AppVersion-5.4.1-informational?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -96,7 +96,7 @@ helm install anchore chart/
 | global.fullnameOverride | string | `""` |  |
 | global.nameOverride | string | `"anchore-enterprise"` |  |
 | global.imagePullSecretName | string | `"private-registry"` |  |
-| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.3.0"` |  |
+| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.4.1"` |  |
 | imagePullPolicy | string | `"IfNotPresent"` |  |
 | imagePullSecretName | string | `"private-registry"` |  |
 | startMigrationPod | bool | `true` |  |
@@ -307,7 +307,7 @@ helm install anchore chart/
 | feeds.url | string | `""` |  |
 | feeds.service.port | int | `8448` |  |
 | feeds.service.apiVersion | string | `"v2"` |  |
-| feeds.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.3.0"` |  |
+| feeds.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.4.1"` |  |
 | feeds.imagePullSecretName | string | `"private-registry"` |  |
 | feeds.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | feeds.resources.limits.cpu | int | `1` |  |
@@ -478,7 +478,7 @@ helm install anchore chart/
 | rbacManager.affinity | object | `{}` |  |
 | rbacManager.serviceAccountName | string | `""` |  |
 | ui.enabled | bool | `true` |  |
-| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.3.2"` |  |
+| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.4.0"` |  |
 | ui.imagePullPolicy | string | `"IfNotPresent"` |  |
 | ui.imagePullSecretName | string | `"private-registry"` |  |
 | ui.existingSecretName | string | `"anchore-enterprise-ui-env"` |  |
@@ -505,7 +505,7 @@ helm install anchore chart/
 | upgradeJob.rbacCreate | bool | `true` |  |
 | upgradeJob.serviceAccountName | string | `""` |  |
 | upgradeJob.usePostUpgradeHook | bool | `false` |  |
-| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.28.6"` |  |
+| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.3"` |  |
 | upgradeJob.nodeSelector | object | `{}` |  |
 | upgradeJob.tolerations | list | `[]` |  |
 | upgradeJob.affinity | object | `{}` |  |
