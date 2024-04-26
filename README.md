@@ -1,6 +1,6 @@
 # anchore
 
-![Version: 2.4.2-bb.9](https://img.shields.io/badge/Version-2.4.2--bb.9-informational?style=flat-square) ![AppVersion: 5.4.1](https://img.shields.io/badge/AppVersion-5.4.1-informational?style=flat-square)
+![Version: 2.4.2-bb.10](https://img.shields.io/badge/Version-2.4.2--bb.10-informational?style=flat-square) ![AppVersion: 5.4.1](https://img.shields.io/badge/AppVersion-5.4.1-informational?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -60,6 +60,7 @@ helm install anchore chart/
 | networkPolicies.enabled | bool | `false` |  |
 | networkPolicies.ingressLabels.app | string | `"istio-ingressgateway"` |  |
 | networkPolicies.ingressLabels.istio | string | `"ingressgateway"` |  |
+| networkPolicies.additionalPolicies | list | `[]` |  |
 | openshift | bool | `false` | Openshift Container Platform Feature Toggle |
 | postgresqlSuperUser.postgresUsername | string | `""` |  |
 | postgresqlSuperUser.postgresPassword | string | `""` |  |
