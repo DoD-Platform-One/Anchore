@@ -1,5 +1,5 @@
+{{/* if external db is enabled, allow egress from ensure db job, engine upgrade job, and enterprise engine upgrade job*/}}
 {{- if .Values.networkPolicies.enabled }}
-# if external db is enabled, allow egress from ensure db job, engine upgrade job, and enterprise engine upgrade job
 {{- if (hasKey .Values.postgresql "enabled") }}
 {{- if (not .Values.postgresql.enabled) }}
 ---
@@ -44,7 +44,9 @@ spec:
 {{- end }}
 {{- end }}
 {{- end }}
-# if external feeds db is enabled, allow egress from ensure feeds db job and enterprise feeds upgrade job
+
+{{/* if external feeds db is enabled, allow egress from ensure feeds db job and enterprise feeds upgrade job */}}
+
 {{- if and (hasKey (index .Values "anchore-feeds-db") "enabled")  }}
 {{- if (not (index .Values "anchore-feeds-db" "enabled")) }}
 ---
@@ -89,7 +91,8 @@ spec:
 {{- end }}
 {{- end }}
 {{- end }}
-# if sso is enabled, allow egress from configure sso job
+
+{{/* if sso is enabled, allow egress from configure sso job */}}
 {{- if .Values.sso.enabled }}
 ---
 apiVersion: networking.k8s.io/v1
@@ -112,3 +115,5 @@ spec:
         - 169.254.169.254/32
 {{- end }}
 {{- end }}
+
+

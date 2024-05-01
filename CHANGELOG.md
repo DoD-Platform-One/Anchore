@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [2.4.2-bb.11] - 2024-04-30
+### Changed
+- Update kubeVersion constraints, set minimum kubeVersion and remove max version
+
 ## [2.4.2-bb.10] - 2024-04-23
 ### Added
 - Added additionalNetworkPolicy support via values file

@@ -1,6 +1,7 @@
-# Allow DNS.  Due to inconsistencies in how distros label dns pods,
-# we just allow all port 53.  We could provide better if we enforce/
-# standardize the kube-system labels or the coredns/kubedns labels
+
+{{/*Allow DNS.  Due to inconsistencies in how distros label dns pods, we just allow all port 53.  We could provide better if we enforce */}}
+{{/* standardize the kube-system labels or the coredns/kubedns labels */}}
+
 {{- if .Values.networkPolicies.enabled }}
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
