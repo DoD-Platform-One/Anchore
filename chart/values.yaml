@@ -9,6 +9,21 @@ istio:
   enabled: false
   hardened:
     enabled: false
+    outboundTrafficPolicyMode: "REGISTRY_ONLY"
+    customServiceEntries: []
+      # - name: "allow-google"
+      #   enabled: true
+      #   spec:
+      #     exportTo:
+      #       - "."
+      #     hosts:
+      #       - google.com
+      #     location: MESH_EXTERNAL
+      #     ports:
+      #       - number: 443
+      #         protocol: TLS
+      #         name: https
+      #     resolution: DNS
     customAuthorizationPolicies: []
   injection: "disabled"
   ui:
@@ -59,6 +74,26 @@ networkPolicies:
   #           # Block requests to AWS cloud metadata IP
   #           - 169.254.169.254/32
 
+
+# For stricter control over the enterprise feeds pod egress, uncomment the list of known feeds endpoints below
+# Warning: This list may not be complete depending on your desired feeds
+feedsHosts: []
+  # - anchore-feed-service.s3.amazonaws.com
+  # - packages.cgr.dev
+  # - access.redhat.com
+  # - alas.aws.amazon.com
+  # - secdb.alpinelinux.org
+  # - security-tracker.debian.org
+  # - linux.oracle.com
+  # - git.launchpad.net
+  # - www.redhat.com
+  # - services.nvd.nist.gov
+  # - raw.githubusercontent.com
+  # - ftp.suse.com
+  # - data.anchore-enterprise.com
+  # - packages.wolfi.dev
+  # - packages.gcr.dev
+  # - salsa.debian.org
 
 # -- Openshift Container Platform Feature Toggle
 openshift: false
@@ -899,7 +934,7 @@ analyzer:
     port: 8084
 
   ## ** Big Bang Addition **
-  ## @param analyzer.serviceType The serviceType used to expose metrics 
+  ## @param analyzer.serviceType The serviceType used to expose metrics
   ##
   serviceType: ClusterIP
 
@@ -1152,9 +1187,9 @@ feeds:
       registry: registry1.dso.mil
       repository: ironbank/opensource/postgres/postgresql
       tag: "13.12"
-    #postgresPort: "5432" 
+    #postgresPort: "5432"
     externalEndpoint: Null
-    #auth: 
+    #auth:
     #  username: anchore
     #  password: "anchore-postgres,123"
     #  database: anchore
