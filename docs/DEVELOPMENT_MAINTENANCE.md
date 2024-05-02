@@ -25,7 +25,7 @@ This policy revokes access to the K8s API for Pods utilizing said ServiceAccount
 
 - Obtain the Big Bang dev Anchore enterprise license by following the below instructions:
   - Clone the dogfood repo if you have not already, from https://repo1.dso.mil/big-bang/team/deployments/bigbang.git
-  - Run `sops -d bigbang/prod/environment-bb-secret.enc.yaml | yq '.stringData."values.yaml"' | yq '.addons.anchore.enterprise.licenseYaml'` to get the full license contents.
+  - Run `sops -d bigbang/prod2/environment-bb-secret.enc.yaml | yq '.stringData."values.yaml"' | yq '.addons.anchore.enterprise.licenseYaml'` to get the full license contents.
   - Add the full output from that command under `licenseYaml` in your override values (shown below), making sure that indentation is properly preserved 
 
 `overrides/anchore.yaml`
@@ -38,9 +38,10 @@ addons:
       branch: "renovate/anchore"
     adminPassword: "foobar"
     enterprise:
-      enabled: true
+      # -- License for Anchore Enterprise. Enterprise is the only option available for the chart starting with chart major version 2.X.
+      # For formatting examples see https://repo1.dso.mil/big-bang/product/packages/CHART.md#enabling-enterprise-services
       licenseYaml: |
-            $LICENSE_CONTENT
+        $LICENSE_CONTENT
     sso:
       enabled: true
       client_id: "platform1_a8604cc9-f5e9-4656-802d-d05624370245_bb8-anchore"

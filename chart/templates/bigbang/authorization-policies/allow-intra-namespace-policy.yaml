@@ -6,9 +6,6 @@ metadata:
   name: allow-intranamespace
   namespace: {{ $namespace }}
 spec:
-  selector:
-    matchLabels:
-      app: anchore-anchore-enterprise
   action: ALLOW
   rules:
   - from:
