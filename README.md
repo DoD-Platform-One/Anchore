@@ -1,6 +1,6 @@
 # anchore
 
-![Version: 2.4.2-bb.12](https://img.shields.io/badge/Version-2.4.2--bb.12-informational?style=flat-square) ![AppVersion: 5.4.1](https://img.shields.io/badge/AppVersion-5.4.1-informational?style=flat-square)
+![Version: 2.4.2-bb.13](https://img.shields.io/badge/Version-2.4.2--bb.13-informational?style=flat-square) ![AppVersion: 5.4.1](https://img.shields.io/badge/AppVersion-5.4.1-informational?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
