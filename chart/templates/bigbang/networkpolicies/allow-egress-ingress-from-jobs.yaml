@@ -31,7 +31,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      job-name: enterprise-upgrade
+      app.kubernetes.io/component: upgradejob
   policyTypes:
   - Egress
   - Ingress
