@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [2.4.2-bb.15] - 2024-05-22
+### Changed
+-  Added new label to upgrade job containers to allow access if network policies are enabled
+
 ## [2.4.2-bb.14] - 2024-05-03
 ### Changed
 - Fixed db credential leaking in the ensure anchor db container   
