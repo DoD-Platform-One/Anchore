@@ -1,6 +1,7 @@
+
 # anchore
 
-![Version: 2.4.2-bb.15](https://img.shields.io/badge/Version-2.4.2--bb.15-informational?style=flat-square) ![AppVersion: 5.4.1](https://img.shields.io/badge/AppVersion-5.4.1-informational?style=flat-square)
+![Version: 2.4.2-bb.16](https://img.shields.io/badge/Version-2.4.2--bb.16-informational?style=flat-square) ![AppVersion: 5.4.1](https://img.shields.io/badge/AppVersion-5.4.1-informational?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -20,7 +21,6 @@ It is based on Anchore Engine, an open-source image inspection and scanning tool
 * Kubernetes Cluster deployed
 * Kubernetes config installed in `~/.kube/config`
 * Helm installed
-
 Kubernetes: `>=1.23.x || >=1.23.x-x`
 
 Install Helm
@@ -598,10 +598,19 @@ helm install anchore chart/
 | bbtests.scripts.secretEnvs[0].name | string | `"ANCHORE_CLI_PASS"` |  |
 | bbtests.scripts.secretEnvs[0].valueFrom.secretKeyRef.name | string | `"{{ template \"enterprise.fullname\" . }}"` |  |
 | bbtests.scripts.secretEnvs[0].valueFrom.secretKeyRef.key | string | `"ANCHORE_ADMIN_PASSWORD"` |  |
-| bbtests.scripts.resources.requests.cpu | string | `"1"` |  |
-| bbtests.scripts.resources.requests.memory | string | `"1Gi"` |  |
-| bbtests.scripts.resources.limits.cpu | string | `"1"` |  |
-| bbtests.scripts.resources.limits.memory | string | `"1Gi"` |  |
+| bbtests.cypress.resources.requests.cpu | string | `"1"` |  |
+| bbtests.cypress.resources.requests.memory | string | `"2Gi"` |  |
+| bbtests.cypress.resources.limits.cpu | string | `"1"` |  |
+| bbtests.cypress.resources.limits.memory | string | `"2Gi"` |  |
+| bbtests.cypress.artifacts | bool | `true` |  |
+| bbtests.cypress.envs.cypress_url | string | `"http://{{ template \"enterprise.ui.fullname\" . }}:{{ .Values.ui.service.port }}"` |  |
+| bbtests.cypress.envs.cypress_user | string | `"admin"` |  |
+| bbtests.cypress.envs.cypress_registry | string | `"docker.io"` |  |
+| bbtests.cypress.envs.cypress_repository | string | `"anchore/grype"` |  |
+| bbtests.cypress.envs.cypress_tag | string | `"latest"` |  |
+| bbtests.cypress.secretEnvs[0].name | string | `"cypress_password"` |  |
+| bbtests.cypress.secretEnvs[0].valueFrom.secretKeyRef.name | string | `"{{ template \"enterprise.fullname\" . }}"` |  |
+| bbtests.cypress.secretEnvs[0].valueFrom.secretKeyRef.key | string | `"ANCHORE_ADMIN_PASSWORD"` |  |
 
 ## Contributing
 

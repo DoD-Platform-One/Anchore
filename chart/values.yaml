@@ -1981,10 +1981,24 @@ bbtests:
           secretKeyRef:
             name: "{{ template \"enterprise.fullname\" . }}"
             key: ANCHORE_ADMIN_PASSWORD
+  cypress: 
     resources:
       requests:
         cpu: "1"
-        memory: "1Gi"
+        memory: "2Gi"
       limits:
         cpu: "1"
-        memory: "1Gi"
+        memory: "2Gi"
+    artifacts: true
+    envs: 
+      cypress_url: "http://{{ template \"enterprise.ui.fullname\" . }}:{{ .Values.ui.service.port }}"
+      cypress_user: admin
+      cypress_registry: docker.io
+      cypress_repository: anchore/grype
+      cypress_tag: latest
+    secretEnvs:
+      - name: cypress_password
+        valueFrom:
+          secretKeyRef:
+            name: "{{ template \"enterprise.fullname\" . }}"
+            key: ANCHORE_ADMIN_PASSWORD
