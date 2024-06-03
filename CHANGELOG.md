@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [2.4.2-bb.16] - 2024-05-23
+### Updated
+- Added Cypress tests for pipelines
+- Update Gluon subchart dependency to 0.5.0
+
 ## [2.4.2-bb.15] - 2024-05-22
 ### Changed
 -  Added new label to upgrade job containers to allow access if network policies are enabled
