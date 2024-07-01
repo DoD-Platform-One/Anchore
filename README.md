@@ -1,7 +1,6 @@
-
 # anchore
 
-![Version: 2.4.2-bb.16](https://img.shields.io/badge/Version-2.4.2--bb.16-informational?style=flat-square) ![AppVersion: 5.4.1](https://img.shields.io/badge/AppVersion-5.4.1-informational?style=flat-square)
+![Version: 2.4.2-bb.17](https://img.shields.io/badge/Version-2.4.2--bb.17-informational?style=flat-square) ![AppVersion: 5.4.1](https://img.shields.io/badge/AppVersion-5.4.1-informational?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -10,7 +9,7 @@ It is based on Anchore Engine, an open-source image inspection and scanning tool
 ## Upstream References
 * <https://anchore.com>
 
-* <https://github.com/anchore/anchore-charts/tree/master/stable/enterprise>
+* <https://github.com/anchore/anchore-charts/tree/main/stable/enterprise>
 
 ## Learn More
 * [Application Overview](docs/overview.md)
@@ -21,6 +20,7 @@ It is based on Anchore Engine, an open-source image inspection and scanning tool
 * Kubernetes Cluster deployed
 * Kubernetes config installed in `~/.kube/config`
 * Helm installed
+
 Kubernetes: `>=1.23.x || >=1.23.x-x`
 
 Install Helm
