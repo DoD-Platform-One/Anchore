@@ -25,6 +25,9 @@ istio:
       #         name: https
       #     resolution: DNS
     customAuthorizationPolicies: []
+    # - name: "allow-nothing"
+    #   enabled: true
+    #   spec: {}
   injection: "disabled"
   ui:
     # Toggle vs creation

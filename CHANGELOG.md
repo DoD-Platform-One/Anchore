@@ -3,6 +3,10 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [2.4.2-bb.18] - 2024-07-01
+### Updated
+- Removed the shared AuthorizationPolicies
+
 ## [2.4.2-bb.17] - 2024-06-27
 ### Updated
 - Update upstream reference from github.com/anchore/anchore-charts/tree/master/stable/enterprise to github.com/anchore/anchore-charts/tree/main/stable/enterprise   
