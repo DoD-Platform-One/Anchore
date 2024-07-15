@@ -65,3 +65,27 @@ NOTE: You may disable `kiali`, `kyverno`, `promtail`, `loki`, `neuvector`, `temp
 - [ ] Allow several minutes for the analysis to complete.
 - [ ] Select the repository name of your new tag, confirm `Status` is `Analyzed`
 - [ ] Select the tag SHA and confirm `Metadata`, `Policy Compliance`, and `Action Workbench` have all been Analyzed. (`Vulnerabilities` will be marked unsuccessful, with a red 'X,' this is expected.)
+- [ ] Ensure integration tests are passing by following the [test-package-against-bb](https://repo1.dso.mil/big-bang/bigbang/-/blob/master/docs/developer/test-package-against-bb.md?ref_type=heads) doc and modify test-values with the following settings: 
+  ```yaml
+  addons:
+    anchore:
+      enabled: true
+      git:
+        tag: null
+        branch: my-package-branch-that-needs-testing
+      adminPassword: "foobar"
+      enterprise:
+        # -- License for Anchore Enterprise. Enterprise is the only option available for the chart starting with chart major version 2.X.
+        # For formatting examples see https://repo1.dso.mil/big-bang/product/packages/CHART.md#enabling-enterprise-services
+        licenseYaml: |
+          $LICENSE_CONTENT
+      sso:
+        enabled: true
+        client_id: "platform1_a8604cc9-f5e9-4656-802d-d05624370245_bb8-anchore"
+      values:
+        anchoreAnalyzer:
+          replicaCount: 2
+      istio:
+        hardened:
+          enabled: true
+    ```
