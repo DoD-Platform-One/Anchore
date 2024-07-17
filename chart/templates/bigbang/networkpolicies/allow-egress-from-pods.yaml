@@ -105,28 +105,6 @@ spec:
 {{- if hasKey .Values.postgresql "enabled" }}
 {{- if (not .Values.postgresql.enabled) }}
 ---
-# if an external db is enabled, the RBAC, Reports, and Notifications pods will require egress to communicate with the db
-{{- if .Values.rbacAuth.enabled }}
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-egress-from-rbac
-  namespace: {{ .Release.Namespace }}
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/component: rbacmanager
-  policyTypes:
-  - Egress
-  egress:
-  - to:
-    - ipBlock:
-        cidr: 0.0.0.0/0
-        # ONLY Block requests to AWS metadata IP
-        except:
-        - 169.254.169.254/32
----
-{{- end }}
 {{- if .Values.reports.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

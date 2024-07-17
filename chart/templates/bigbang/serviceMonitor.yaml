@@ -91,23 +91,6 @@ spec:
       #jobLabel: anchore-metrics-feeds-api
     {{- end }}
 
-    {{- if .Values.rbacAuth.enabled }}
-    - interval: 30s
-      path: /metrics
-      params:
-        format:
-          - prometheus
-      port: rbac
-      {{- if .Values.monitoring.serviceMonitor.scheme }}
-      scheme: {{ .Values.monitoring.serviceMonitor.scheme }}
-      {{- end }}
-      {{- if .Values.monitoring.serviceMonitor.tlsConfig }}
-      tlsConfig:
-        {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
-      {{- end }}
-      #jobLabel: anchore-metrics-enterprise-rbac
-    {{- end }}
-
     {{- if .Values.reports.enabled }}
     - interval: 30s
       path: /metrics
