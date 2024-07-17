@@ -12,6 +12,7 @@
     }
   ],
   "separateMajorMinor": "false",
+  "postUpdateOptions": ["helmUpdateSubChartArchives"],
   "ignoreDeps": ["docker.io/bitnami/redis-sentinel", "docker.io/bitnami/redis-sentinel-exporter", "docker.io/bitnami/bitnami-shell", "gcr.io/cloudsql-docker/gce-proxy"],
   "ignorePaths": ["chart/deps/postgresql/**", "chart/deps/redis/**"],
   "regexManagers": [
