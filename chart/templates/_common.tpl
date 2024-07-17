@@ -19,6 +19,25 @@ When calling this template, .component can be included in the context for compon
 {{- end }}
 {{- end -}}
 
+{{/*
+Service annotations
+{{- include "enterprise.service.annotations" (merge (dict "component" $component) .) }}
+*/}}
+{{- define "enterprise.service.annotations" -}}
+{{- $component := .component -}}
+{{- if and (not .nil) (not .Values.annotations) (not (index .Values (print $component)).service.annotations) }}
+  {{- print "{}" }}
+{{- else }}
+  {{- with .Values.annotations -}}
+{{ toYaml . }}
+  {{- end }}
+  {{- if $component }}
+    {{- with (index .Values (print $component)).service.annotations }}
+{{ toYaml . }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- end -}}
 
 {{/*
 Setup a container for the cloudsql proxy to run in all pods when .Values.cloudsql.enabled = true
@@ -90,11 +109,7 @@ When calling this template, .component can be included in the context for compon
 {{ toYaml . }}
   {{- end }}
 - name: ANCHORE_ENDPOINT_HOSTNAME
-  {{- if and (eq $component "reports") (eq .api "true") }}
-  value: {{ template "enterprise.api.fullname" . }}
-  {{- else }}
-  value: {{ include (printf "enterprise.%s.fullname" $component) . }}
-  {{- end }}
+  value: {{ include (printf "enterprise.%s.fullname" $component) . }}.{{ .Release.Namespace }}.svc.cluster.local
   {{- with (index .Values (print $component)).service }}
 - name: ANCHORE_PORT
   value: {{ .port | quote }}
@@ -107,6 +122,42 @@ When calling this template, .component can be included in the context for compon
   valueFrom:
     fieldRef:
       fieldPath: metadata.name
+{{- end -}}
+
+
+{{/*
+Common extraVolumes
+When calling this template, .component can be included in the context for component specific annotations
+{{- include "enterprise.common.extraVolumes" (merge (dict "component" $component) .) }}
+*/}}
+{{- define "enterprise.common.extraVolumes" -}}
+{{- $component := .component -}}
+{{- with .Values.extraVolumes }}
+{{ toYaml . }}
+{{- end }}
+{{- if $component }}
+  {{- with (index .Values (print $component)).extraVolumes }}
+{{ toYaml . }}
+  {{- end }}
+{{- end }}
+{{- end -}}
+
+
+{{/*
+Common extraVolumeMounts
+When calling this template, .component can be included in the context for component specific annotations
+{{- include "enterprise.common.extraVolumes" (merge (dict "component" $component) .) }}
+*/}}
+{{- define "enterprise.common.extraVolumeMounts" -}}
+{{- $component := .component -}}
+{{- with .Values.extraVolumeMounts }}
+{{ toYaml . }}
+{{- end }}
+{{- if $component }}
+  {{- with (index .Values (print $component)).extraVolumeMounts }}
+{{ toYaml . }}
+  {{- end }}
+{{- end }}
 {{- end -}}
 
 
@@ -192,68 +243,21 @@ Setup the common pod spec configs
 {{- with .Values.securityContext }}
 securityContext: {{- toYaml . | nindent 2 }}
 {{- end }}
-{{- if or .Values.serviceAccountName (index .Values (print $component)).serviceAccountName (eq $component "upgradeJob") }}
+{{- if or .Values.serviceAccountName (index .Values (print $component)).serviceAccountName (eq $component "upgradeJob") (eq $component "osaaMigrationJob") }}
 serviceAccountName: {{ include "enterprise.serviceAccountName" (merge (dict "component" $component) .) }}
 {{- end }}
 {{- with .Values.imagePullSecretName }}
 imagePullSecrets:
   - name: {{ . }}
 {{- end }}
-{{- with (index .Values (print $component)).nodeSelector }}
+{{- with (default .Values.nodeSelector (index .Values (print $component)).nodeSelector) }}
 nodeSelector: {{- toYaml . | nindent 2 }}
 {{- end }}
-{{- with (index .Values (print $component)).affinity }}
+{{- with (default .Values.affinity (index .Values (print $component)).affinity) }}
 affinity: {{- toYaml . | nindent 2 }}
 {{- end }}
-{{- with (index .Values (print $component)).tolerations }}
+{{- with (default .Values.tolerations (index .Values (print $component)).tolerations) }}
 tolerations: {{- toYaml . | nindent 2 }}
-{{- end }}
-{{- end -}}
-
-
-{{/*
-Setup a container for the Anchore Enterprise RBAC Auth for pods that need to authenticate with the API
-*/}}
-{{- define "enterprise.common.rbacAuthContainer" -}}
-- name: rbac-auth
-  image: {{ .Values.image }}
-  imagePullPolicy: {{ .Values.imagePullPolicy }}
-{{- with .Values.containerSecurityContext }}
-  securityContext:
-    {{ toYaml . | nindent 4 }}
-{{- end }}
-  command: ["/bin/sh", "-c"]
-  args:
-    - {{ print (include "enterprise.common.dockerEntrypoint" .) }} rbac_authorizer
-  envFrom: {{- include "enterprise.common.envFrom" . | nindent 4 }}
-  env: {{- include "enterprise.common.environment" (merge (dict "component" "rbacAuth") .) | nindent 4 }}
-  ports:
-    - containerPort: 8089
-      name: rbac-auth
-  volumeMounts: {{- include "enterprise.common.volumeMounts" . | nindent 4 }}
-  livenessProbe:
-    exec:
-      command:
-        - curl
-        - -f
-        - 'localhost:8089/health'
-    initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
-    timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
-    periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
-    failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
-    successThreshold: {{ .Values.probes.liveness.successThreshold }}
-  readinessProbe:
-    exec:
-      command:
-        - curl
-        - -f
-        - 'localhost:8089/health'
-    timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
-    periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-    failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
-    successThreshold: {{ .Values.probes.readiness.successThreshold }}
-{{- with .Values.rbacAuth.resources }}
-  resources: {{- toYaml . | nindent 4 }}
 {{- end }}
 {{- end -}}
 
@@ -278,9 +282,8 @@ successThreshold: {{ .Values.probes.readiness.successThreshold }}
 Setup the common anchore volume mounts
 */}}
 {{- define "enterprise.common.volumeMounts" -}}
-{{- with .Values.extraVolumeMounts }}
-{{ toYaml . }}
-{{- end }}
+{{- $component := .component -}}
+{{- include "enterprise.common.extraVolumeMounts" (merge (dict "component" $component) .) }}
 - name: anchore-license
   mountPath: /home/anchore/license.yaml
   subPath: license.yaml
@@ -301,9 +304,8 @@ Setup the common anchore volume mounts
 Setup the common anchore volumes
 */}}
 {{- define "enterprise.common.volumes" -}}
-{{- with .Values.extraVolumes }}
-{{ toYaml . }}
-{{- end }}
+{{- $component := .component -}}
+{{- include "enterprise.common.extraVolumes" (merge (dict "component" $component) .) }}
 - name: anchore-license
   secret:
     secretName: {{ .Values.licenseSecretName }}
@@ -311,9 +313,15 @@ Setup the common anchore volumes
   configMap:
     name: {{ .Release.Name }}-enterprise-scripts
     defaultMode: 0755
+{{- if .Values.osaaMigrationJob.enabled }}
+- name: config-volume
+  configMap:
+    name: {{ template "enterprise.osaaMigrationJob.fullname" . }}
+{{- else }}
 - name: config-volume
   configMap:
     name: {{ template "enterprise.fullname" . }}
+{{- end }}
 {{- with .Values.certStoreSecretName }}
 - name: certs
   secret:

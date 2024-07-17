@@ -23,7 +23,7 @@ spec:
         checksum/ui-config: {{ include (print $.Template.BasePath "/ui_configmap.yaml") . | sha256sum }}
     spec:
       {{- include "enterprise.common.podSpec" (merge (dict "component" $component) .) | indent 6 }}
-      volumes:
+      volumes: {{- include "enterprise.common.extraVolumes" (merge (dict "component" $component) .) | nindent 8 }}
         - name: anchore-license
           secret:
             secretName: {{ .Values.licenseSecretName }}
@@ -40,9 +40,6 @@ spec:
           secret:
             secretName: {{ .Values.cloudsql.serviceAccSecretName }}
       {{- end }}
-      {{- with .Values.extraVolumes }}
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       containers:
       {{- if .Values.cloudsql.enabled  }}
         {{- include "enterprise.common.cloudsqlContainer" . | nindent 8 }}
@@ -56,7 +53,7 @@ spec:
         {{- end }}
           command: ["/bin/sh", "-c"]
           args:
-            - {{ print (include "enterprise.doSourceFile" .) }} /docker-entrypoint.sh node /home/node/aui/build/server.js
+            - {{ print (include "enterprise.doSourceFile" .) }} /docker-entrypoint.sh node /home/node/aui/build/server.js {{ print (include "enterprise.ui.featureFlags" .) }}
           env: {{- include "enterprise.common.environment" (merge (dict "component" $component) .) | nindent 12 }}
           {{- if .Values.anchoreConfig.database.ssl }}
             - name: PGSSLROOTCERT
@@ -80,7 +77,7 @@ spec:
             - containerPort: 3000
               protocol: TCP
               name: {{ $component | lower }}
-          volumeMounts:
+          volumeMounts: {{- include "enterprise.common.extraVolumeMounts" (merge (dict "component" $component) .) | nindent 12 }}
             - name: anchore-license
               mountPath: /home/anchore/license.yaml
               subPath: license.yaml
@@ -91,9 +88,6 @@ spec:
             - name: certs
               mountPath: /home/anchore/certs/
               readOnly: true
-          {{- end }}
-          {{- with .Values.extraVolumeMounts }}
-            {{- toYaml . | nindent 12 }}
           {{- end }}
           livenessProbe:
             tcpSocket:
@@ -123,7 +117,7 @@ metadata:
   name: {{ template "enterprise.ui.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels: {{- include "enterprise.common.labels" (merge (dict "component" $component) .) | nindent 4 }}
-  annotations: {{- include "enterprise.common.annotations" (merge (dict "component" $component) .) | nindent 4 }}
+  annotations: {{- include "enterprise.service.annotations" (merge (dict "component" $component) .) | nindent 4 }}
 spec:
   sessionAffinity: {{ .Values.ui.service.sessionAffinity }}
   type: {{ .Values.ui.service.type }}

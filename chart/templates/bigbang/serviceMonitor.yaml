@@ -28,20 +28,6 @@ spec:
         {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
       {{- end }}
       #jobLabel: anchore-metrics-external-api
-    - interval: 30s
-      path: /metrics
-      params:
-        format:
-          - prometheus
-      port: anchore-rbac-manager
-      {{- if .Values.monitoring.serviceMonitor.scheme }}
-      scheme: {{ .Values.monitoring.serviceMonitor.scheme }}
-      {{- end }}
-      {{- if .Values.monitoring.serviceMonitor.tlsConfig }}
-      tlsConfig:
-        {{- toYaml .Values.monitoring.serviceMonitor.tlsConfig | nindent 8 }}
-      {{- end }}
-      #jobLabel: anchore-metrics-rbac-manager
 
     - interval: 30s
       path: /metrics
