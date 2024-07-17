@@ -29,8 +29,6 @@ spec:
       protocol: TCP
     - port: {{ .Values.feeds.service.port }} # anchore enterprise feeds api (default: 8448)
       protocol: TCP
-    - port: {{ .Values.rbacManager.service.port }} # anchore enterprise rbac manager (default: 8229)
-      protocol: TCP
     - port: {{ .Values.reports.service.port }} # anchore enterprise reports (default: 8778)
       protocol: TCP
     - port: {{ .Values.notifications.service.port }} # anchore enterprise notifications (default: 8668)

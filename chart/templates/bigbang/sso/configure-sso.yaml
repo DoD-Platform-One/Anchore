@@ -43,7 +43,7 @@ spec:
               idp_metadata_xml=$(echo ${idp_metadata_xml_raw} | sed 's/"/\\\\"/g')
 
               # Wait for Anchore Engine API to go live
-              while [ $(curl -sw '%{http_code}' "http://{{ template "enterprise.rbacManager.fullname" . }}:{{ .Values.rbacManager.service.port }}/v2/openapi.json" -o /dev/null) -ne 200 ]; do
+              while [ $(curl -sw '%{http_code}' "http://{{ template "enterprise.api.fullname" . }}:{{ .Values.api.service.port }}/v2/openapi.json" -o /dev/null) -ne 200 ]; do
                 echo "Waiting for Anchore API..."
                 sleep 10;
               done

@@ -37,16 +37,6 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s-%s" .Release.Name $name "policy"| trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "enterprise.rbacAuth.fullname" -}}
-{{- $name := default .Chart.Name .Values.global.nameOverride -}}
-{{- printf "%s-%s-%s" .Release.Name $name "rbac-auth"| trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "enterprise.rbacManager.fullname" -}}
-{{- $name := default .Chart.Name .Values.global.nameOverride -}}
-{{- printf "%s-%s-%s" .Release.Name $name "rbac-manager"| trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
 {{- define "enterprise.reports.fullname" -}}
 {{- $name := default .Chart.Name .Values.global.nameOverride -}}
 {{- printf "%s-%s-%s" .Release.Name $name "reports"| trunc 63 | trimSuffix "-" -}}
@@ -69,6 +59,11 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- $forcedRevision = printf "-forced-%s" (randAlphaNum 5 | lower) -}}
 {{- end }}
 {{- printf "%s-%s-%s-%s%s" .Release.Name $name (.Chart.AppVersion | replace "." "") "upgrade" $forcedRevision| trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "enterprise.osaaMigrationJob.fullname" -}}
+{{- $name := default .Chart.Name .Values.global.nameOverride -}}
+{{- printf "%s-%s-%s-%s" .Release.Name $name (.Chart.AppVersion | replace "." "") "osaa-migration-job" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "enterprise.feeds.fullname" -}}

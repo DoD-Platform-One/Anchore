@@ -9,7 +9,7 @@ describe('Anchore Login', () => {
     cy.wait(3000); // wait for the dashboard to load
     cy.get('body').then($body => {
       if ($body.find('h2:contains("Welcome to Anchore Enterprise")').length > 0) {
-        cy.get('button[data-action="skip"]').click()
+        cy.get('button[data-action="close"]').click()
       } else {
         // Check if the dashboard is loaded
         cy.contains('Welcome to your Dashboard!')
@@ -18,6 +18,9 @@ describe('Anchore Login', () => {
   })
 })
 
+
+/*
+// Commented out due to changes in https://docs.anchore.com/current/docs/releasenotes/560/ that removed data-test tags on UI elements
 describe('Analyze Image', () => {
   it('Admin should be able to analyze an image', () => {
     // Navigate to images
@@ -34,3 +37,4 @@ describe('Analyze Image', () => {
     cy.get('button[class="ui red mini basic compact icon button"]').click()
   })
 })
+*/
