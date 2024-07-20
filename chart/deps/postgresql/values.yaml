@@ -15,7 +15,7 @@ global:
 image:
   registry: registry1.dso.mil
   repository: ironbank/opensource/postgres/postgresql
-  tag: 13.12
+  tag: 16.2
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -87,15 +87,15 @@ volumePermissions:
 ##
 securityContext:
   enabled: true
-  fsGroup: 26
+  fsGroup: 1001
 
 ## Container Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 ##
 containerSecurityContext:
   enabled: true
-  runAsUser: 26
-  runAsGroup: 26
+  runAsUser: 1001
+  runAsGroup: 1001
   capabilities:
     drop:
       - ALL
@@ -164,7 +164,7 @@ postgresqlUsername: postgres
 ## PostgreSQL data dir
 ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md
 ##
-postgresqlDataDir: /var/lib/postgresql/pgdata/data
+postgresqlDataDir: /var/lib/postgresql/data
 
 ## An array to add extra environment variables
 ## For example:
@@ -806,8 +806,8 @@ metrics:
   ##
   securityContext:
     enabled: false
-    runAsUser: 26
-    runAsGroup: 26
+    runAsUser: 1001
+    runAsGroup: 1001
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
   ## Configure extra options for liveness and readiness probes
   ##

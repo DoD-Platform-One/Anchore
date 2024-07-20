@@ -164,8 +164,8 @@ sso:
       memory: 256Mi
 
   containerSecurityContext:
-    runAsUser: 26
-    runAsGroup: 26
+    runAsUser: 1001
+    runAsGroup: 1001
     capabilities:
       drop:
         - ALL
@@ -195,7 +195,7 @@ global:
 ## ** Big Bang Change **
 ## @param image Image used for all Anchore Enterprise deployments, excluding Anchore UI
 ##
-image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.6.0
+image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.7.0
 
 ## @param imagePullPolicy Image pull policy used by all deployments
 ## ref: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
@@ -215,7 +215,7 @@ startMigrationPod: true
 
 ## @param migrationPodImage The image reference to the migration pod
 ##
-migrationPodImage: registry1.dso.mil/ironbank/opensource/postgres/postgresql:13.12
+migrationPodImage: registry1.dso.mil/ironbank/opensource/postgres/postgresql:16.2
 
 ## @param serviceAccountName Name of a service account used to run all Anchore pods
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
@@ -1138,7 +1138,7 @@ feeds:
 
   ## ** Big Bang Feeds Chart Values **
   # See: https://github.com/anchore/anchore-charts/blob/main/stable/feeds/values.yaml
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.6.0
+  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.7.0
 
   imagePullSecretName: private-registry
 
@@ -1172,7 +1172,7 @@ feeds:
     image:
       registry: registry1.dso.mil
       repository: ironbank/opensource/postgres/postgresql
-      tag: "13.12"
+      tag: "16.2"
     global:
       imagePullSecrets:
         - private-registry
@@ -1193,14 +1193,14 @@ feeds:
 
     securityContext:
       enabled: true
-      fsGroup: 26
-      runAsUser: 26
-      runAsGroup: 26
+      fsGroup: 1001
+      runAsUser: 1001
+      runAsGroup: 1001
 
     containerSecurityContext:
       enabled: true
-      runAsUser: 26
-      runAsGroup: 26
+      runAsUser: 1001
+      runAsGroup: 1001
       capabilities:
         drop:
           - ALL
@@ -1234,13 +1234,13 @@ feeds:
       postgresqlDataDir: /var/lib/postgresql/data
       podSecurityContext:
         enabled: true
-        fsGroup: 26
-        runAsUser: 26
-        runAsGroup: 26
+        fsGroup: 1001
+        runAsUser: 1001
+        runAsGroup: 1001
       containerSecurityContext:
         enabled: true
-        runAsUser: 26
-        runAsGroup: 26
+        runAsUser: 1001
+        runAsGroup: 1001
         capabilities:
           drop:
             - ALL
@@ -1269,9 +1269,9 @@ feeds:
 
     securityContext:
       enabled: true
-      fsGroup: 26
-      runAsUser: 26
-      runAsGroup: 26
+      fsGroup: 1001
+      runAsUser: 1001
+      runAsGroup: 1001
 
     primary:
       persistence:
@@ -1280,13 +1280,13 @@ feeds:
 
       podSecurityContext:
         enabled: true
-        fsGroup: 26
-        runAsUser: 26
-        runAsGroup: 26
+        fsGroup: 1001
+        runAsUser: 1001
+        runAsGroup: 1001
       containerSecurityContext:
         enabled: true
-        runAsUser: 26
-        runAsGroup: 26
+        runAsUser: 1001
+        runAsGroup: 1001
         capabilities:
           drop:
             - ALL
@@ -1563,7 +1563,7 @@ ui:
   ## ** Big Bang Change **
   ## @param ui.image Image used for the Anchore UI container
   ##
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.6.0
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.7.0
 
   ## @param ui.imagePullPolicy Image pull policy for Anchore UI image
   ##
@@ -1677,7 +1677,7 @@ upgradeJob:
   ## @param upgradeJob.kubectlImage The image to use for the upgrade job's init container that uses kubectl to scale down deployments before an upgrade
   ## This is only used in the preupgrade job.
   ##
-  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.6
+  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.7
 
   ## @param upgradeJob.nodeSelector Node labels for the Anchore upgrade job pod assignment
   ##
@@ -1891,14 +1891,14 @@ postgresql:
      ## ** Big Bang Addition **
     podSecurityContext:
       enabled: true
-      fsGroup: 26
-      runAsUser: 26
-      runAsGroup: 26
+      fsGroup: 1001
+      runAsUser: 1001
+      runAsGroup: 1001
 
     containerSecurityContext:
       enabled: true
-      runAsUser: 26
-      runAsGroup: 26
+      runAsUser: 1001
+      runAsGroup: 1001
       capabilities:
         drop:
           - ALL
@@ -1930,7 +1930,7 @@ postgresql:
   image:
     registry: registry1.dso.mil
     repository: ironbank/opensource/postgres/postgresql
-    tag: "13.12"
+    tag: "16.2"
   global:
     imagePullSecrets:
       - private-registry
@@ -1963,14 +1963,14 @@ postgresql:
 
   securityContext:
     enabled: true
-    fsGroup: 26
-    runAsUser: 26
-    runAsGroup: 26
+    fsGroup: 1001
+    runAsUser: 1001
+    runAsGroup: 1001
 
   containerSecurityContext:
     enabled: true
-    runAsUser: 26
-    runAsGroup: 26
+    runAsUser: 1001
+    runAsGroup: 1001
     capabilities:
       drop:
         - ALL
@@ -1990,7 +1990,7 @@ osaaMigrationJob:
   ## @param osaaMigrationJob.kubectlImage The image to use for the job's init container that uses kubectl to scale down deployments for the migration
   ## This is only used in the osaaMigrationJob job.
   ##
-  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.6
+  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.7
 
   ## @param osaaMigrationJob.extraEnv An array to add extra environment variables
   ##
