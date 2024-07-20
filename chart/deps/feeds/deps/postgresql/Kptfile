@@ -5,7 +5,7 @@ metadata:
 upstream:
     type: git
     git:
-        commit: 0391090fe16c1c9b80300bd5c24c76b52bcfc169
+        commit: 06ab2db2211d173726ffbe90801481d0591dd7ed
         repo: https://github.com/bitnami/charts
         directory: /bitnami/postgresql
-        ref: 0391090fe16c1c9b80300bd5c24c76b52bcfc169
+        ref: postgresql/12.5.9

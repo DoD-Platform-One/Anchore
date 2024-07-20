@@ -1,7 +1,7 @@
 apiVersion: v2
 annotations:
   category: Database
-appVersion: "13.12"
+appVersion: "16.2"
 dependencies:
   - name: common
     repository: https://charts.bitnami.com/bitnami
