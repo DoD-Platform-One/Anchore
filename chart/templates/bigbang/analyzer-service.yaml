@@ -14,5 +14,5 @@ spec:
       protocol: TCP
       appProtocol: http
   selector:
-    app.kubernetes.io/name: {{ template "enterprise.analyzer.fullname" . }}
+    app.kubernetes.io/name: {{ template "enterprise.fullname" . }}
     app.kubernetes.io/component: {{ $component }}
