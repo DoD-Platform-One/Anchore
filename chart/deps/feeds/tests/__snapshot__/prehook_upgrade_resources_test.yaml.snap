@@ -117,7 +117,7 @@ should render proper initContainers:
               CONNSTR=${CONNSTR}?sslmode=${ANCHORE_FEEDS_DB_SSL_MODE}
             fi
             if [[ ${ANCHORE_FEEDS_DB_SSL_ROOT_CERT} != null ]]; then
-              CONNSTR=${CONNSTR}&sslrootcert=/home/anchore/certs/${ANCHORE_FEEDS_DB_SSL_ROOT_CERT}
+              CONNSTR=${CONNSTR}\&sslrootcert=${ANCHORE_FEEDS_DB_SSL_ROOT_CERT}
             fi
             err=$(anchore-enterprise-manager db --db-connect ${CONNSTR} pre-upgrade-check 2>&1 > /dev/null)
             if [[ !$err ]]; then
@@ -140,9 +140,9 @@ should render proper initContainers:
             fieldRef:
               fieldPath: metadata.name
         - name: ANCHORE_ENDPOINT_HOSTNAME
-          value: test-release-feeds
+          value: test-release-feeds.test-namespace.svc.cluster.local
         - name: ANCHORE_PORT
           value: "8448"
-      image: docker.io/anchore/enterprise:v4.9.4
+      image: docker.io/anchore/enterprise:v5.7.0
       imagePullPolicy: IfNotPresent
       name: wait-for-db

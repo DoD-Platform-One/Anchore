@@ -4,12 +4,12 @@ dependencies:
   version: 12.5.9
 - name: feeds
   repository: file://./deps/feeds
-  version: 2.2.0
+  version: 2.7.0
 - name: redis
   repository: oci://registry1.dso.mil/bigbang
   version: 19.5.5-bb.0
 - name: gluon
   repository: oci://registry1.dso.mil/bigbang
   version: 0.5.0
-digest: sha256:3cd5bc6a87ce5c85dbd844f60a1749802eea7aea58d7e7b1255bbe45c57cfa6b
-generated: "2024-07-16T16:24:16.405026065-04:00"
+digest: sha256:78ef2fee75f496c8290558be9bc030294ed642b4fb0627ef095ed43923fa9bba
+generated: "2024-07-23T11:44:40.947705387-04:00"
