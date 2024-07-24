@@ -1,11 +1,11 @@
 apiVersion: kpt.dev/v1alpha1
 kind: Kptfile
 metadata:
-    name: feeds
+  name: feeds
 upstream:
-    type: git
-    git:
-        commit: 6ca8d1fae1bb51ee9d444193e274e0143d55f967
-        repo: https://github.com/anchore/anchore-charts
-        directory: /stable/feeds
-        ref: feeds-2.2.0
+  type: git
+  git:
+    commit: 59818a8f61ca1dd0c2b45004e89aada9dac51896
+    repo: https://github.com/anchore/anchore-charts
+    directory: /stable/feeds
+    ref: feeds-2.7.0

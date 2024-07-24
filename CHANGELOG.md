@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+
+## [2.7.0-bb.4] - 2024-07-23
+
+### Changed
+
+- Updated Anchore Feeds chart to `2.7.0`
+
 ## [2.7.0-bb.3] - 2024-07-23
 
 ### Changed
@@ -44,7 +51,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Updated
 
-- Update upstream reference from github.com/anchore/anchore-charts/tree/master/stable/enterprise to github.com/anchore/anchore-charts/tree/main/stable/enterprise   
+- Update upstream reference from github.com/anchore/anchore-charts/tree/master/stable/enterprise to github.com/anchore/anchore-charts/tree/main/stable/enterprise
 
 ## [2.4.2-bb.16] - 2024-05-23
 
@@ -57,13 +64,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
--  Added new label to upgrade job containers to allow access if network policies are enabled
+- Added new label to upgrade job containers to allow access if network policies are enabled
 
 ## [2.4.2-bb.14] - 2024-05-03
 
 ### Changed
 
-- Fixed db credential leaking in the ensure anchor db container   
+- Fixed db credential leaking in the ensure anchor db container
 
 ## [2.4.2-bb.13] - 2024-05-03
 
@@ -235,7 +242,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Bumped chart version to `1.26.1`
 - Bumped Anchore Enterprise image tag to `4.8.0`
 - Bumped Anchore Enterprise UI image tag to `4.8.0`
-
 
 ## [1.24.1-bb.5]
 
