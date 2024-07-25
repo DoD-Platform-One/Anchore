@@ -1181,6 +1181,7 @@ feeds:
     # enabled: false
     # if enabled=false specify an external (already existing) postgres deployment for use.
     # Set to the hostname eg. mypostgres.myserver.io
+    # Also check egress-postgres.yaml if network policy is enabled
     #postgresPort: "5432"
     externalEndpoint: Null
     #auth:
