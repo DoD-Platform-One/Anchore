@@ -1,6 +1,6 @@
 # Changes needed for Big Bang and Ironbank Images
 
-The Big Bang team had to change some values from upstream because of how Big Bang makes use of Anchore from within Umbrella. We also made some additional modifications that were necessary because the Ironbank images our implementation of Anchore uses function slightly differently from the coresponding upstream Dockerhub images. This document outlines these changes so that you can verify that none of them have been overwritten by an update. 
+The Big Bang team had to change some values from upstream because of how Big Bang makes use of Anchore from within Umbrella. We also made some additional modifications that were necessary because the Ironbank images our implementation of Anchore uses function slightly differently from the coresponding upstream Dockerhub images. This document outlines these changes so that you can verify that none of them have been overwritten by an update.
 
 ## Big Bang Modifications
 
@@ -109,7 +109,9 @@ anchoreEnterpriseUi:
   image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:2.4.1
   imagePullSecretName: private-registry
 ```
+
 4) An image pull secret should be specified so that Umbrella can pull the images above correctly. To check this, make sure you see this section in chart/values.yaml:
+
 ```
     imagePullSecrets:
       - private-registry
@@ -158,7 +160,7 @@ anchoreEnterpriseRbac:
 
 ---
 
-8) The following block needs to be present at the end of /chart/templates/_helpers.tpl (do not add this block to any other _helpers.tpl files elsewhere in the project):
+8) The following block needs to be present at the end of /chart/templates/_helpers.tpl (do not add this block to any other_helpers.tpl files elsewhere in the project):
 
 ```yaml
 {{/*
@@ -272,6 +274,7 @@ keys:
   secret: ${ANCHORE_SAML_SECRET}
   {{- end }}
 ```
+
 18) To support metrics mTLS added `appPotocol: http` to the Service port spec found in `./chart/templates/*_deployment.yaml`
 
 ### Container Security Context Additions
@@ -284,4 +287,5 @@ keys:
       drop:
         - ALL
 ```
+
 Note that other sections with additional securityContext settings may have been modified to include explicit drops, but these were already part of the chart.

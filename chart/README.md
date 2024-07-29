@@ -1532,7 +1532,6 @@ To restore your deployment to using your previous driver configurations:
 | `osaaMigrationJob.objectStoreMigration.run`                  | Run the object_store migration                                                                                   | `false`                |
 | `osaaMigrationJob.objectStoreMigration.object_store`         | The configuration of the object_store for the dest-config.yaml                                                   | `{}`                   |
 
-
 ## Release Notes
 
 For the latest updates and features in Anchore Enterprise, see the official [Release Notes](https://docs.anchore.com/current/docs/releasenotes/).
