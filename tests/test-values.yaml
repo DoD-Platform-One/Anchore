@@ -11,7 +11,7 @@ global:
   saml:
     secret: ci-testing-only
 
-anchoreAnalyzer:
+analyzer:
   replicaCount: 1
 
 istio:

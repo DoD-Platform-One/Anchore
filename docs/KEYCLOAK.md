@@ -2,7 +2,7 @@
 
 This document summarizes helm values and manual steps that are required to integrate with Keycloak.
 
-**NOTE:** SSO requires an Anchore Enterprise license. To be onboarded and provided with a trial or production license, please send an email to publicsector@anchore.com including program name and contact details.
+**NOTE:** SSO requires an Anchore Enterprise license. To be onboarded and provided with a trial or production license, please send an email to <publicsector@anchore.com> including program name and contact details.
 
 ## Configuration Steps
 

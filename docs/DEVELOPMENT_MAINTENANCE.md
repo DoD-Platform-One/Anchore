@@ -7,15 +7,18 @@ Check the [upstream release notes](https://docs.anchore.com/current/docs/release
 Find the latest enterprise chart version that corresponds with the Anchore Enterprise version identified by Renovate.
 
 Update the chart with KPT
+
 ```shell
 kpt pkg update chart@enterprise-${chart.version} --strategy alpha-git-patch
 ```
 
 ### Modifications made to upstream
+
 Review the list of [Big Bang Changes](https://repo1.dso.mil/big-bang/product/packages/anchore-enterprise/-/blob/main/docs/BBCHANGES.md) to this chart and ensure they weren't overwritten in the update.
 
 ### automountServiceAccountToken
-The mutating Kyverno policy named `update-automountserviceaccounttokens` is leveraged to harden all ServiceAccounts in this package with `automountServiceAccountToken: false`. This policy is configured by namespace in the Big Bang umbrella chart repository at [chart/templates/kyverno-policies/values.yaml](https://repo1.dso.mil/big-bang/bigbang/-/blob/master/chart/templates/kyverno-policies/values.yaml?ref_type=heads). 
+
+The mutating Kyverno policy named `update-automountserviceaccounttokens` is leveraged to harden all ServiceAccounts in this package with `automountServiceAccountToken: false`. This policy is configured by namespace in the Big Bang umbrella chart repository at [chart/templates/kyverno-policies/values.yaml](https://repo1.dso.mil/big-bang/bigbang/-/blob/master/chart/templates/kyverno-policies/values.yaml?ref_type=heads).
 
 This policy revokes access to the K8s API for Pods utilizing said ServiceAccounts. If a Pod truly requires access to the K8s API (for app functionality), the Pod is added to the `pods:` array of the same mutating policy. This grants the Pod access to the API, and creates a Kyverno PolicyException to prevent an alert.
 
@@ -24,11 +27,12 @@ This policy revokes access to the K8s API for Pods utilizing said ServiceAccount
 ### Deploy Anchore as part of Big Bang
 
 - Obtain the Big Bang dev Anchore enterprise license by following the below instructions:
-  - Clone the dogfood repo if you have not already, from https://repo1.dso.mil/big-bang/team/deployments/bigbang.git
+  - Clone the dogfood repo if you have not already, from <https://repo1.dso.mil/big-bang/team/deployments/bigbang.git>
   - Run `sops -d bigbang/prod2/environment-bb-secret.enc.yaml | yq '.stringData."values.yaml"' | yq '.addons.anchore.enterprise.licenseYaml'` to get the full license contents.
-  - Add the full output from that command under `licenseYaml` in your override values (shown below), making sure that indentation is properly preserved 
+  - Add the full output from that command under `licenseYaml` in your override values (shown below), making sure that indentation is properly preserved
 
 `overrides/anchore.yaml`
+
 ```
 addons:
   anchore:
@@ -49,10 +53,13 @@ addons:
       anchoreAnalyzer:
         replicaCount: 2
 ```
+
 - Deploy Big Bang and Anchore to dev environment
+
 ```
 helm upgrade -i bigbang ./bigbang/chart --create-namespace -n bigbang -f ./bigbang/chart/ingress-certs.yaml -f ./overrides/registry-values.yaml -f ./overrides/anchore.yaml
 ```
+
 NOTE: You may disable `kiali`, `kyverno`, `promtail`, `loki`, `neuvector`, `tempo`, and/or `monitoring` in the deployment, if desired, as they are not required for testing.
 
 - [ ] Visit `https://anchore.bigbang.dev`
@@ -65,7 +72,8 @@ NOTE: You may disable `kiali`, `kyverno`, `promtail`, `loki`, `neuvector`, `temp
 - [ ] Allow several minutes for the analysis to complete.
 - [ ] Select the repository name of your new tag, confirm `Status` is `Analyzed`
 - [ ] Select the tag SHA and confirm `Metadata`, `Policy Compliance`, and `Action Workbench` have all been Analyzed. (`Vulnerabilities` will be marked unsuccessful, with a red 'X,' this is expected.)
-- [ ] Ensure integration tests are passing by following the [test-package-against-bb](https://repo1.dso.mil/big-bang/bigbang/-/blob/master/docs/developer/test-package-against-bb.md?ref_type=heads) doc and modify test-values with the following settings: 
+- [ ] Ensure integration tests are passing by following the [test-package-against-bb](https://repo1.dso.mil/big-bang/bigbang/-/blob/master/docs/developer/test-package-against-bb.md?ref_type=heads) doc and modify test-values with the following settings:
+
   ```yaml
   addons:
     anchore:

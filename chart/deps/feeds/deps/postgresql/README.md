@@ -5,12 +5,14 @@
 Chart for PostgreSQL, an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance.
 
 ## Upstream References
+
 * <https://github.com/bitnami/charts/tree/master/bitnami/postgresql>
 
 * <https://github.com/bitnami/bitnami-docker-postgresql>
 * <https://www.postgresql.org/>
 
 ## Learn More
+
 * [Application Overview](docs/overview.md)
 * [Other Documentation](docs/)
 
@@ -22,12 +24,13 @@ Chart for PostgreSQL, an object-relational database management system (ORDBMS) w
 
 Install Helm
 
-https://helm.sh/docs/intro/install/
+<https://helm.sh/docs/intro/install/>
 
 ## Deployment
 
 * Clone down the repository
 * cd into directory
+
 ```bash
 helm install postgresql chart/
 ```

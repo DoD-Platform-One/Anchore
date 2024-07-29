@@ -39,14 +39,15 @@ docker run docker.io/anchore/enterprise:v4.1.0 anchore-enterprise-manager db --d
 ```
 
 If you want to `kubectl port-forward ...` the database pod then you can connect the container to the host machine. Likely something like this
+
 ```sh
 export ANCHORE_DB_HOST=host.docker.internal
 ```
 
 2. Copy the SQL script to one of the running pods and execute it with `psql -f fix.sql` making sure it's pointed at the correct database.
 
-
 ## If running on docker-compose, use the following
+
 ```
 docker compose down (assuming running 4.0.3)
 docker compose create anchore-db
@@ -56,4 +57,4 @@ psql -U postgres -p 5432 < 4.1.0_do_upgrade.sql
 docker compose up -d
 ```
 
-*Note:* For additional support and to receive the script contact support@anchore.com
+*Note:* For additional support and to receive the script contact <support@anchore.com>

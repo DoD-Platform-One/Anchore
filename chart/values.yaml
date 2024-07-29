@@ -2095,11 +2095,11 @@ bbtests:
   cypress:
     resources:
       requests:
-        cpu: "1"
-        memory: "2Gi"
+        cpu: "2"
+        memory: "4Gi"
       limits:
-        cpu: "1"
-        memory: "2Gi"
+        cpu: "2"
+        memory: "4Gi"
     artifacts: true
     envs:
       cypress_url: "http://{{ template \"enterprise.ui.fullname\" . }}:{{ .Values.ui.service.port }}"
