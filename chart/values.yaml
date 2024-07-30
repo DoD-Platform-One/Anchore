@@ -185,8 +185,6 @@ global:
   ##
   nameOverride: "anchore-enterprise"
 
-  imagePullSecretName: private-registry
-
 ###################################################
 ## @section Common Resource Parameters
 ## Common params used by all Anchore k8s resources

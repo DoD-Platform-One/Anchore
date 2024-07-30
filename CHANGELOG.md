@@ -4,6 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.7.0-bb.7] - 2024-07-30
+
+### Changed
+
+- Updated charts to be able to exclude imagePullSecrets
+
 ## [2.7.0-bb.6] - 2024-07-26
 
 ### Changed

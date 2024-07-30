@@ -12,8 +12,10 @@ spec:
     metadata:
       name: configure-sso
     spec:
+      {{- if .Values.imagePullSecretName }}
       imagePullSecrets:
         - name: {{ .Values.imagePullSecretName }}
+      {{- end }}
       containers:
         - name: configure-sso
           image: {{ .Values.image }}

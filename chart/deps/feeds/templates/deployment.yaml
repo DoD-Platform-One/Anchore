@@ -26,9 +26,9 @@ spec:
     {{- with .Values.serviceAccountName }}
       serviceAccountName: {{ . }}
       {{- end }}
-    {{- with .Values.imagePullSecretName }}
+    {{- if .Values.imagePullSecretName }}
       imagePullSecrets:
-        - name: {{ . }}
+        - name: {{ .Values.imagePullSecretName }}
     {{- end }}
     {{- if and (or .Values.scratchVolume.fixGroupPermissions .Values.persistence.fixGroupPermissions) .Values.securityContext.fsGroup }}
       initContainers:

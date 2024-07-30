@@ -11,10 +11,12 @@ spec:
   {{- with .Values.securityContext }}
   securityContext: {{ toYaml . | nindent 4 }}
   {{- end }}
-  {{- with .Values.imagePullSecretName }}
+
+  {{- if .Values.imagePullSecretName }}
   imagePullSecrets:
-  - name: {{ . }}
+  - name: {{ .Values.imagePullSecretName }}
   {{- end }}
+
   containers:
   - command: [ "/bin/bash", "-c", "--" ]
     args: [ "sleep infinity" ]
