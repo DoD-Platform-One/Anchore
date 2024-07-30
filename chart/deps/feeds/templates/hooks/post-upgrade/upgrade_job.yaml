@@ -31,10 +31,9 @@ spec:
       serviceAccountName: {{ . }}
       {{- end }}
     {{- end }}
-
-    {{- with .Values.imagePullSecretName }}
+    {{- if .Values.imagePullSecretName }}
       imagePullSecrets:
-        - name: {{ . }}
+        - name: {{ .Values.imagePullSecretName }}
     {{- end }}
       restartPolicy: Never
     {{- with .Values.feedsUpgradeJob.nodeSelector }}
