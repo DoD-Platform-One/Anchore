@@ -4,6 +4,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.7.0-bb.8] - 2024-07-31
+
+### Changed
+
+- Updated Gluon subchart dependency to `0.5.2`
+- Updated Redis chart dependency to `19.6.2-bb.0`
+
 ## [2.7.0-bb.7] - 2024-07-30
 
 ### Changed
