@@ -1,14 +1,21 @@
 suite: Common Helper Template Tests
 templates:
+  - analyzer_deployment.yaml
+  - api_deployment.yaml
+  - catalog_deployment.yaml
+  - notifications_deployment.yaml
+  - policyengine_deployment.yaml
+  - reports_deployment.yaml
+  - reportsworker_deployment.yaml
+  - simplequeue_deployment.yaml
+  - ui_deployment.yaml
+  - hooks/pre-upgrade/upgrade_job.yaml
+  - analyzer_configmap.yaml
+  - anchore_configmap.yaml
+  - ui_configmap.yaml
+  - anchore_secret.yaml
+  - ui_secret.yaml
   - envvars_configmap.yaml
-  - configmap.yaml
-  - deployment.yaml
-  - pvc.yaml
-  - secret.yaml
-  - ingress.yaml
-  - templates/hooks/pre-upgrade/upgrade_rbac.yaml
-  - templates/hooks/pre-upgrade/upgrade_job.yaml
-  - templates/hooks/post-upgrade/upgrade_job.yaml
 release:
   name: test-release
   namespace: test-namespace
