@@ -4,6 +4,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.9.0-bb.0] - 2024-08-01
+
+### Changed
+
+- Updated Anchore Enterprise chart to `2.9.0`
+- Updated Anchore Enterprise tag to `5.8.0`
+- Updated Anchore Enterprise UI tag to `5.8.0`
+- Updated Anchore Feeds chart to `2.8.0`
+- Updated Cypress dependency to `v13.13.2`
+
 ## [2.7.0-bb.8] - 2024-07-31
 
 ### Changed

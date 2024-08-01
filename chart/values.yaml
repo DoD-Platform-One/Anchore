@@ -193,7 +193,7 @@ global:
 ## ** Big Bang Change **
 ## @param image Image used for all Anchore Enterprise deployments, excluding Anchore UI
 ##
-image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.7.0
+image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.8.0
 
 ## @param imagePullPolicy Image pull policy used by all deployments
 ## ref: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
@@ -386,6 +386,11 @@ scripts:
       printf '%s\n' "$line";
     done < /config/config.yaml
 
+## @param domainSuffix domain suffix for appending to the ANCHORE_ENDPOINT_HOSTNAME. If blank, domainSuffix will be "namespace.svc.cluster.local".
+## If set here, the domainSuffix will be appended to the hostname for all Anchore services unless overridden at the service level of each anchore service
+##
+domainSuffix: ""
+
 #####################################################################
 ## @section Anchore Configuration Parameters
 ## Params used for all Anchore Enterprise service configuration files
@@ -477,6 +482,7 @@ anchoreConfig:
   ##
   ## @param anchoreConfig.user_authentication.sso_require_existing_users set to true in order to disable the SSO JIT provisioning during authentication
   ## This provides an additional layer of security and configuration for SSO users to gain access to Anchore.
+  ## @param anchoreConfig.user_authentication.disallow_native_users Disallow native users to authenticate by any method. Only SSO/'saml' users will be able to access the system.
   ##
   ## @param anchoreConfig.user_authentication.remove_deleted_user_api_keys_older_than_days
   ## The number of days elapsed after a user API key is deleted before it is garbage collected (-1 to disable)
@@ -491,6 +497,7 @@ anchoreConfig:
     hashed_passwords: true
     sso_require_existing_users: false
     remove_deleted_user_api_keys_older_than_days: 365
+    disallow_native_users: false
 
   ## @param anchoreConfig.metrics.enabled Enable Prometheus metrics for all Anchore services
   ## @param anchoreConfig.metrics.auth_disabled Disable auth on Prometheus metrics for all Anchore services
@@ -742,6 +749,9 @@ anchoreConfig:
     ##
     overrideFeedsToUpstream: false
 
+    ## @param anchoreConfig.policy_engine.enable_user_base_image Enables usage of Well Known Annotation to identify base image for use in ancestry calculations
+    enable_user_base_image: true
+
   notifications:
     ## @param anchoreConfig.notifications.cycle_timers.notifications Interval that notifications are sent
     ##
@@ -850,6 +860,9 @@ anchoreConfig:
     authentication_lock:
       count: 5
       expires: 300
+
+    ## @param anchoreConfig.ui.sso_auth_only Enable SSO authentication only
+    sso_auth_only: false
 
     ## @param anchoreConfig.ui.custom_links List of up to 10 external links provided
     ## Each link entry must have a title of greater than 0-length and a valid URI. If either item is invalid, the entry will be excluded.
@@ -986,9 +999,11 @@ analyzer:
   replicaCount: 2
 
   ## @param analyzer.service.port The port used for gatherings metrics when .Values.metricsEnabled=true
+  ## @param analyzer.service.domainSuffix domain suffix for appending to the ANCHORE_ENDPOINT_HOSTNAME. If blank, domainSuffix will be "namespace.svc.cluster.local". Takes precedence over the top level domainSuffix
   ##
   service:
     port: 8084
+    domainSuffix: ""
 
   ## ** Big Bang Addition **
   ## @param analyzer.serviceType The serviceType used to expose metrics
@@ -1055,6 +1070,7 @@ catalog:
   ## @param catalog.service.annotations Annotations for Anchore Catalog service
   ## @param catalog.service.labels Labels for Anchore Catalog service
   ## @param catalog.service.nodePort nodePort for Anchore Catalog service
+  ## @param catalog.service.domainSuffix domain suffix for appending to the ANCHORE_ENDPOINT_HOSTNAME. If blank, domainSuffix will be "namespace.svc.cluster.local". Takes precedence over the top level domainSuffix
   ##
   service:
     type: ClusterIP
@@ -1062,6 +1078,7 @@ catalog:
     annotations: {}
     labels: {}
     nodePort: ""
+    domainSuffix: ""
 
   ## @param catalog.extraEnv Set extra environment variables for Anchore Catalog pods
   ##
@@ -1136,7 +1153,7 @@ feeds:
 
   ## ** Big Bang Feeds Chart Values **
   # See: https://github.com/anchore/anchore-charts/blob/main/stable/feeds/values.yaml
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.7.0
+  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.8.0
 
   imagePullSecretName: private-registry
 
@@ -1174,6 +1191,7 @@ feeds:
     global:
       imagePullSecrets:
         - private-registry
+
     # To use an external DB or Google CloudSQL, uncomment & set 'enabled: false'
     # externalEndpoint, postgresUser, postgresPassword, postgresDatabase, & postgresPort are required values for external postgres
     # enabled: false
@@ -1182,10 +1200,6 @@ feeds:
     # Also check egress-postgres.yaml if network policy is enabled
     #postgresPort: "5432"
     externalEndpoint: Null
-    #auth:
-    #  username: anchore
-    #  password: "anchore-postgres,123"
-    #  database: anchore
     postgresUser: anchore
     postgresPassword: anchore-postgres,123
     postgresDatabase: anchore
@@ -1203,7 +1217,6 @@ feeds:
       capabilities:
         drop:
           - ALL
-
     # Configure resource limits and requests for the postgresql deployment
     resources:
       limits:
@@ -1258,10 +1271,6 @@ feeds:
       tag: "16.2"
     #postgresPort: "5432"
     externalEndpoint: Null
-    #auth:
-    #  username: anchore
-    #  password: "anchore-postgres,123"
-    #  database: anchore
     postgresUser: anchore
     postgresPassword: anchore-postgres,123
     postgresDatabase: anchore
@@ -1290,6 +1299,76 @@ feeds:
           drop:
             - ALL
 
+############################################
+## @section Anchore Notifications Parameters
+############################################
+notifications:
+  ## @param notifications.replicaCount Number of replicas for the Anchore Notifications deployment
+  ##
+  replicaCount: 1
+
+  ## @param notifications.service.type Service type for Anchore Notifications
+  ## @param notifications.service.port Service port for Anchore Notifications
+  ## @param notifications.service.annotations Annotations for Anchore Notifications service
+  ## @param notifications.service.labels Labels for Anchore Notifications service
+  ## @param notifications.service.nodePort nodePort for Anchore Notifications service
+  ## @param notifications.service.domainSuffix domain suffix for appending to the ANCHORE_ENDPOINT_HOSTNAME. If blank, domainSuffix will be "namespace.svc.cluster.local". Takes precedence over the top level domainSuffix
+  ##
+  service:
+    type: ClusterIP
+    port: 8668
+    annotations: {}
+    labels: {}
+    nodePort: ""
+    domainSuffix: ""
+
+  ## @param notifications.extraEnv Set extra environment variables for Anchore Notifications pods
+  ##
+  extraEnv: []
+
+  ## @param notifications.extraVolumes Define additional volumes for Anchore Notifications pods
+  ##
+  extraVolumes: []
+
+  ## @param notifications.extraVolumeMounts Define additional volume mounts for Anchore Notifications pods
+  ##
+  extraVolumeMounts: []
+
+  ## @param notifications.resources Resource requests and limits for Anchore Notifications pods
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  ## Commented values below are just a suggested baseline. Contact Anchore support for deployment specific recommendations.
+  ##
+  resources: {}
+    # requests:
+    #   cpu: 100m
+    #   memory: 500Mi
+    # limits:
+    #   memory: 500Mi
+
+  ## @param notifications.labels Labels for Anchore Notifications pods
+  ##
+  labels: {}
+
+  ## @param notifications.annotations Annotation for Anchore Notifications pods
+  ##
+  annotations: {}
+
+  ## @param notifications.nodeSelector Node labels for Anchore Notifications pod assignment
+  ##
+  nodeSelector: {}
+
+  ## @param notifications.tolerations Tolerations for Anchore Notifications pod assignment
+  ##
+  tolerations: []
+
+  ## @param notifications.affinity Affinity for Anchore Notifications pod assignment
+  ##
+  affinity: {}
+
+  ## @param notifications.serviceAccountName Service account name for Anchore Notifications pods
+  ##
+  serviceAccountName: ""
+
 ###########################################################
 ## @section Anchore Policy Engine k8s Deployment Parameters
 ###########################################################
@@ -1303,6 +1382,7 @@ policyEngine:
   ## @param policyEngine.service.annotations Annotations for Anchore Policy Engine service
   ## @param policyEngine.service.labels Labels for Anchore Policy Engine service
   ## @param policyEngine.service.nodePort nodePort for Anchore Policy Engine service
+  ## @param policyEngine.service.domainSuffix domain suffix for appending to the ANCHORE_ENDPOINT_HOSTNAME. If blank, domainSuffix will be "namespace.svc.cluster.local". Takes precedence over the top level domainSuffix
   ##
   service:
     type: ClusterIP
@@ -1310,6 +1390,7 @@ policyEngine:
     annotations: {}
     labels: {}
     nodePort: ""
+    domainSuffix: ""
 
   ## @param policyEngine.extraEnv Set extra environment variables for Anchore Policy Engine pods
   ##
@@ -1378,6 +1459,7 @@ simpleQueue:
     annotations: {}
     labels: {}
     nodePort: ""
+    domainSuffix: ""
 
   ## @param simpleQueue.extraEnv Set extra environment variables for Anchore Simple Queue pods
   ##
@@ -1439,6 +1521,7 @@ notifications:
     annotations: {}
     labels: {}
     nodePort: ""
+    domainSuffix: ""
 
   ## @param notifications.extraEnv Set extra environment variables for Anchore Notifications pods
   ##
@@ -1494,11 +1577,6 @@ reports:
   ## @param reports.replicaCount Number of replicas for the Anchore Reports deployment
   replicaCount: 1
 
-  ## @param notifications.service.type Service type for Anchore Notifications
-  ## @param notifications.service.port Service port for Anchore Notifications
-  ## @param notifications.service.annotations Annotations for Anchore Notifications service
-  ## @param notifications.service.labels Labels for Anchore Notifications service
-  ## @param notifications.service.nodePort nodePort for Anchore Notifications service
   ##
   service:
     type: ClusterIP
@@ -1506,6 +1584,7 @@ reports:
     annotations: {}
     labels: {}
     nodePort: ""
+    domainSuffix: ""
 
   ## @param notifications.extraEnv Set extra environment variables for Anchore Notifications pods
   ##
@@ -1562,7 +1641,7 @@ ui:
   ## ** Big Bang Change **
   ## @param ui.image Image used for the Anchore UI container
   ##
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.7.0
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.8.0
 
   ## @param ui.imagePullPolicy Image pull policy for Anchore UI image
   ##
@@ -1587,6 +1666,7 @@ ui:
   ## @param ui.service.labels Labels for Anchore UI service
   ## @param ui.service.sessionAffinity Session Affinity for Ui service
   ## @param ui.service.nodePort nodePort for Anchore UI service
+  ## @param ui.service.domainSuffix domain suffix for appending to the ANCHORE_ENDPOINT_HOSTNAME. If blank, domainSuffix will be "namespace.svc.cluster.local". Takes precedence over the top level domainSuffix
   ##
   service:
     type: ClusterIP
@@ -1596,6 +1676,7 @@ ui:
     labels: {}
     sessionAffinity: ClientIP
     nodePort: ""
+    domainSuffix: ""
 
 
   ## @param ui.extraEnv Set extra environment variables for Anchore UI pods
