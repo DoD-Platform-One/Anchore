@@ -9,12 +9,15 @@ The Big Bang team had to change some values from upstream because of how Big Ban
 ```yaml
 # Big Bang Values
 # ---------------
-domain: bigbang.dev
+domain: dev.bigbang.mil
 
 istio:
   # Toggle istio integration
   enabled: false
+  hardened:
+    enabled: false
   injection: "disabled"
+
   ui:
     # Toggle vs creation
     enabled: true
@@ -23,7 +26,7 @@ istio:
     gateways:
       - istio-system/main
     hosts:
-      - "anchore.{{ .Values.hostname }}"
+      - "anchore.{{ .Values.domain }}"
   api:
     # Toggle vs creation
     enabled: true
@@ -32,7 +35,12 @@ istio:
     gateways:
       - istio-system/main
     hosts:
-      - "anchore-api.{{ .Values.hostname }}"
+      - "anchore-api.{{ .Values.domain }}"
+
+   mtls:
+    # -- STRICT = Allow only mutual TLS traffic,
+    # PERMISSIVE = Allow both plain text and mutual TLS traffic
+    mode: STRICT
 
 networkPolicies:
   enabled: false
@@ -69,7 +77,8 @@ sso:
   idpMetadataUrl: "https://login.dso.mil/auth/realms/baby-yoda/protocol/saml/descriptor"
 
 # Default name override to upstream chart name
-nameOverride: "anchore-engine"
+global:
+  nameOverride: "anchore-enterprise"
 ```
 
 2) All chart changes are located under the `chart/templates/bigbang` directory. These are currently:
@@ -77,9 +86,9 @@ nameOverride: "anchore-engine"
 - Automated creation of the license secret
 - Creation of an SSO secret with the above SSO values
 - Automation of SSO configuration through a k8s job
-- Creation of secrets with database credentials from postgres and anchore-feeds-db values
+- Creation of secrets with database credentials from postgres and feeds.feeds-db values
 - Automated creation and synchronization of the Postgres databases, database users, and passwords through k8s jobs
-- Added analyzerService.yaml to support metrics for analyzer
+- Added analyzer-service.yaml to support metrics for analyzer
 - Added service monitors for all exposed metrics
 
 Verify that these are present. As additional Big Bang changes are made, add them to this directory and update this document to reflect that.
@@ -89,33 +98,37 @@ Verify that these are present. As additional Big Bang changes are made, add them
 3) Check chart/values.yaml and verify that all the following images are actually being pulled from registry1.dso.mil and not from the external upstream (note: the version numbers will be different from what is in this document):
 
 ```yaml
+image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.8.0
+imagePullSecretName: private-registry
+
 postgresql:
-  image: registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.18
+  image: registry1.dso.mil/ironbank/opensource/postgres/postgresql:16.2
   imagePullSecrets: private-registry
 
-anchoreGlobal:
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:2.4.1
-  imagePullSecretName: private-registry
+feeds:
+  feeds-db:
+    image: registry1.dso.mil/ironbank/opensource/postgres/postgresql:16.2
+    imagePullSecrets: private-registry
 
-anchoreEnterpriseGlobal:
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:2.4.1
-  imagePullSecretName: private-registry
-
-anchore-feeds-db:
-  image: registry1.dso.mil/ironbank/opensource/postgres/postgresql96:9.6.18
+gem-db:
+  image: registry1.dso.mil/ironbank/opensource/postgres/postgresql:16.2
   imagePullSecrets: private-registry
 
-anchoreEnterpriseUi:
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:2.4.1
+ui:
+  image: registry1.dso.mil/ironbank/anchore/enterprise/enterpriseui:5.8.0
   imagePullSecretName: private-registry
+
+osaaMigrationJob:
+  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.7
 ```
 
-4) An image pull secret should be specified so that Umbrella can pull the images above correctly. To check this, make sure you see this section in chart/values.yaml:
+4) An image pull secret name should be specified so that Umbrella can pull the images above correctly. To check this, make sure you see this section in chart/values.yaml:
 
 ```
-    imagePullSecrets:
-      - private-registry
+imagePullSecretName: private-registry
 ```
+
+If you are pulling from public registry that don't require credentials, you can set `imagePullSecretName: ""`
 
 5) To support the Ironbank Postgres image, additional configuration has to be set in chart/values.yaml:
 
@@ -131,155 +144,136 @@ postgresql:
   pgHbaConfiguration: |-
     local all all md5
     host all all all md5
+  postgresqlDataDir: /var/lib/postgresql/data
 
-anchore-feeds-db:
-  persistence:
-    resourcePolicy: keep
-    size: 20Gi
-    subPath: "pgdata"
-    mountPath: /var/lib/postgresql
-  # Set the configs to allow listening and connecting from other pods
-  postgresConfiguration: {"listen_addresses": "*"}
-  pgHbaConfiguration: |-
-    local all all md5
-    host all all all md5
+feeds:
+  feeds-db:
+    primary:
+      persistence:
+        resourcePolicy: keep
+        size: 20Gi
+        subPath: "pgdata"
+        mountPath: /var/lib/postgresql
+    # Set the configs to allow listening and connecting from other pods
+    postgresConfiguration: {"listen_addresses": "*"}
+    pgHbaConfiguration: |-
+      local all all md5
+      host all all all md5
 ```
 
-6) To support SSO + Istio the RBAC container needs an additional environment variable set:
+6) To support SSO:
 
 ```yaml
-anchoreEnterpriseRbac:
-  extraEnv:
-  - name: AUTHLIB_INSECURE_TRANSPORT
-    value: "true"
+sso:
+  enabled: true
+```
+
+7) To support Istio:
+```yaml
+istio:
+  enabled: true
+  hardened:
+    enabled: true
 ```
 
 ## Other Modifications
 
-7) For consistency in naming, the chart name in `Chart.yaml` should be `anchore`.
+8) For consistency in naming, the chart name in `Chart.yaml` should be `anchore`.
 
 ---
 
-8) The following block needs to be present at the end of /chart/templates/_helpers.tpl (do not add this block to any other_helpers.tpl files elsewhere in the project):
+9) The following block needs to be present at the end of /chart/templates/_names.tpl (do not add this block to any other_helpers.tpl files elsewhere in the project):
 
 ```yaml
-{{/*
-Expand the name of the chart.
-*/}}
-{{- define "anchore.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "anchore.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-```
-
----
-
-9) In `chart/templates/engine_configmap.yaml`, the metrics lines should be modified to:
-
-```yaml
-    metrics:
-      enabled: {{ .Values.monitoring.enabled }}
-      auth_disabled: {{ .Values.monitoring.enabled }}
-```
-
-10) The same should be done in `chart/templates/enterprise_configmap.yaml`:
-
-```yaml
-    metrics:
-      enabled: {{ .Values.monitoring.enabled }}
-      auth_disabled: {{ .Values.monitoring.enabled }}
-```
-
-11) And in `chart/templates/enterprise_feeds_configmap.yaml`:
-
-```yaml
-    metrics:
-      enabled: {{ .Values.monitoring.enabled }}
-      auth_disabled: {{ .Values.monitoring.enabled }}
-```
-
-12) Required environment variables should be set in `chart/templates/enterprise_feed_deployment.yaml`:
-
-```yaml
-    - name: ANCHORE_ENABLE_METRICS
-      value: {{ .Values.monitoring.enabled | quote }}
-    - name: ANCHORE_DISABLE_METRICS_AUTH
-      value: {{ .Values.monitoring.enabled | quote }}
-```
-
----
-
-13) To resolve a race condition in Big Bang CI pipelines, an additional sleep argument should be present in `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml`:
-
-```yaml
-- |
-  sleep 60
-  anchore-manager db --db-connect postgresql://${ANCHORE_DB_USER}:${ANCHORE_DB_PASSWORD}@${ANCHORE_DB_HOST}/${ANCHORE_DB_NAME} upgrade --dontask;
-```
-
----
-
-14) To resolve OPA Gatekeeper violations around container resources and ratios, a field should have been added to `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml` to allow users to specify container resource requests and limits for the jobs:
-
-```yaml
-resources:
-  {{ toYaml .Values.anchoreEngineUpgradeJob.resources | nindent 10 }}
-```
-
----
-
-15) To resolve OPA Gatekeeper violations around istio sidecar injection, a curl should have been added to `chart/templates/engine_upgrade_job.yaml`, `enterprise_upgrade_job.yaml`, and `enterprise_feeds_upgrade_jobs.yaml` to allow the istio sidecar container to cleanly terminate after jobs complete.
-
-```yaml
-{{- if eq .Values.istio.injection "enabled" }}
-  until curl -fsI http://localhost:15021/healthz/ready; do
-    echo "Waiting for Istio sidecar proxy..."
-    sleep 3
-  done
-  sleep 5
-  echo "Stopping the istio proxy..."
-  curl -X POST http://localhost:15020/quitquitquit
+{{- define "enterprise.fullname" -}}
+{{- if .Values.global.fullnameOverride }}
+  {{- .Values.global.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+  {{- $name := default .Chart.Name .Values.global.nameOverride }}
+  {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
 {{- end }}
+{{- end -}}
 ```
 
 ---
 
-16) To resolve an issue where Anchore would redeploy after every update, `./chart/templates/engine_secret.yaml` and `./chart/templates/enterprise_feeds_secret.yaml` should be modified to set `ANCHORE_SAML_SECRET` to a randomly generated value if not set and the previous secret does not exist:
+10) Required environment variables should be set in `chart/templates/envvars_configmap.yaml`:
 
 ```yaml
-  {{- $anchorefullname := include "anchore-engine.fullname" . -}}
-  {{- $old_secret := lookup "v1" "Secret" .Release.Namespace $anchorefullname }}
-  {{- if .Values.anchoreGlobal.saml.secret }}
-  {{- with .Values.anchoreGlobal.saml.secret }}
-  ANCHORE_SAML_SECRET: {{ . }}
-  {{- end }}
-  {{- else if or (not $old_secret) (not $old_secret.data) }}
-  ANCHORE_SAML_SECRET: {{ (randAlphaNum 12) | quote }}
-  {{ else }}
-  ANCHORE_SAML_SECRET: {{ b64dec (index $old_secret.data "ANCHORE_SAML_SECRET") }}
-  {{- end }}
+data:
+  ANCHORE_ENABLE_METRICS: "{{ .Values.anchoreConfig.metrics.enabled }}"
+  ANCHORE_DISABLE_METRICS_AUTH: "{{ .Values.anchoreConfig.metrics.auth_disabled }}"
 ```
 
-17) Additionally, `./chart/templates/engine_configmap.yaml`, `./chart/templates/enterprise_configmap.yaml`, and `./chart/templates/enterprise_feeds_confimap.yaml` should be modified to set appropriate saml secret credentials when the saml secret has been randomly generated but left `Null` by the user at `.Values.anchoreGlobal.saml.secret`:
+---
+
+11) To resolve OPA Gatekeeper violations around istio sidecar injection, a curl should be added to `chart/templates/hooks/pre-upgrade/upgrade_job.yaml`, `chart/templates/hooks/post-upgrade/upgrade_job.yaml`, `chart/deps/feeds/templates/hooks/pre-upgrade/upgrade_job.yaml`, `chart/deps/feeds/templates/hooks/post-upgrade/upgrade_job.yaml`, `chart/templates/bigbang/sso/configure-sso.yaml`, `chart/templates/bigbang/db/ensure-anchore-db.yaml`, `chart/templates/bigbang/db/ensure-feeds-db.yaml`:
 
 ```yaml
-keys:
-  {{- if or .Values.anchoreGlobal.saml.secret .Values.anchoreGlobal.saml.useExistingSecret .Values.anchoreGlobal.oauthEnabled }}
-  secret: ${ANCHORE_SAML_SECRET}
-  {{- end }}
+          {{- if not .Values.anchoreConfig.database.ssl }}
+            - |
+              # istio quit logic added by BigBang
+              {{ print (include "enterprise.doSourceFile" .) }} anchore-enterprise-manager db --db-connect postgresql://"${ANCHORE_DB_USER}":"${ANCHORE_DB_PASSWORD}"@"${ANCHORE_DB_HOST}":"${ANCHORE_DB_PORT}"/"${ANCHORE_DB_NAME}" upgrade --dontask;
+              {{ if and .Values.istio.enabled (eq .Values.istio.injection "enabled") }}
+              sleep 5
+              echo "Stopping the istio proxy..."
+              curl -X POST http://localhost:15020/quitquitquit
+              {{ end }}
+          {{- else if eq .Values.anchoreConfig.database.sslMode "require" }}
+            - |
+              # istio quit logic added by BigBang
+              {{ print (include "enterprise.doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_DB_USER}":"${ANCHORE_DB_PASSWORD}"@"${ANCHORE_DB_HOST}":"${ANCHORE_DB_PORT}"/"${ANCHORE_DB_NAME}"?sslmode={{- .Values.anchoreConfig.database.sslMode }} upgrade --dontask;
+              {{ if and .Values.istio.enabled (eq .Values.istio.injection "enabled") }}
+              sleep 5
+              echo "Stopping the istio proxy..."
+              curl -X POST http://localhost:15020/quitquitquit
+              {{ end }}
+          {{- else }}
+            - |
+              # istio quit logic added by BigBang
+              {{ print (include "enterprise.doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_DB_USER}":"${ANCHORE_DB_PASSWORD}"@"${ANCHORE_DB_HOST}":"${ANCHORE_DB_PORT}"/"${ANCHORE_DB_NAME}"?sslmode={{- .Values.anchoreConfig.database.sslMode -}}\&sslrootcert=/home/anchore/certs/{{- .Values.anchoreConfig.datab>
+              {{ if and .Values.istio.enabled (eq .Values.istio.injection "enabled") }}
+              sleep 5
+              echo "Stopping the istio proxy..."
+              curl -X POST http://localhost:15020/quitquitquit
+              {{ end }}
+          {{- end }}
 ```
 
-18) To support metrics mTLS added `appPotocol: http` to the Service port spec found in `./chart/templates/*_deployment.yaml`
+---
+
+12) To resolve OPA Gatekeeper violations around container resources and ratios, a field should have been added to `chart/templates/bigbang/db/ensure-feeds-db.yaml`, and `chart/templates/bigbang/db/ensure-anchore-db.yaml` to allow users to specify container resource requests and limits for the jobs:
+
+```yaml
+resources: {{ toYaml .Values.ensureDbJobs.resources | nindent 12 }}
+```
+
+---
+
+13) To resolve an issue where Anchore would redeploy after every update, `chart/templates/anchore_secret.yaml` and `chart/deps/feeds/templates/secret.yaml` should be modified to set `ANCHORE_SAML_SECRET` to a randomly generated value if not set and the previous secret does not exist:
+
+```yaml
+{{- if not .Values.useExistingSecrets -}}
+{{- /*
+  If release is being upgraded, don't recreate the defaultAdminPassword or samlSecret, instead get it from the corresponding existing
+  secret.
+*/ -}}
+{{- $anchoreSamlSecret := (include "enterprise.samlSecret" . | quote) -}}
+{{- if .Release.IsUpgrade -}}
+  {{- $anchoreSecret := (lookup "v1" "Secret" .Release.Namespace (include "enterprise.fullname" .)) -}}
+  {{- if $anchoreSecret -}}
+    {{- $anchoreSamlSecret = (index $anchoreSecret.data "ANCHORE_SAML_SECRET" | b64dec) | quote -}}
+  {{- end -}}
+{{- end -}}
+ 
+  ANCHORE_SAML_SECRET: {{ $anchoreSamlSecret }}
+```
+
+14) To support metrics mTLS added `appPotocol: http` to the Service port spec found in `chart/templates/bigbang/analyzer-service.yaml`
 
 ### Container Security Context Additions
 
-19) To set all containers to run without additional capabilities, and instead to add explicit drops, several containerSecurityContext sections have been added to chart/values.yaml.  Each of these sections look like the following and are referenced in the template files:
+15) To set all containers to run without additional capabilities, and instead to add explicit drops, several containerSecurityContext sections have been added to chart/values.yaml.  Each of these sections look like the following and are referenced in the template files:
 
 ```yaml
   containerSecurityContext:
