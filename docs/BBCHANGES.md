@@ -142,8 +142,8 @@ postgresql:
   # Set the configs to allow listening and connecting from other pods
   postgresConfiguration: {"listen_addresses": "*"}
   pgHbaConfiguration: |-
-    local all all md5
-    host all all all md5
+    local all all scram-sha-256
+    host all all all scram-sha-256
   postgresqlDataDir: /var/lib/postgresql/data
 
 feeds:
@@ -157,8 +157,8 @@ feeds:
     # Set the configs to allow listening and connecting from other pods
     postgresConfiguration: {"listen_addresses": "*"}
     pgHbaConfiguration: |-
-      local all all md5
-      host all all all md5
+      local all all scram-sha-256
+      host all all all scram-sha-256
 ```
 
 6) To support SSO:

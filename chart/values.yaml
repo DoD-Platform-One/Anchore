@@ -1259,8 +1259,8 @@ feeds:
      # Set the configs to allow listening and connecting from other pods
     postgresqlConfiguration: {"listen_addresses": "*"}
     pgHbaConfiguration: |-
-      local all all md5
-      host all all all md5
+      local all all scram-sha-256
+      host all all all scram-sha-256
 
   gem-db:
     enabled: false
@@ -2016,8 +2016,8 @@ postgresql:
       - private-registry
   postgresqlConfiguration: {"listen_addresses": "*"}
   pgHbaConfiguration: |-
-    local all all md5
-    host all all all md5
+    local all all scram-sha-256
+    host all all all scram-sha-256
   # PG creds
   postgresUser: anchore
   postgresPassword: anchore-postgres,123
