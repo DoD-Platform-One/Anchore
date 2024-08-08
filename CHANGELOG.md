@@ -4,6 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.9.0-bb.2] - 2024-08-08
+
+### Changed
+
+- Updated Postgres configuration to use `scram-sha-256` instead of `md5`
+
 ## [2.9.0-bb.1] - 2024-08-05
 
 ### Changed

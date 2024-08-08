@@ -220,7 +220,7 @@ primaryAsStandBy:
 # pgHbaConfiguration: |-
 #   local all all trust
 #   host all all localhost trust
-#   host mydatabase mysuser 192.168.0.0/24 md5
+#   host mydatabase mysuser 192.168.0.0/24 scram-sha-256
 
 ## ConfigMap with PostgreSQL configuration
 ## NOTE: This will override postgresqlConfiguration and pgHbaConfiguration
