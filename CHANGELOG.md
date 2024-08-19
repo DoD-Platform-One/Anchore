@@ -4,6 +4,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.9.0-bb.4] - 2024-08-19
+
+### Changed
+
+- Updated Redis chart dependency to `20.0.1-bb.0`
+- Updated Redis to 7.4.0
+- Updated kubectl to 1.29.8
+- Updated Cypress dependency to `v13.13.3`
+
 ## [2.9.0-bb.3] - 2024-08-14
 
 ### Changed

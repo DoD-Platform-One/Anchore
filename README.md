@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 2.9.0-bb.3](https://img.shields.io/badge/Version-2.9.0--bb.3-informational?style=flat-square) ![AppVersion: 5.8.1](https://img.shields.io/badge/AppVersion-5.8.1-informational?style=flat-square)
+![Version: 2.9.0-bb.4](https://img.shields.io/badge/Version-2.9.0--bb.4-informational?style=flat-square) ![AppVersion: 5.8.1](https://img.shields.io/badge/AppVersion-5.8.1-informational?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -555,7 +555,7 @@ helm install anchore chart/
 | upgradeJob.rbacCreate | bool | `true` |  |
 | upgradeJob.serviceAccountName | string | `""` |  |
 | upgradeJob.usePostUpgradeHook | bool | `false` |  |
-| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.7"` |  |
+| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.8"` |  |
 | upgradeJob.nodeSelector | object | `{}` |  |
 | upgradeJob.tolerations | list | `[]` |  |
 | upgradeJob.affinity | object | `{}` |  |
@@ -637,7 +637,7 @@ helm install anchore chart/
 | postgresql.containerSecurityContext.runAsGroup | int | `1001` |  |
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | osaaMigrationJob.enabled | bool | `false` |  |
-| osaaMigrationJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.7"` |  |
+| osaaMigrationJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.8"` |  |
 | osaaMigrationJob.extraEnv | list | `[]` |  |
 | osaaMigrationJob.extraVolumes | list | `[]` |  |
 | osaaMigrationJob.extraVolumeMounts | list | `[]` |  |
