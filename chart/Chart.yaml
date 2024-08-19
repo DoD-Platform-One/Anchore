@@ -1,5 +1,5 @@
 name: anchore
-version: 2.9.0-bb.3
+version: 2.9.0-bb.4
 apiVersion: v2
 appVersion: 5.8.1
 kubeVersion: ">=1.23.x || >=1.23.x-x"
@@ -39,7 +39,7 @@ dependencies:
     condition: feeds.enabled
     alias: feeds
   - name: redis
-    version: 19.6.2-bb.0
+    version: 20.0.1-bb.0
     repository: "oci://registry1.dso.mil/bigbang"
     condition: ui-redis.enabled
     alias: ui-redis
@@ -52,7 +52,7 @@ annotations:
   # Note engine image won't be used at all if enterprise is enabled
   helm.sh/images: |
     - name: redis
-      image: registry1.dso.mil/ironbank/bitnami/redis:7.2.5
+      image: registry1.dso.mil/ironbank/bitnami/redis:7.4.0
     - name: enterprise
       image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.8.1
     - name: postgresql
