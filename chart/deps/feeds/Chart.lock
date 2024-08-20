@@ -6,4 +6,4 @@ dependencies:
   repository: file://./deps/postgresql
   version: 12.5.9
 digest: sha256:19565a5fce6e6b55d61599aeebae86e7de4c994d35acb3bbbc16e004b338b36f
-generated: "2024-07-23T12:07:19.260356992-04:00"
+generated: "2024-08-20T10:39:55.457477869-04:00"

@@ -1,5 +1,5 @@
 name: anchore
-version: 2.9.0-bb.4
+version: 2.9.0-bb.5
 apiVersion: v2
 appVersion: 5.8.1
 kubeVersion: ">=1.23.x || >=1.23.x-x"
@@ -34,7 +34,7 @@ dependencies:
     repository: "file://./deps/postgresql"
     condition: postgresql.enabled
   - name: feeds
-    version: "2.8.0"
+    version: "2.8.1"
     repository: "file://./deps/feeds"
     condition: feeds.enabled
     alias: feeds
