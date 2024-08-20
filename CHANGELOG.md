@@ -4,6 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.9.0-bb.5] - 2024-08-20
+
+### Changed
+
+- Updated Anchore Feeds chart to `2.8.1`
+
 ## [2.9.0-bb.4] - 2024-08-19
 
 ### Changed
