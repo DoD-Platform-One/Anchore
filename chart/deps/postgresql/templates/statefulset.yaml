@@ -35,7 +35,7 @@ spec:
         role: primary
         app.kubernetes.io/component: primary
       {{- with .Values.primary.podLabels }}
-      {{- toYaml . | nindent 8 }}
+      {{- tpl (toYaml . | nindent 8) $ }}
       {{- end }}
       {{- with .Values.primary.podAnnotations }}
       annotations: {{- toYaml . | nindent 8 }}

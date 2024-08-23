@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 2.9.0-bb.5](https://img.shields.io/badge/Version-2.9.0--bb.5-informational?style=flat-square) ![AppVersion: 5.8.1](https://img.shields.io/badge/AppVersion-5.8.1-informational?style=flat-square)
+![Version: 2.9.0-bb.6](https://img.shields.io/badge/Version-2.9.0--bb.6-informational?style=flat-square) ![AppVersion: 5.8.1](https://img.shields.io/badge/AppVersion-5.8.1-informational?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.

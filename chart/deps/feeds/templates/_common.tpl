@@ -96,11 +96,11 @@ app.kubernetes.io/part-of: anchore
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- with .Values.labels }}
-{{ toYaml . }}
+{{ tpl (toYaml .) $ }}
 {{- end }}
 {{- if $component }}
   {{- with (index .Values (print $component)).labels }}
-{{ toYaml . }}
+{{ tpl (toYaml .) $ }}
   {{- end }}
 {{- end }}
 {{- end -}}

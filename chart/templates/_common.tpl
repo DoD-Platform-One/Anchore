@@ -200,11 +200,11 @@ When calling this template, .component can be included in the context for compon
 {{- $component := .component -}}
 {{- if $component }}
   {{- with (index .Values (print $component)).labels }}
-{{ toYaml . }}
+{{ tpl (toYaml .) $ }}
   {{- end }}
 {{- end }}
 {{- with .Values.labels }}
-{{ toYaml . }}
+{{ tpl (toYaml .) $ }}
 {{- end }}
 app.kubernetes.io/name: {{ template "enterprise.fullname" . }}
   {{- with $component }}
