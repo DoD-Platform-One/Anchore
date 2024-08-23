@@ -4,6 +4,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.9.0-bb.6] - 2024-08-23
+
+### Changed
+
+- Updated templating in `chart/deps/feeds/deps/postgresql/templates/statefulset-replicas.yaml` to add `tpl` for label interpretation
+- Updated templating in `chart/deps/feeds/deps/postgresql/templates/statefulset.yaml` to add `tpl` for label interpretation
+- Updated templating in `chart/deps/feeds/templates/_common.tpl` to add `tpl` for label interpretation
+- Updated templating in `chart/deps/postgresql/templates/statefulset-replicas.yaml` to add `tpl` for label interpretation
+- Updated templating in `chart/deps/postgresql/templates/statefulset.yaml` to add `tpl` for label interpretation
+- Updated templating in `chart/templates/_common.tpl` to add `tpl` for label interpretation
+
 ## [2.9.0-bb.5] - 2024-08-20
 
 ### Changed

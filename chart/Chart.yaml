@@ -1,5 +1,5 @@
 name: anchore
-version: 2.9.0-bb.5
+version: 2.9.0-bb.6
 apiVersion: v2
 appVersion: 5.8.1
 kubeVersion: ">=1.23.x || >=1.23.x-x"
