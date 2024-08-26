@@ -8,7 +8,6 @@ it allows developers to bolster security without compromising velocity and enabl
 It is based on Anchore Engine, an open-source image inspection and scanning tool.
 
 ## Upstream References
-
 * <https://anchore.com>
 
 * <https://github.com/anchore/anchore-charts/tree/main/stable/enterprise>
@@ -17,7 +16,6 @@ It is based on Anchore Engine, an open-source image inspection and scanning tool
 
 This package has no upstream release note links on file. Please add some to [chart/Chart.yaml](chart/Chart.yaml) under `annotations.bigbang.dev/upstreamReleaseNotesMarkdown`.
 Example:
-
 ```yaml
 annotations:
   bigbang.dev/upstreamReleaseNotesMarkdown: |
@@ -26,7 +24,6 @@ annotations:
 ```
 
 ## Learn More
-
 * [Application Overview](docs/overview.md)
 * [Other Documentation](docs/)
 
@@ -40,13 +37,12 @@ Kubernetes: `>=1.23.x || >=1.23.x-x`
 
 Install Helm
 
-<https://helm.sh/docs/intro/install/>
+https://helm.sh/docs/intro/install/
 
 ## Deployment
 
 * Clone down the repository
 * cd into directory
-
 ```bash
 helm install anchore chart/
 ```
@@ -687,3 +683,4 @@ Please see the [contributing guide](./CONTRIBUTING.md) if you are interested in 
 ---
 
 _This file is programatically generated using `helm-docs` and some BigBang-specific templates. The `gluon` repository has [instructions for regenerating package READMEs](https://repo1.dso.mil/big-bang/product/packages/gluon/-/blob/master/docs/bb-package-readme.md)._
+

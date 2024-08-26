@@ -30,8 +30,21 @@ spec:
               # Extract SAML URL and name
               SSO_NAME=$(grep -oP '^\s*"name"\s*:\s*"\K(.*)(?=",?\s*$)' anchore-sso.json)
 
+              # Determine the protocol and curl options
+              PROTOCOL="http"
+              CURL_OPTS=""
+              {{- if .Values.anchoreConfig.internalServicesSSL.enabled }}
+              PROTOCOL="https"
+              {{- end }}
+              {{- if and .Values.anchoreConfig.internalServicesSSL.enabled (eq .Values.anchoreConfig.internalServicesSSL.verifyCerts false) }}
+              CURL_OPTS="--insecure"
+              {{- end }}
+              {{- if .Values.anchoreConfig.internalServicesSSL.certSecretCertFileName }}
+              CURL_OPTS="$CURL_OPTS --cacert /home/certs/{{ .Values.anchoreConfig.internalServicesSSL.certSecretCertFileName }}"
+              {{- end }}
+
               # Wait for the given SAML IdP metadata url to exist and give data back
-              while [ $(curl -sw '%{http_code}' "{{ .Values.sso.idpMetadataUrl }}" -o /dev/null) -ne 200 ]; do
+              while [ $(curl -sw '%{http_code}' $CURL_OPTS "{{ .Values.sso.idpMetadataUrl }}" -o /dev/null) -ne 200 ]; do
                 echo "Waiting for IdP metadata..."
                 sleep 10;
               done
@@ -39,13 +52,13 @@ spec:
               echo "IdP URL is live..."
 
               # Use the IDP_URL to get the metadata XML
-              idp_metadata_xml_raw=$(curl -s {{ .Values.sso.idpMetadataUrl }})
+              idp_metadata_xml_raw=$(curl -s $CURL_OPTS {{ .Values.sso.idpMetadataUrl }})
               # Escape quotes so that it formats nicely in the JSON
               # Quadruple escape ensures a literal double escape which ensures our sed replace later prints a literal escape
               idp_metadata_xml=$(echo ${idp_metadata_xml_raw} | sed 's/"/\\\\"/g')
 
               # Wait for Anchore Engine API to go live
-              while [ $(curl -sw '%{http_code}' "http://{{ template "enterprise.api.fullname" . }}:{{ .Values.api.service.port }}/v2/openapi.json" -o /dev/null) -ne 200 ]; do
+              while [ $(curl -sw '%{http_code}' $CURL_OPTS "${PROTOCOL}://{{ template "enterprise.api.fullname" . }}:{{ .Values.api.service.port }}/v2/openapi.json" -o /dev/null) -ne 200 ]; do
                 echo "Waiting for Anchore API..."
                 sleep 10;
               done
@@ -53,12 +66,12 @@ spec:
               echo "Anchore Engine is live..."
 
               # If a SAML IdP doesn't exist with the given name, add this. Otherwise update the existing entry
-              if [ $(curl -sw '%{http_code}' -u "admin:${ANCHORE_ADMIN_PASSWORD}" "http://{{ template "enterprise.api.fullname" . }}:{{ .Values.api.service.port }}/v2/rbac-manager/saml/idps/${SSO_NAME}" -o /dev/null) -ne 200 ]; then
+              if [ $(curl -sw '%{http_code}' -u "admin:${ANCHORE_ADMIN_PASSWORD}" $CURL_OPTS "${PROTOCOL}://{{ template "enterprise.api.fullname" . }}:{{ .Values.api.service.port }}/v2/rbac-manager/saml/idps/${SSO_NAME}" -o /dev/null) -ne 200 ]; then
                 echo "Applying SAML config to Anchore..."
-                curl -vvv --fail -u "admin:${ANCHORE_ADMIN_PASSWORD}" -d "$(sed "s@XML_PLACEHOLDER@${idp_metadata_xml}@g" anchore-sso.json)" -H "Content-Type: application/json" --request POST http://{{ template "enterprise.api.fullname" . }}:{{ .Values.api.service.port }}/v2/rbac-manager/saml/idps
+                curl -vvv --fail -u "admin:${ANCHORE_ADMIN_PASSWORD}" $CURL_OPTS -d "$(sed "s@XML_PLACEHOLDER@${idp_metadata_xml}@g" anchore-sso.json)" -H "Content-Type: application/json" --request POST "${PROTOCOL}://{{ template "enterprise.api.fullname" . }}:{{ .Values.api.service.port }}/v2/rbac-manager/saml/idps"
               else
                 echo  "SAML config already exists, updating..."
-                curl -vvv --fail -u "admin:${ANCHORE_ADMIN_PASSWORD}" -d "$(sed "s@XML_PLACEHOLDER@${idp_metadata_xml}@g" anchore-sso.json)" -H "Content-Type: application/json" --request PUT "http://{{ template "enterprise.api.fullname" . }}:{{ .Values.api.service.port }}/v2/rbac-manager/saml/idps/${SSO_NAME}"
+                curl -vvv --fail -u "admin:${ANCHORE_ADMIN_PASSWORD}" $CURL_OPTS -d "$(sed "s@XML_PLACEHOLDER@${idp_metadata_xml}@g" anchore-sso.json)" -H "Content-Type: application/json" --request PUT "${PROTOCOL}://{{ template "enterprise.api.fullname" . }}:{{ .Values.api.service.port }}/v2/rbac-manager/saml/idps/${SSO_NAME}"
               fi
 
               {{- if eq .Values.istio.injection "enabled" }}
@@ -79,11 +92,24 @@ spec:
             - name: anchore-sso
               mountPath: "/tmp"
               readOnly: true
+          {{- if .Values.certStoreSecretName }}
+            - name: certs
+              mountPath: /home/certs
+              readOnly: true
+          {{- end }}
           resources:
             {{ toYaml .Values.sso.resources | nindent 12 }}
       volumes:
         - name: anchore-sso
           secret:
             secretName: anchore-sso
+      {{- if .Values.certStoreSecretName }}
+        {{- with .Values.certStoreSecretName }}
+        - name: certs
+          secret:
+            secretName: {{ . }}
+            defaultMode: 0444
+        {{- end }}
+      {{- end }}
       restartPolicy: OnFailure
 {{- end }}
