@@ -258,10 +258,15 @@ securityContext: {{- toYaml . | nindent 2 }}
 {{- if or .Values.serviceAccountName (index .Values (print $component)).serviceAccountName (eq $component "upgradeJob") (eq $component "osaaMigrationJob") }}
 serviceAccountName: {{ include "enterprise.serviceAccountName" (merge (dict "component" $component) .) }}
 {{- end }}
-{{- with .Values.imagePullSecretName }}
+
+# **BIGBANG CHANGE**
+# allow charts to be able to exclude imagePullSecretName
+{{- if .Values.imagePullSecretName }}
 imagePullSecrets:
-  - name: {{ . }}
+  - name: {{ .Values.imagePullSecretName }}
 {{- end }}
+
+
 {{- with (default .Values.nodeSelector (index .Values (print $component)).nodeSelector) }}
 nodeSelector: {{- toYaml . | nindent 2 }}
 {{- end }}
