@@ -296,4 +296,4 @@ Note that other sections with additional securityContext settings may have been 
   **warning**: *these are non exhaustive and should always be manually checked*
 
   - chart/templates/ui_secret.yaml
-  - 
+  - chart/templates/migrate_pod.yaml
