@@ -294,6 +294,8 @@ Note that other sections with additional securityContext settings may have been 
 ## List of files that are frequently modified from upstream
 
   **warning**: *these are non exhaustive and should always be manually checked*
+  You will likely want to select "ours" when merging in upstream changes
 
   - chart/templates/ui_secret.yaml
   - chart/templates/migrate_pod.yaml
+  - chart/templates/ui_secret.yaml

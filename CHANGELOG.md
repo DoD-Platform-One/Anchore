@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [2.9.0-bb.7] - 2024-08-30
+
+### Changed
+
+- Resync with upstream commit [abca795cfb04c61d6242509bdd34634a2f405928](https://github.com/anchore/anchore-charts/tree/abca795cfb04c61d6242509bdd34634a2f405928)
+
 ## [2.9.0-bb.6] - 2024-08-23
 
 ### Changed
