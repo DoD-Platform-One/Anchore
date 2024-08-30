@@ -1,5 +1,12 @@
 # Changes needed for Big Bang and Ironbank Images
 
+- [Changes needed for Big Bang and Ironbank Images](#changes-needed-for-big-bang-and-ironbank-images)
+  - [Big Bang Modifications](#big-bang-modifications)
+  - [Ironbank Modifications](#ironbank-modifications)
+  - [Other Modifications](#other-modifications)
+    - [Container Security Context Additions](#container-security-context-additions)
+  - [List of files that are frequently modified from upstream](#list-of-files-that-are-frequently-modified-from-upstream)
+
 The Big Bang team had to change some values from upstream because of how Big Bang makes use of Anchore from within Umbrella. We also made some additional modifications that were necessary because the Ironbank images our implementation of Anchore uses function slightly differently from the coresponding upstream Dockerhub images. This document outlines these changes so that you can verify that none of them have been overwritten by an update.
 
 ## Big Bang Modifications
@@ -283,3 +290,12 @@ resources: {{ toYaml .Values.ensureDbJobs.resources | nindent 12 }}
 ```
 
 Note that other sections with additional securityContext settings may have been modified to include explicit drops, but these were already part of the chart.
+
+## List of files that are frequently modified from upstream
+
+  **warning**: *these are non exhaustive and should always be manually checked*
+  You will likely want to select "ours" when merging in upstream changes
+
+  - chart/templates/ui_secret.yaml
+  - chart/templates/migrate_pod.yaml
+  - chart/templates/ui_secret.yaml

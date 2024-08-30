@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 2.9.0-bb.6](https://img.shields.io/badge/Version-2.9.0--bb.6-informational?style=flat-square) ![AppVersion: 5.8.1](https://img.shields.io/badge/AppVersion-5.8.1-informational?style=flat-square)
+![Version: 2.9.0-bb.7](https://img.shields.io/badge/Version-2.9.0--bb.7-informational?style=flat-square) ![AppVersion: 5.8.1](https://img.shields.io/badge/AppVersion-5.8.1-informational?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -128,6 +128,7 @@ helm install anchore chart/
 | nodeSelector | object | `{}` |  |
 | tolerations | list | `[]` |  |
 | affinity | object | `{}` |  |
+| scratchVolume.fixerInitContainerImage | string | `"alpine"` |  |
 | scratchVolume.mountPath | string | `"/analysis_scratch"` |  |
 | scratchVolume.fixGroupPermissions | bool | `false` |  |
 | scratchVolume.details | object | `{}` |  |
@@ -324,6 +325,7 @@ helm install anchore chart/
 | analyzer.tolerations | list | `[]` |  |
 | analyzer.affinity | object | `{}` |  |
 | analyzer.serviceAccountName | string | `""` |  |
+| analyzer.scratchVolume.details | object | `{}` |  |
 | catalog.replicaCount | int | `1` |  |
 | catalog.service.type | string | `"ClusterIP"` |  |
 | catalog.service.port | int | `8082` |  |
@@ -344,6 +346,7 @@ helm install anchore chart/
 | catalog.tolerations | list | `[]` |  |
 | catalog.affinity | object | `{}` |  |
 | catalog.serviceAccountName | string | `""` |  |
+| catalog.scratchVolume.details | object | `{}` |  |
 | feeds.enabled | bool | `true` |  |
 | feeds.istio.enabled | bool | `false` |  |
 | feeds.istio.injection | string | `"disabled"` |  |
@@ -461,6 +464,7 @@ helm install anchore chart/
 | policyEngine.tolerations | list | `[]` |  |
 | policyEngine.affinity | object | `{}` |  |
 | policyEngine.serviceAccountName | string | `""` |  |
+| policyEngine.scratchVolume.details | object | `{}` |  |
 | simpleQueue.replicaCount | int | `1` |  |
 | simpleQueue.service.type | string | `"ClusterIP"` |  |
 | simpleQueue.service.port | int | `8083` |  |
@@ -479,27 +483,26 @@ helm install anchore chart/
 | simpleQueue.tolerations | list | `[]` |  |
 | simpleQueue.affinity | object | `{}` |  |
 | simpleQueue.serviceAccountName | string | `""` |  |
-| notifications.enabled | bool | `true` |  |
-| notifications.replicaCount | int | `1` |  |
-| notifications.service.type | string | `"ClusterIP"` |  |
-| notifications.service.port | int | `8668` |  |
-| notifications.service.annotations | object | `{}` |  |
-| notifications.service.labels | object | `{}` |  |
-| notifications.service.nodePort | string | `""` |  |
-| notifications.service.domainSuffix | string | `""` |  |
-| notifications.extraEnv | list | `[]` |  |
-| notifications.extraVolumes | list | `[]` |  |
-| notifications.extraVolumeMounts | list | `[]` |  |
-| notifications.resources.limits.cpu | int | `1` |  |
-| notifications.resources.limits.memory | string | `"1G"` |  |
-| notifications.resources.requests.cpu | int | `1` |  |
-| notifications.resources.requests.memory | string | `"1G"` |  |
-| notifications.labels | object | `{}` |  |
-| notifications.annotations | object | `{}` |  |
-| notifications.nodeSelector | object | `{}` |  |
-| notifications.tolerations | list | `[]` |  |
-| notifications.affinity | object | `{}` |  |
-| notifications.serviceAccountName | string | `""` |  |
+| reportsWorker.replicaCount | int | `1` |  |
+| reportsWorker.service.type | string | `"ClusterIP"` |  |
+| reportsWorker.service.port | int | `8559` |  |
+| reportsWorker.service.annotations | object | `{}` |  |
+| reportsWorker.service.labels | object | `{}` |  |
+| reportsWorker.service.nodePort | string | `""` |  |
+| reportsWorker.service.domainSuffix | string | `""` |  |
+| reportsWorker.extraEnv | list | `[]` |  |
+| reportsWorker.extraVolumes | list | `[]` |  |
+| reportsWorker.extraVolumeMounts | list | `[]` |  |
+| reportsWorker.resources.limits.cpu | int | `1` |  |
+| reportsWorker.resources.limits.memory | string | `"1G"` |  |
+| reportsWorker.resources.requests.cpu | int | `1` |  |
+| reportsWorker.resources.requests.memory | string | `"1G"` |  |
+| reportsWorker.labels | object | `{}` |  |
+| reportsWorker.annotations | object | `{}` |  |
+| reportsWorker.nodeSelector | object | `{}` |  |
+| reportsWorker.tolerations | list | `[]` |  |
+| reportsWorker.affinity | object | `{}` |  |
+| reportsWorker.serviceAccountName | string | `""` |  |
 | reports.replicaCount | int | `1` |  |
 | reports.service.type | string | `"ClusterIP"` |  |
 | reports.service.port | int | `8558` |  |

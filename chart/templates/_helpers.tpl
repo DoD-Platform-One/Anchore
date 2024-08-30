@@ -165,13 +165,13 @@ Return the database user for the Anchore Enterprise UI config
 Return the database port for the Anchore Enterprise UI config
 */}}
 {{- define "enterprise.ui.dbPort" -}}
-{{ ternary .Values.postgresql.postgresPort .Values.anchoreConfig.ui.dbPort (empty .Values.anchoreConfig.ui.dbPort) }}
+{{ ternary .Values.postgresql.primary.service.ports.postgresql .Values.anchoreConfig.ui.dbPort (empty .Values.anchoreConfig.ui.dbPort) }}
 {{- end -}}
 
 {{/*
 Set the nodePort for services if its defined
 */}}
-{{- define "service.nodePort" -}}
+{{- define "enterprise.service.nodePort" -}}
 {{- $component := .component -}}
 {{- if (index .Values (print $component)).service.nodePort -}}
 nodePort: {{ (index .Values (print $component)).service.nodePort }}

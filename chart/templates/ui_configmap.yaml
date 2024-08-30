@@ -26,7 +26,6 @@ data:
       admin: {{ .admin }}
       standard: {{ .standard }}
   {{- end }}
-    engine_uri: '{{- include "enterprise.setProtocol" . -}}://{{- template "enterprise.api.fullname" . -}}:{{- .Values.api.service.port -}}/v2'
     reports_uri: '{{- include "enterprise.setProtocol" . -}}://{{- template "enterprise.api.fullname" . -}}:{{- .Values.api.service.port -}}/v2'
     notifications_uri: '{{- include "enterprise.setProtocol" . -}}://{{- template "enterprise.api.fullname" . -}}:{{- .Values.api.service.port -}}/v2'
     enterprise_uri: '{{- include "enterprise.setProtocol" . -}}://{{- template "enterprise.api.fullname" . -}}:{{- .Values.api.service.port -}}/v2'
