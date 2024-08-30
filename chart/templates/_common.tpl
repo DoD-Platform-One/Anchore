@@ -178,7 +178,7 @@ Setup the common fix permissions init container for all pods using a scratch vol
 */}}
 {{- define "enterprise.common.fixPermissionsInitContainer" -}}
 - name: mode-fixer
-  image: alpine
+  image: {{ .Values.scratchVolume.fixerInitContainerImage }}
   securityContext:
     runAsUser: 0
   volumeMounts:
@@ -200,11 +200,11 @@ When calling this template, .component can be included in the context for compon
 {{- $component := .component -}}
 {{- if $component }}
   {{- with (index .Values (print $component)).labels }}
-{{ tpl (toYaml .) $ }}
+{{ toYaml . }}
   {{- end }}
 {{- end }}
 {{- with .Values.labels }}
-{{ tpl (toYaml .) $ }}
+{{ toYaml . }}
 {{- end }}
 app.kubernetes.io/name: {{ template "enterprise.fullname" . }}
   {{- with $component }}
@@ -258,12 +258,10 @@ securityContext: {{- toYaml . | nindent 2 }}
 {{- if or .Values.serviceAccountName (index .Values (print $component)).serviceAccountName (eq $component "upgradeJob") (eq $component "osaaMigrationJob") }}
 serviceAccountName: {{ include "enterprise.serviceAccountName" (merge (dict "component" $component) .) }}
 {{- end }}
-
-{{- if .Values.imagePullSecretName }}
+{{- with .Values.imagePullSecretName }}
 imagePullSecrets:
-  - name: {{ .Values.imagePullSecretName }}
+  - name: {{ . }}
 {{- end }}
-
 {{- with (default .Values.nodeSelector (index .Values (print $component)).nodeSelector) }}
 nodeSelector: {{- toYaml . | nindent 2 }}
 {{- end }}
@@ -289,6 +287,21 @@ timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
 periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
 failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
 successThreshold: {{ .Values.probes.readiness.successThreshold }}
+{{- end -}}
+
+
+{{/*
+Setup the common anchore scratch volume details config
+*/}}
+{{- define "enterprise.common.scratchVolume.details" -}}
+{{- $component := .component -}}
+{{- if (index .Values (print $component)).scratchVolume.details }}
+  {{- toYaml (index .Values (print $component)).scratchVolume.details }}
+{{- else if .Values.scratchVolume.details }}
+  {{- toYaml .Values.scratchVolume.details }}
+{{- else }}
+emptyDir: {}
+{{- end }}
 {{- end -}}
 
 

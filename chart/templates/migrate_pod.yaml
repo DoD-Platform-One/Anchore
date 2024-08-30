@@ -33,21 +33,21 @@ spec:
         valueFrom:
           secretKeyRef:
             key: ANCHORE_DB_HOST
-            name: {{ template "enterprise.fullname" . }}
+            name: {{ .Values.migrationAnchoreEngineSecretName }}
       - name: NEW_DB_PASSWORD
         value: {{ .Values.postgresql.postgresPassword }}
       - name: OLD_DB_PASSWORD
         valueFrom:
           secretKeyRef:
             key: ANCHORE_DB_PASSWORD
-            name: {{ template "enterprise.fullname" . }}
+            name: {{ .Values.migrationAnchoreEngineSecretName }}
       - name: NEW_DB_USERNAME
         value: {{ .Values.postgresql.postgresUser }}
       - name: OLD_DB_USERNAME
         valueFrom:
           secretKeyRef:
             key: ANCHORE_DB_USER
-            name: {{ template "enterprise.fullname" . }}
+            name: {{ .Values.migrationAnchoreEngineSecretName }}
       - name: OLD_DB_NAME
         valueFrom:
           secretKeyRef:
