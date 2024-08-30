@@ -293,6 +293,7 @@ affinity: {}
 ## ref: https://kubernetes.io/docs/concepts/storage/volumes/
 ##
 scratchVolume:
+  fixerInitContainerImage: alpine
   mountPath: /analysis_scratch
   fixGroupPermissions: false
   details: {}
@@ -556,10 +557,10 @@ anchoreConfig:
   ## ref: https://docs.anchore.com/current/docs/installation/configuration/tls_ssl_config/
   ##
   internalServicesSSL:
-    enabled: false
-    verifyCerts: false
-    certSecretKeyFileName: ""
-    certSecretCertFileName: ""
+      enabled: false
+      verifyCerts: false
+      certSecretKeyFileName: ""
+      certSecretCertFileName: ""
 
   ## @param anchoreConfig.policyBundles Include custom Anchore policy bundles
   ## This object represents the data of a configmap that is mounted to <anchore_service_dir>/policies of all Anchore services
@@ -1057,6 +1058,11 @@ analyzer:
   ##
   serviceAccountName: ""
 
+  ## @param analyzer.scratchVolume.details [object] Details for the k8s volume to be created for Anchore Analyzer scratch space
+  ##
+  scratchVolume:
+    details: {}
+
 #####################################################
 ## @section Anchore Catalog k8s Deployment Parameters
 #####################################################
@@ -1084,7 +1090,6 @@ catalog:
   ##
   extraEnv: []
 
-  ## ** Big Bang Change **
   ## @param catalog.extraVolumes Define additional volumes for Anchore Catalog pods
   ##
   extraVolumes: []
@@ -1094,14 +1099,16 @@ catalog:
   extraVolumeMounts: []
 
   ## @param catalog.resources Resource requests and limits for Anchore Catalog pods
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  ## Commented values below are just a suggested baseline. Contact Anchore support for deployment specific recommendations.
   ##
   resources:
-   limits:
-     cpu: 1
-     memory: 2G
-   requests:
-     cpu: 1
-     memory: 2G
+    limits:
+      cpu: 1
+      memory: 2G
+    requests:
+      cpu: 1
+      memory: 2G
 
   ## @param catalog.labels Labels for Anchore Catalog pods
   ##
@@ -1126,6 +1133,11 @@ catalog:
   ## @param catalog.serviceAccountName Service account name for Anchore Catalog pods
   ##
   serviceAccountName: ""
+
+  ## @param catalog.scratchVolume.details [object] Details for the k8s volume to be created for Anchore Catalog scratch space
+  ##
+  scratchVolume:
+    details: {}
 
 ##########################################
 ## @section Anchore Feeds Chart Parameters
@@ -1396,7 +1408,6 @@ policyEngine:
   ##
   extraEnv: []
 
-  ## ** Big Bang Change **
   ## @param policyEngine.extraVolumes Define additional volumes for Anchore Policy Engine pods
   ##
   extraVolumes: []
@@ -1406,6 +1417,8 @@ policyEngine:
   extraVolumeMounts: []
 
   ## @param policyEngine.resources Resource requests and limits for Anchore Policy Engine pods
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  ## Commented values below are just a suggested baseline. Contact Anchore support for deployment specific recommendations.
   ##
   resources:
     limits:
@@ -1438,6 +1451,11 @@ policyEngine:
   ## @param policyEngine.serviceAccountName Service account name for Anchore Policy Engine pods
   ##
   serviceAccountName: ""
+
+  ## @param policyEngine.scratchVolume.details [object] Details for the k8s volume to be created for Anchore Policy Engine scratch space
+  ##
+  scratchVolume:
+    details: {}
 
 ###########################################
 ## @section Anchore Simple Queue Parameters
@@ -1500,43 +1518,44 @@ simpleQueue:
   ##
   serviceAccountName: ""
 
-############################################
-## @section Anchore Notifications Parameters
-############################################
-notifications:
-  enabled: true
-
-  ## @param notifications.replicaCount Number of replicas for the Anchore Notifications deployment
+#############################################
+## @section Anchore Reports Worker Parameters
+#############################################
+reportsWorker:
+  ## @param reportsWorker.replicaCount Number of replicas for the Anchore Reports deployment
+  ##
   replicaCount: 1
 
-  ## @param notifications.service.type Service type for Anchore Notifications
-  ## @param notifications.service.port Service port for Anchore Notifications
-  ## @param notifications.service.annotations Annotations for Anchore Notifications service
-  ## @param notifications.service.labels Labels for Anchore Notifications service
-  ## @param notifications.service.nodePort nodePort for Anchore Notifications service
+  ## @param reportsWorker.service.type Service type for Anchore Reports Worker
+  ## @param reportsWorker.service.port Service port for Anchore Reports Worker
+  ## @param reportsWorker.service.annotations Annotations for Anchore Reports Worker service
+  ## @param reportsWorker.service.labels Labels for Anchore Reports Worker service
+  ## @param reportsWorker.service.nodePort nodePort for Anchore Reports Worker service
+  ## @param reportsWorker.service.domainSuffix domain suffix for appending to the ANCHORE_ENDPOINT_HOSTNAME. If blank, domainSuffix will be "namespace.svc.cluster.local". Takes precedence over the top level domainSuffix
   ##
   service:
     type: ClusterIP
-    port: 8668
+    port: 8559
     annotations: {}
     labels: {}
     nodePort: ""
     domainSuffix: ""
 
-  ## @param notifications.extraEnv Set extra environment variables for Anchore Notifications pods
+  ## @param reportsWorker.extraEnv Set extra environment variables for Anchore Reports Worker pods
   ##
   extraEnv: []
 
-  ## @param notifications.extraVolumes Define additional volumes for Anchore Notifications pods
+  ## @param reportsWorker.extraVolumes Define additional volumes for Anchore Reports Worker pods
   ##
   extraVolumes: []
 
-  ## @param notifications.extraVolumeMounts Define additional volume mounts for Anchore Notifications pods
+  ## @param reportsWorker.extraVolumeMounts Define additional volume mounts for Anchore Reports Worker pods
   ##
   extraVolumeMounts: []
 
-  ## ** Big Bang Change **
-  ## @param notifications.resources Resource requests and limits for Anchore Notifications pods
+  ## @param reportsWorker.resources Resource requests and limits for Anchore Reports Worker pods
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  ## Commented values below are just a suggested baseline. Contact Anchore support for deployment specific recommendations.
   ##
   resources:
     limits:
@@ -1546,29 +1565,30 @@ notifications:
       cpu: 1
       memory: 1G
 
-  ## @param notifications.labels Labels for Anchore Notifications pods
+  ## @param reportsWorker.labels Labels for Anchore Reports Worker pods
   ##
   labels: {}
 
-  ## @param notifications.annotations Annotation for Anchore Notifications pods
+  ## @param reportsWorker.annotations Annotation for Anchore Reports Worker pods
   ##
   annotations: {}
 
-  ## @param notifications.nodeSelector Node labels for Anchore Notifications pod assignment
+  ## @param reportsWorker.nodeSelector Node labels for Anchore Reports Worker pod assignment
   ##
   nodeSelector: {}
 
-  ## @param notifications.tolerations Tolerations for Anchore Notifications pod assignment
+  ## @param reportsWorker.tolerations Tolerations for Anchore Reports Worker pod assignment
   ##
   tolerations: []
 
-  ## @param notifications.affinity Affinity for Anchore Notifications pod assignment
+  ## @param reportsWorker.affinity Affinity for Anchore Reports Worker pod assignment
   ##
   affinity: {}
 
-  ## @param notifications.serviceAccountName Service account name for Anchore Notifications pods
+  ## @param reportsWorker.serviceAccountName Service account name for Anchore Reports Worker pods
   ##
   serviceAccountName: ""
+
 
 ########################################
 ## @section Anchore Reports Parameters
