@@ -3,9 +3,20 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+
+## [2.9.0-bb.10] - 2024-09-06
+
+### Changed
+
+- Updated Anchore Enterprise tag to `5.9.0`
+- Updated Anchore Enterprise UI tag to `5.9.0`
+- Updated Gluon subchart dependency to `0.5.4`
+- Updated Cypress dependency to `v13.14.2`
+
 ## [2.9.0-bb.9] - 2024-09-05
 
 ### Changed
+
 - Re-numbered CHANGELOG to prevent duplicate entries
 
 ## [2.9.0-bb.8] - 2024-08-30
