@@ -4,6 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.9.0-bb.11] - 2024-09-06
+
+### Changed
+
+- Fix common labels
+
 ## [2.9.0-bb.10] - 2024-09-06
 
 ### Changed
