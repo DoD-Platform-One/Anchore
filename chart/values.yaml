@@ -193,7 +193,7 @@ global:
 ## ** Big Bang Change **
 ## @param image Image used for all Anchore Enterprise deployments, excluding Anchore UI
 ##
-image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.8.1
+image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.9.0
 
 ## @param imagePullPolicy Image pull policy used by all deployments
 ## ref: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
@@ -1165,7 +1165,7 @@ feeds:
 
   ## ** Big Bang Feeds Chart Values **
   # See: https://github.com/anchore/anchore-charts/blob/main/stable/feeds/values.yaml
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.8.1
+  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.9.0
 
   imagePullSecretName: private-registry
 
@@ -1661,7 +1661,7 @@ ui:
   ## ** Big Bang Change **
   ## @param ui.image Image used for the Anchore UI container
   ##
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.8.0
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.9.0
 
   ## @param ui.imagePullPolicy Image pull policy for Anchore UI image
   ##
