@@ -5,7 +5,7 @@ metadata:
 upstream:
   type: git
   git:
-    commit: d12adb8602efa8df2c4d987525fb81e35c9cb1e0
+    commit: aaab3c32a143f497f5a5a7905a81dfa40c1a2711
     repo: https://github.com/anchore/anchore-charts
     directory: /stable/feeds
-    ref: feeds-2.8.1
+    ref: feeds-2.9.0
