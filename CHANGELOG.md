@@ -4,6 +4,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.10.0-bb.0] - 2024-09-09
+
+### Changed
+
+- Updated Anchore Enterprise chart to `2.10.0`
+- Updated Anchore Feeds chart to `2.9.0`
+
 ## [2.9.0-bb.11] - 2024-09-06
 
 ### Changed

@@ -1,5 +1,5 @@
 name: anchore
-version: 2.9.0-bb.11
+version: 2.10.0-bb.0
 apiVersion: v2
 appVersion: 5.9.0
 kubeVersion: ">=1.23.x || >=1.23.x-x"
@@ -34,7 +34,7 @@ dependencies:
     repository: "file://./deps/postgresql"
     condition: postgresql.enabled
   - name: feeds
-    version: "2.8.1"
+    version: "2.9.0"
     repository: "file://./deps/feeds"
     condition: feeds.enabled
     alias: feeds
@@ -49,6 +49,9 @@ dependencies:
 annotations:
   bigbang.dev/applicationVersions: |
     - Enterprise: 5.9.0
+  bigbang.dev/upstreamReleaseNotesMarkdown: |
+    - [Find our upstream chart's CHANGELOG here](https://github.com/anchore/anchore-charts/tree/main)
+    - [and our upstream application release notes here](https://docs.anchore.com/current/docs/releasenotes/)
   # Note engine image won't be used at all if enterprise is enabled
   helm.sh/images: |
     - name: redis
