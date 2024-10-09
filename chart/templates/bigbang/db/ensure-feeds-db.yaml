@@ -1,5 +1,5 @@
-{{- if and (hasKey (index .Values "anchore-feeds-db") "enabled")  }}
-{{- if (not (index .Values "anchore-feeds-db" "enabled")) }}
+{{- if and (hasKey (index .Values "feeds" "feeds-db") "enabled")  }}
+{{- if (not (index .Values "feeds" "feeds-db" "enabled")) }}
 # Job to sync db and db user with external postgres for Anchore's feeds db
 apiVersion: batch/v1
 kind: Job
@@ -15,13 +15,13 @@ spec:
       name: ensure-feeds-db
     spec:
       imagePullSecrets:
-      {{- range (index .Values "anchore-feeds-db" "global" "imagePullSecrets") }}
+      {{- range (index .Values "feeds" "feeds-db" "global" "imagePullSecrets") }}
         - name: {{ . }}
       {{- end }}
       containers:
         - name: psql
-          image: "{{ (index .Values "anchore-feeds-db" "image" "registry") }}/{{ (index .Values "anchore-feeds-db" "image" "repository") }}:{{ (index .Values "anchore-feeds-db" "image" "tag") }}"
-          securityContext: {{- omit (index .Values "anchore-feeds-db" "containerSecurityContext") "enabled" | toYaml | nindent 12 }}
+          image: "{{ (index .Values "feeds" "feeds-db" "image" "registry") }}/{{ (index .Values "feeds" "feeds-db" "image" "repository") }}:{{ (index .Values "feeds" "feeds-db" "image" "tag") }}"
+          securityContext: {{- omit (index .Values "feeds" "feeds-db" "containerSecurityContext") "enabled" | toYaml | nindent 12 }}
           {{- if or (and .Values.postgresqlSuperUser.postgresUsername .Values.postgresqlSuperUser.postgresPassword) .Values.postgresqlSuperUser.existingSecret }}
           command:
             - /bin/bash

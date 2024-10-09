@@ -1,25 +1,23 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 2.10.0-bb.0](https://img.shields.io/badge/Version-2.10.0--bb.0-informational?style=flat-square) ![AppVersion: 5.9.0](https://img.shields.io/badge/AppVersion-5.9.0-informational?style=flat-square)
+![Version: 2.10.0-bb.1](https://img.shields.io/badge/Version-2.10.0--bb.1-informational?style=flat-square) ![AppVersion: 5.9.0](https://img.shields.io/badge/AppVersion-5.9.0-informational?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
 It is based on Anchore Engine, an open-source image inspection and scanning tool.
 
 ## Upstream References
-
 * <https://anchore.com>
 
 * <https://github.com/anchore/anchore-charts/tree/main/stable/enterprise>
 
 ### Upstream Release Notes
 
-* [Find our upstream chart's CHANGELOG here](https://github.com/anchore/anchore-charts/tree/main)
-* [and our upstream application release notes here](https://docs.anchore.com/current/docs/releasenotes/)
+- [Find our upstream chart's CHANGELOG here](https://github.com/anchore/anchore-charts/tree/main)
+- [and our upstream application release notes here](https://docs.anchore.com/current/docs/releasenotes/)
 
 ## Learn More
-
 * [Application Overview](docs/overview.md)
 * [Other Documentation](docs/)
 
@@ -33,13 +31,12 @@ Kubernetes: `>=1.23.x || >=1.23.x-x`
 
 Install Helm
 
-<https://helm.sh/docs/intro/install/>
+https://helm.sh/docs/intro/install/
 
 ## Deployment
 
 * Clone down the repository
 * cd into directory
-
 ```bash
 helm install anchore chart/
 ```
@@ -683,3 +680,4 @@ Please see the [contributing guide](./CONTRIBUTING.md) if you are interested in 
 ---
 
 _This file is programatically generated using `helm-docs` and some BigBang-specific templates. The `gluon` repository has [instructions for regenerating package READMEs](https://repo1.dso.mil/big-bang/product/packages/gluon/-/blob/master/docs/bb-package-readme.md)._
+
