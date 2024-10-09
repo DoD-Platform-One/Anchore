@@ -4,6 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [2.10.0-bb.1] - 2024-09-27
+
+### Changed
+
+- Updated feeds-db chart
+
 ## [2.10.0-bb.0] - 2024-09-09
 
 ### Changed
