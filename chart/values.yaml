@@ -80,7 +80,9 @@ networkPolicies:
 
 # For stricter control over the enterprise feeds pod egress, uncomment the list of known feeds endpoints below
 # Warning: This list may not be complete depending on your desired feeds
-feedsHosts: []
+feedsHosts: 
+    - data.anchore-enterprise.com
+    - s3.us-west-2.amazonaws.com/enterprise-data-service.production.anchore.io  
   # - anchore-feed-service.s3.amazonaws.com
   # - packages.cgr.dev
   # - access.redhat.com
@@ -193,7 +195,7 @@ global:
 ## ** Big Bang Change **
 ## @param image Image used for all Anchore Enterprise deployments, excluding Anchore UI
 ##
-image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.9.0
+image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.10.0
 
 ## @param imagePullPolicy Image pull policy used by all deployments
 ## ref: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
@@ -206,6 +208,21 @@ imagePullPolicy: IfNotPresent
 ## Secrets must be manually created in the same namespace as release
 ##
 imagePullSecretName: private-registry
+
+## @param useExistingPullCredSecret forgoes pullcred secret creation and uses the secret defined in imagePullSecretName
+##
+useExistingPullCredSecret: true
+
+## @param imageCredentials.registry The registry URL for the image pull secret
+## @param imageCredentials.username The username for the image pull secret
+## @param imageCredentials.password The password for the image pull secret
+## @param imageCredentials.email The email for the image pull secret
+##
+imageCredentials:
+  registry: ""
+  username: ""
+  password: ""
+  email: ""
 
 ## @param startMigrationPod Spin up a Database migration pod to help migrate the database to the new schema
 ##
@@ -225,11 +242,19 @@ serviceAccountName: ""
 ##
 injectSecretsViaEnv: false
 
+## @param license License for Anchore Enterprise
+##
+license: {}
+
 ## @param licenseSecretName Name of the Kubernetes secret containing your license.yaml file
 ## This must be manually created. For example with the following command:
 ## `kubectl create secret generic anchore-enterprise-license --from-file=license.yaml=<PATH TO LICENSE.YAML>`
 ##
 licenseSecretName: anchore-enterprise-license
+
+## @param useExistingLicenseSecret forgoes license secret creation and uses the secret defined in licenseSecretName
+##
+useExistingLicenseSecret: true
 
 ## @param certStoreSecretName Name of secret containing the certificates & keys used for SSL, SAML & CAs
 ## The chart will mount the secret specified in certStoreSecretName to /home/anchore/certs
@@ -484,6 +509,7 @@ anchoreConfig:
   ## @param anchoreConfig.user_authentication.sso_require_existing_users set to true in order to disable the SSO JIT provisioning during authentication
   ## This provides an additional layer of security and configuration for SSO users to gain access to Anchore.
   ## @param anchoreConfig.user_authentication.disallow_native_users Disallow native users to authenticate by any method. Only SSO/'saml' users will be able to access the system.
+  ## @param anchoreConfig.user_authentication.log_saml_assertions Enable logging of received SAML assertions at INFO level for SSO debugging in API container.
   ##
   ## @param anchoreConfig.user_authentication.remove_deleted_user_api_keys_older_than_days
   ## The number of days elapsed after a user API key is deleted before it is garbage collected (-1 to disable)
@@ -499,6 +525,7 @@ anchoreConfig:
     sso_require_existing_users: false
     remove_deleted_user_api_keys_older_than_days: 365
     disallow_native_users: false
+    log_saml_assertions: false
 
   ## @param anchoreConfig.metrics.enabled Enable Prometheus metrics for all Anchore services
   ## @param anchoreConfig.metrics.auth_disabled Disable auth on Prometheus metrics for all Anchore services
@@ -746,9 +773,13 @@ anchoreConfig:
       feed_sync: 14400
       feed_sync_checker: 3600
 
-    ## @param anchoreConfig.policy_engine.overrideFeedsToUpstream Override the Anchore Feeds URL to use the public upstream Anchore Feeds
-    ##
-    overrideFeedsToUpstream: false
+    ## @param anchoreConfig.policy_engine.vulnerabilities.matching.exclude.providers List of providers to exclude from matching
+    ## @param anchoreConfig.policy_engine.vulnerabilities.matching.exclude.package_types List of package types to exclude from matching
+    vulnerabilities:
+      matching:
+        exclude:
+          providers: []
+          package_types: []
 
     ## @param anchoreConfig.policy_engine.enable_user_base_image Enables usage of Well Known Annotation to identify base image for use in ancestry calculations
     enable_user_base_image: true
@@ -1139,177 +1170,80 @@ catalog:
   scratchVolume:
     details: {}
 
-##########################################
-## @section Anchore Feeds Chart Parameters
-##########################################
-feeds:
-  enabled: true
-  
-  # istio values added by BigBang
-  istio:
-    enabled: false
-    injection: "disabled"
-
-  ## @param feeds.standalone Sets the Anchore Feeds chart to run into non-standalone mode, for use with Anchore Enterprise.
-  ## This should never be set to true when enabled=true.
+#########################################################
+## @section Anchore DataSyncer k8s Deployment Parameters
+#########################################################
+dataSyncer:
+  ## @param dataSyncer.replicaCount Number of replicas for the Anchore DataSyncer deployment
   ##
-  standalone: false
+  replicaCount: 1
 
-  ## @param feeds.url Set the URL for a standalone Feeds service. Use when enabled=false.
+  ## @param dataSyncer.service.type Service type for Anchore DataSyncer
+  ## @param dataSyncer.service.port Service port for Anchore DataSyncer
+  ## @param dataSyncer.service.annotations Annotations for Anchore DataSyncer service
+  ## @param dataSyncer.service.labels Labels for Anchore DataSyncer service
+  ## @param dataSyncer.service.nodePort nodePort for Anchore DataSyncer service
+  ## @param dataSyncer.service.domainSuffix domain suffix for appending to the ANCHORE_ENDPOINT_HOSTNAME. If blank, domainSuffix will be "namespace.svc.cluster.local". Takes precedence over the top level domainSuffix
   ##
-  url: ""
-
   service:
-    port: 8448
-    apiVersion: v2
+    type: ClusterIP
+    port: 8778
+    annotations: {}
+    labels: {}
+    nodePort: ""
+    domainSuffix: ""
 
-  ## ** Big Bang Feeds Chart Values **
-  # See: https://github.com/anchore/anchore-charts/blob/main/stable/feeds/values.yaml
-  image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.9.0
+  ## @param dataSyncer.extraEnv Set extra environment variables for Anchore DataSyncer pods
+  ##
+  extraEnv: []
 
-  imagePullSecretName: private-registry
+  ## @param dataSyncer.extraVolumes Define additional volumes for Anchore DataSyncer pods
+  ##
+  extraVolumes: []
 
-  containerSecurityContext:
-    capabilities:
-      drop:
-        - ALL
+  ## @param dataSyncer.extraVolumeMounts Define additional volume mounts for Anchore DataSyncer pods
+  ##
+  extraVolumeMounts: []
 
-  resources:
-    limits:
-      cpu: 1
-      memory: 10G
-    requests:
-      cpu: 1
-      memory: 10G
+  ## @param dataSyncer.resources Resource requests and limits for Anchore DataSyncer pods
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  ## Commented values below are just a suggested baseline. Contact Anchore support for deployment specific recommendations.
+  ##
+  resources: {}
+    # requests:
+    #   cpu: 1000m
+    #   memory: 8000Mi
+    # limits:
+    #   memory: 8000Mi
 
-  # This is so that the monitoring metrics can be enabled... should somehow tie to monitoring defined above though
-  anchoreConfig:
-    internalServicesSSL:
-      enabled: false
-      verifyCerts: false
-      certSecretKeyFileName: ""
-      certSecretCertFileName: ""
+  ## @param dataSyncer.labels Labels for Anchore DataSyncer pods
+  ##
+  labels: {}
 
-  # ** Big Bang Feeds passthrus to Postgress Chart Values
-  # Need to update passthrough values to feeds and gem
-  # Going to be pass-throughs to a local pg sub-chart...
-  feeds-db:
-    enabled: true
+  ## @param dataSyncer.annotations Annotation for Anchore DataSyncer pods
+  ##
+  annotations: {}
 
-    image:
-      registry: registry1.dso.mil
-      repository: ironbank/opensource/postgres/postgresql
-      tag: "16.2"
-    global:
-      imagePullSecrets:
-        - private-registry
+  ## @param dataSyncer.nodeSelector Node labels for Anchore DataSyncer pod assignment
+  ##
+  nodeSelector: {}
 
-    # To use an external DB or Google CloudSQL, uncomment & set 'enabled: false'
-    # externalEndpoint, postgresUser, postgresPassword, postgresDatabase, & postgresPort are required values for external postgres
-    # enabled: false
-    # if enabled=false specify an external (already existing) postgres deployment for use.
-    # Set to the hostname eg. mypostgres.myserver.io
-    # Also check egress-postgres.yaml if network policy is enabled
-    #postgresPort: "5432"
-    externalEndpoint: Null
-    postgresUser: anchore
-    postgresPassword: anchore-postgres,123
-    postgresDatabase: anchore
+  ## @param dataSyncer.tolerations Tolerations for Anchore DataSyncer pod assignment
+  ##
+  tolerations: []
 
-    securityContext:
-      enabled: true
-      fsGroup: 1001
-      runAsUser: 1001
-      runAsGroup: 1001
+  ## @param dataSyncer.affinity Affinity for Anchore DataSyncer pod assignment
+  ##
+  affinity: {}
 
-    containerSecurityContext:
-      enabled: true
-      runAsUser: 1001
-      runAsGroup: 1001
-      capabilities:
-        drop:
-          - ALL
-    # Configure resource limits and requests for the postgresql deployment
-    resources:
-      limits:
-        cpu: 100m
-        memory: 256Mi
-      requests:
-        cpu: 100m
-        memory: 256Mi
-    # Configure resource limits and requests for postgresql metrics (disabled by default)
-    metrics:
-      resources:
-        limits:
-          cpu: 100m
-          memory: 256Mi
-        requests:
-          cpu: 100m
-          memory: 256Mi
+  ## @param dataSyncer.serviceAccountName Service account name for Anchore DataSyncer pods
+  ##
+  serviceAccountName: ""
 
-    primary:
-      # Configure size of the persistent volume used with helm managed chart.
-      # This should be commented out if using an external endpoint.
-      persistence:
-        resourcePolicy: keep
-        size: 20Gi
-        subPath: "pgdata"
-        mountPath: /var/lib/postgresql
-      postgresqlDataDir: /var/lib/postgresql/data
-      podSecurityContext:
-        enabled: true
-        fsGroup: 1001
-        runAsUser: 1001
-        runAsGroup: 1001
-      containerSecurityContext:
-        enabled: true
-        runAsUser: 1001
-        runAsGroup: 1001
-        capabilities:
-          drop:
-            - ALL
-     # Set the configs to allow listening and connecting from other pods
-    postgresqlConfiguration: {"listen_addresses": "*"}
-    pgHbaConfiguration: |-
-      local all all scram-sha-256
-      host all all all scram-sha-256
-
-  gem-db:
-    enabled: false
-
-    image:
-      registry: registry1.dso.mil
-      repository: ironbank/opensource/postgres/postgresql
-      tag: "16.2"
-    #postgresPort: "5432"
-    externalEndpoint: Null
-    postgresUser: anchore
-    postgresPassword: anchore-postgres,123
-    postgresDatabase: anchore
-
-    securityContext:
-      enabled: true
-      fsGroup: 1001
-      runAsUser: 1001
-      runAsGroup: 1001
-
-    primary:
-      persistence:
-        enabled: false
-      postgresqlDataDir: /var/lib/postgresql/data
-
-      podSecurityContext:
-        enabled: true
-        fsGroup: 1001
-        runAsUser: 1001
-        runAsGroup: 1001
-      containerSecurityContext:
-        enabled: true
-        runAsUser: 1001
-        runAsGroup: 1001
-        capabilities:
-          drop:
-            - ALL
+  ## @param dataSyncer.scratchVolume.details [object] Details for the k8s volume to be created for Anchore DataSyncer scratch space
+  ##
+  scratchVolume:
+    details: {}
 
 ############################################
 ## @section Anchore Notifications Parameters
@@ -1661,7 +1595,7 @@ ui:
   ## ** Big Bang Change **
   ## @param ui.image Image used for the Anchore UI container
   ##
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.9.0
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.10.0
 
   ## @param ui.imagePullPolicy Image pull policy for Anchore UI image
   ##
@@ -1777,7 +1711,7 @@ upgradeJob:
   ## @param upgradeJob.kubectlImage The image to use for the upgrade job's init container that uses kubectl to scale down deployments before an upgrade
   ## This is only used in the preupgrade job.
   ##
-  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.8
+  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.5
 
   ## @param upgradeJob.nodeSelector Node labels for the Anchore upgrade job pod assignment
   ##
@@ -1853,26 +1787,6 @@ ingress:
   ## @param ingress.uiPath The path used for accessing the Anchore UI
   ##
   uiPath: /
-
-  ## @param ingress.feedsHosts List of custom hostnames for the Anchore Feeds API
-  ##
-  feedsHosts: []
-
-  ## @param ingress.feedsPaths The path used for accessing the Anchore Feeds API
-  ## Exposing the feeds API is for special cases only, use /v2/feeds for ingress.feedsPath
-  ##
-  feedsPaths:
-    - /v2/feeds/
-
-  ## @param ingress.reportsHosts List of custom hostnames for the Anchore Reports API
-  ##
-  #reportsHosts: []
-
-  ## @param ingress.reportsPaths The path used for accessing the Anchore Reports API
-  ## Exposing the reports API enables the GraphQL interface, use /v2/reports/graphql for ingress.reportsPath
-  ##
-  reportsPaths:
-    - /v2/reports/
 
   ## @param ingress.tls Configure tls for the ingress resource
   ## Secrets must be manually created in the release namespace
@@ -2090,7 +2004,7 @@ osaaMigrationJob:
   ## @param osaaMigrationJob.kubectlImage The image to use for the job's init container that uses kubectl to scale down deployments for the migration
   ## This is only used in the osaaMigrationJob job.
   ##
-  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.8
+  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.5
 
   ## @param osaaMigrationJob.extraEnv An array to add extra environment variables
   ##
