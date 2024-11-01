@@ -8,35 +8,38 @@ it allows developers to bolster security without compromising velocity and enabl
 It is based on Anchore Engine, an open-source image inspection and scanning tool.
 
 ## Upstream References
-* <https://anchore.com>
 
-* <https://github.com/anchore/anchore-charts/tree/main/stable/enterprise>
+- <https://anchore.com>
 
-### Upstream Release Notes
+- <https://github.com/anchore/anchore-charts/tree/main/stable/enterprise>
+
+## Upstream Release Notes
 
 - [Find our upstream chart's CHANGELOG here](https://github.com/anchore/anchore-charts/tree/main)
 - [and our upstream application release notes here](https://docs.anchore.com/current/docs/releasenotes/)
 
 ## Learn More
-* [Application Overview](docs/overview.md)
-* [Other Documentation](docs/)
+
+- [Application Overview](docs/overview.md)
+- [Other Documentation](docs/)
 
 ## Pre-Requisites
 
-* Kubernetes Cluster deployed
-* Kubernetes config installed in `~/.kube/config`
-* Helm installed
+- Kubernetes Cluster deployed
+- Kubernetes config installed in `~/.kube/config`
+- Helm installed
 
 Kubernetes: `>=1.23.x || >=1.23.x-x`
 
 Install Helm
 
-https://helm.sh/docs/intro/install/
+<https://helm.sh/docs/intro/install/>
 
 ## Deployment
 
-* Clone down the repository
-* cd into directory
+- Clone down the repository
+- cd into directory
+
 ```bash
 helm install anchore chart/
 ```
@@ -105,14 +108,21 @@ helm install anchore chart/
 | sso.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | global.fullnameOverride | string | `""` |  |
 | global.nameOverride | string | `"anchore-enterprise"` |  |
-| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.9.0"` |  |
+| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.10.0"` |  |
 | imagePullPolicy | string | `"IfNotPresent"` |  |
 | imagePullSecretName | string | `"private-registry"` |  |
+| useExistingPullCredSecret | bool | `true` |  |
+| imageCredentials.registry | string | `""` |  |
+| imageCredentials.username | string | `""` |  |
+| imageCredentials.password | string | `""` |  |
+| imageCredentials.email | string | `""` |  |
 | startMigrationPod | bool | `true` |  |
 | migrationPodImage | string | `"registry1.dso.mil/ironbank/opensource/postgres/postgresql:16.2"` |  |
 | serviceAccountName | string | `""` |  |
 | injectSecretsViaEnv | bool | `false` |  |
+| license | object | `{}` |  |
 | licenseSecretName | string | `"anchore-enterprise-license"` |  |
+| useExistingLicenseSecret | bool | `true` |  |
 | certStoreSecretName | string | `""` |  |
 | extraEnv | list | `[]` |  |
 | useExistingSecrets | bool | `false` |  |
@@ -178,6 +188,7 @@ helm install anchore chart/
 | anchoreConfig.user_authentication.sso_require_existing_users | bool | `false` |  |
 | anchoreConfig.user_authentication.remove_deleted_user_api_keys_older_than_days | int | `365` |  |
 | anchoreConfig.user_authentication.disallow_native_users | bool | `false` |  |
+| anchoreConfig.user_authentication.log_saml_assertions | bool | `false` |  |
 | anchoreConfig.metrics.enabled | bool | `false` |  |
 | anchoreConfig.metrics.auth_disabled | bool | `false` |  |
 | anchoreConfig.webhooks | object | `{}` |  |
@@ -240,7 +251,8 @@ helm install anchore chart/
 | anchoreConfig.catalog.down_analyzer_task_requeue | bool | `true` |  |
 | anchoreConfig.policy_engine.cycle_timers.feed_sync | int | `14400` |  |
 | anchoreConfig.policy_engine.cycle_timers.feed_sync_checker | int | `3600` |  |
-| anchoreConfig.policy_engine.overrideFeedsToUpstream | bool | `false` |  |
+| anchoreConfig.policy_engine.vulnerabilities.matching.exclude.providers | string | `nil` |  |
+| anchoreConfig.policy_engine.vulnerabilities.matching.exclude.package_types | string | `nil` |  |
 | anchoreConfig.policy_engine.enable_user_base_image | bool | `true` |  |
 | anchoreConfig.notifications.cycle_timers.notifications | int | `30` |  |
 | anchoreConfig.notifications.ui_url | string | `""` |  |
@@ -341,86 +353,24 @@ helm install anchore chart/
 | catalog.affinity | object | `{}` |  |
 | catalog.serviceAccountName | string | `""` |  |
 | catalog.scratchVolume.details | object | `{}` |  |
-| feeds.enabled | bool | `true` |  |
-| feeds.istio.enabled | bool | `false` |  |
-| feeds.istio.injection | string | `"disabled"` |  |
-| feeds.standalone | bool | `false` |  |
-| feeds.url | string | `""` |  |
-| feeds.service.port | int | `8448` |  |
-| feeds.service.apiVersion | string | `"v2"` |  |
-| feeds.image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.9.0"` |  |
-| feeds.imagePullSecretName | string | `"private-registry"` |  |
-| feeds.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| feeds.resources.limits.cpu | int | `1` |  |
-| feeds.resources.limits.memory | string | `"10G"` |  |
-| feeds.resources.requests.cpu | int | `1` |  |
-| feeds.resources.requests.memory | string | `"10G"` |  |
-| feeds.anchoreConfig.internalServicesSSL.enabled | bool | `false` |  |
-| feeds.anchoreConfig.internalServicesSSL.verifyCerts | bool | `false` |  |
-| feeds.anchoreConfig.internalServicesSSL.certSecretKeyFileName | string | `""` |  |
-| feeds.anchoreConfig.internalServicesSSL.certSecretCertFileName | string | `""` |  |
-| feeds.feeds-db.enabled | bool | `true` |  |
-| feeds.feeds-db.image.registry | string | `"registry1.dso.mil"` |  |
-| feeds.feeds-db.image.repository | string | `"ironbank/opensource/postgres/postgresql"` |  |
-| feeds.feeds-db.image.tag | string | `"16.2"` |  |
-| feeds.feeds-db.global.imagePullSecrets[0] | string | `"private-registry"` |  |
-| feeds.feeds-db.externalEndpoint | string | `nil` |  |
-| feeds.feeds-db.postgresUser | string | `"anchore"` |  |
-| feeds.feeds-db.postgresPassword | string | `"anchore-postgres,123"` |  |
-| feeds.feeds-db.postgresDatabase | string | `"anchore"` |  |
-| feeds.feeds-db.securityContext.enabled | bool | `true` |  |
-| feeds.feeds-db.securityContext.fsGroup | int | `1001` |  |
-| feeds.feeds-db.securityContext.runAsUser | int | `1001` |  |
-| feeds.feeds-db.securityContext.runAsGroup | int | `1001` |  |
-| feeds.feeds-db.containerSecurityContext.enabled | bool | `true` |  |
-| feeds.feeds-db.containerSecurityContext.runAsUser | int | `1001` |  |
-| feeds.feeds-db.containerSecurityContext.runAsGroup | int | `1001` |  |
-| feeds.feeds-db.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| feeds.feeds-db.resources.limits.cpu | string | `"100m"` |  |
-| feeds.feeds-db.resources.limits.memory | string | `"256Mi"` |  |
-| feeds.feeds-db.resources.requests.cpu | string | `"100m"` |  |
-| feeds.feeds-db.resources.requests.memory | string | `"256Mi"` |  |
-| feeds.feeds-db.metrics.resources.limits.cpu | string | `"100m"` |  |
-| feeds.feeds-db.metrics.resources.limits.memory | string | `"256Mi"` |  |
-| feeds.feeds-db.metrics.resources.requests.cpu | string | `"100m"` |  |
-| feeds.feeds-db.metrics.resources.requests.memory | string | `"256Mi"` |  |
-| feeds.feeds-db.primary.persistence.resourcePolicy | string | `"keep"` |  |
-| feeds.feeds-db.primary.persistence.size | string | `"20Gi"` |  |
-| feeds.feeds-db.primary.persistence.subPath | string | `"pgdata"` |  |
-| feeds.feeds-db.primary.persistence.mountPath | string | `"/var/lib/postgresql"` |  |
-| feeds.feeds-db.primary.postgresqlDataDir | string | `"/var/lib/postgresql/data"` |  |
-| feeds.feeds-db.primary.podSecurityContext.enabled | bool | `true` |  |
-| feeds.feeds-db.primary.podSecurityContext.fsGroup | int | `1001` |  |
-| feeds.feeds-db.primary.podSecurityContext.runAsUser | int | `1001` |  |
-| feeds.feeds-db.primary.podSecurityContext.runAsGroup | int | `1001` |  |
-| feeds.feeds-db.primary.containerSecurityContext.enabled | bool | `true` |  |
-| feeds.feeds-db.primary.containerSecurityContext.runAsUser | int | `1001` |  |
-| feeds.feeds-db.primary.containerSecurityContext.runAsGroup | int | `1001` |  |
-| feeds.feeds-db.primary.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| feeds.feeds-db.postgresqlConfiguration.listen_addresses | string | `"*"` |  |
-| feeds.feeds-db.pgHbaConfiguration | string | `"local all all scram-sha-256\nhost all all all scram-sha-256"` |  |
-| feeds.gem-db.enabled | bool | `false` |  |
-| feeds.gem-db.image.registry | string | `"registry1.dso.mil"` |  |
-| feeds.gem-db.image.repository | string | `"ironbank/opensource/postgres/postgresql"` |  |
-| feeds.gem-db.image.tag | string | `"16.2"` |  |
-| feeds.gem-db.externalEndpoint | string | `nil` |  |
-| feeds.gem-db.postgresUser | string | `"anchore"` |  |
-| feeds.gem-db.postgresPassword | string | `"anchore-postgres,123"` |  |
-| feeds.gem-db.postgresDatabase | string | `"anchore"` |  |
-| feeds.gem-db.securityContext.enabled | bool | `true` |  |
-| feeds.gem-db.securityContext.fsGroup | int | `1001` |  |
-| feeds.gem-db.securityContext.runAsUser | int | `1001` |  |
-| feeds.gem-db.securityContext.runAsGroup | int | `1001` |  |
-| feeds.gem-db.primary.persistence.enabled | bool | `false` |  |
-| feeds.gem-db.primary.postgresqlDataDir | string | `"/var/lib/postgresql/data"` |  |
-| feeds.gem-db.primary.podSecurityContext.enabled | bool | `true` |  |
-| feeds.gem-db.primary.podSecurityContext.fsGroup | int | `1001` |  |
-| feeds.gem-db.primary.podSecurityContext.runAsUser | int | `1001` |  |
-| feeds.gem-db.primary.podSecurityContext.runAsGroup | int | `1001` |  |
-| feeds.gem-db.primary.containerSecurityContext.enabled | bool | `true` |  |
-| feeds.gem-db.primary.containerSecurityContext.runAsUser | int | `1001` |  |
-| feeds.gem-db.primary.containerSecurityContext.runAsGroup | int | `1001` |  |
-| feeds.gem-db.primary.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| dataSyncer.replicaCount | int | `1` |  |
+| dataSyncer.service.type | string | `"ClusterIP"` |  |
+| dataSyncer.service.port | int | `8778` |  |
+| dataSyncer.service.annotations | object | `{}` |  |
+| dataSyncer.service.labels | object | `{}` |  |
+| dataSyncer.service.nodePort | string | `""` |  |
+| dataSyncer.service.domainSuffix | string | `""` |  |
+| dataSyncer.extraEnv | list | `[]` |  |
+| dataSyncer.extraVolumes | list | `[]` |  |
+| dataSyncer.extraVolumeMounts | list | `[]` |  |
+| dataSyncer.resources | object | `{}` |  |
+| dataSyncer.labels | object | `{}` |  |
+| dataSyncer.annotations | object | `{}` |  |
+| dataSyncer.nodeSelector | object | `{}` |  |
+| dataSyncer.tolerations | list | `[]` |  |
+| dataSyncer.affinity | object | `{}` |  |
+| dataSyncer.serviceAccountName | string | `""` |  |
+| dataSyncer.scratchVolume.details | object | `{}` |  |
 | notifications.replicaCount | int | `1` |  |
 | notifications.service.type | string | `"ClusterIP"` |  |
 | notifications.service.port | int | `8668` |  |
@@ -518,7 +468,7 @@ helm install anchore chart/
 | reports.affinity | object | `{}` |  |
 | reports.serviceAccountName | string | `""` |  |
 | ui.enabled | bool | `true` |  |
-| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.9.0"` |  |
+| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.10.0"` |  |
 | ui.imagePullPolicy | string | `"IfNotPresent"` |  |
 | ui.imagePullSecretName | string | `"private-registry"` |  |
 | ui.existingSecretName | string | `"anchore-enterprise-ui-env"` |  |
@@ -548,7 +498,7 @@ helm install anchore chart/
 | upgradeJob.rbacCreate | bool | `true` |  |
 | upgradeJob.serviceAccountName | string | `""` |  |
 | upgradeJob.usePostUpgradeHook | bool | `false` |  |
-| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.8"` |  |
+| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.5"` |  |
 | upgradeJob.nodeSelector | object | `{}` |  |
 | upgradeJob.tolerations | list | `[]` |  |
 | upgradeJob.affinity | object | `{}` |  |
@@ -567,9 +517,6 @@ helm install anchore chart/
 | ingress.apiPaths[1] | string | `"/version/"` |  |
 | ingress.uiHosts | list | `[]` |  |
 | ingress.uiPath | string | `"/"` |  |
-| ingress.feedsHosts | list | `[]` |  |
-| ingress.feedsPaths[0] | string | `"/v2/feeds/"` |  |
-| ingress.reportsPaths[0] | string | `"/v2/reports/"` |  |
 | ingress.tls | list | `[]` |  |
 | ingress.ingressClassName | string | `"nginx"` |  |
 | cloudsql.enabled | bool | `false` |  |
@@ -630,7 +577,7 @@ helm install anchore chart/
 | postgresql.containerSecurityContext.runAsGroup | int | `1001` |  |
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | osaaMigrationJob.enabled | bool | `false` |  |
-| osaaMigrationJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.29.8"` |  |
+| osaaMigrationJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.5"` |  |
 | osaaMigrationJob.extraEnv | list | `[]` |  |
 | osaaMigrationJob.extraVolumes | list | `[]` |  |
 | osaaMigrationJob.extraVolumeMounts | list | `[]` |  |
@@ -680,4 +627,3 @@ Please see the [contributing guide](./CONTRIBUTING.md) if you are interested in 
 ---
 
 _This file is programatically generated using `helm-docs` and some BigBang-specific templates. The `gluon` repository has [instructions for regenerating package READMEs](https://repo1.dso.mil/big-bang/product/packages/gluon/-/blob/master/docs/bb-package-readme.md)._
-

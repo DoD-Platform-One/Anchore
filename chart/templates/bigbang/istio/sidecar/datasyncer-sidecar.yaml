@@ -1,0 +1,17 @@
+{{- /* Render Istio Sidecar */ -}}
+{{- if and .Values.istio.enabled .Values.istio.hardened.enabled -}}
+apiVersion: networking.istio.io/v1beta1
+kind: Sidecar
+metadata:
+  name: {{ .Release.Name }}-datasyncer-sidecar
+  namespace: {{.Release.Namespace}}
+  labels:
+    app: {{ template "enterprise.fullname" . }}
+spec:
+  workloadSelector:
+    labels:
+      app.kubernetes.io/component: datasyncer
+  outboundTrafficPolicy:
+    mode: "ALLOW_ANY"
+{{- end }}
+

@@ -2,14 +2,11 @@ dependencies:
 - name: postgresql
   repository: file://./deps/postgresql
   version: 12.5.9
-- name: feeds
-  repository: file://./deps/feeds
-  version: 2.9.0
 - name: redis
   repository: oci://registry1.dso.mil/bigbang
-  version: 20.0.1-bb.0
+  version: 20.2.1-bb.0
 - name: gluon
   repository: oci://registry1.dso.mil/bigbang
-  version: 0.5.4
-digest: sha256:e80cebb428394dd88d48ba36bc30e6c12de96400120f6f389bb86da28ae9c632
-generated: "2024-09-27T12:02:36.843316-04:00"
+  version: 0.5.8
+digest: sha256:9efc82ae3e811283272ce4dd1d5176c01c84a7096457aa03639fdee153c4c990
+generated: "2024-11-01T13:39:14.497353-04:00"

@@ -53,53 +53,6 @@ spec:
 {{- end }}
 {{- end }}
 
-{{/* if external feeds db is enabled, allow egress from ensure feeds db job and enterprise feeds upgrade job */}}
-
-{{- if and (hasKey (index .Values "feeds" "feeds-db") "enabled")  }}
-{{- if (not (index .Values "feeds" "feeds-db" "enabled")) }}
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-egress-ensure-feeds-db-job
-  namespace: {{ .Release.Namespace }}
-spec:
-  podSelector:
-    matchLabels:
-      job-name: ensure-feeds-db
-  policyTypes:
-  - Egress
-  egress:
-  - to:
-    - ipBlock:
-        cidr: 0.0.0.0/0
-        # ONLY Block requests to AWS metadata IP
-        except:
-        - 169.254.169.254/32
-{{- if .Values.upgradeJob.enabled }}
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-egress-enterprise-feeds-upgrade-job
-  namespace: {{ .Release.Namespace }}
-spec:
-  podSelector:
-    matchLabels:
-      job-name: anchore-enterprise-feeds-upgrade
-  policyTypes:
-  - Egress
-  egress:
-  - to:
-    - ipBlock:
-        cidr: 0.0.0.0/0
-        # ONLY Block requests to AWS metadata IP
-        except:
-        - 169.254.169.254/32
-{{- end }}
-{{- end }}
-{{- end }}
-
 {{/* if sso is enabled, allow egress from configure sso job */}}
 {{- if .Values.sso.enabled }}
 ---
