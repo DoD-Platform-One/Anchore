@@ -78,11 +78,11 @@ networkPolicies:
   #           - 169.254.169.254/32
 
 
-# For stricter control over the enterprise feeds pod egress, uncomment the list of known feeds endpoints below
+# For stricter control over the enterprise datasyncer pod egress, uncomment the list of known datasyncer endpoints below
 # Warning: This list may not be complete depending on your desired feeds
-feedsHosts: 
+datasyncerHosts: 
     - data.anchore-enterprise.com
-    - s3.us-west-2.amazonaws.com/enterprise-data-service.production.anchore.io  
+    - s3.us-west-2.amazonaws.com #/enterprise-data-service.production.anchore.io
   # - anchore-feed-service.s3.amazonaws.com
   # - packages.cgr.dev
   # - access.redhat.com
