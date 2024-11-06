@@ -1,9 +1,9 @@
 {{- /* Render Istio ServiceEntry for datasyncer */ -}}
 {{- if and .Values.istio.enabled .Values.istio.hardened.enabled (gt (len .Values.datasyncerHosts) 0) -}}
 apiVersion: networking.istio.io/v1beta1
-kind: ServiceEntry
+kind: VirtualService
 metadata:
-  name: anchore-datasyncer-service-entry
+  name: anchore-datasyncer-virtual-service
   namespace: {{ .Release.Namespace }}
 spec:
   exportTo:
@@ -12,9 +12,16 @@ spec:
   {{- range .Values.datasyncerHosts }}
     - {{ quote . |  -}}
   {{ end }}
-  location: MESH_EXTERNAL
-  ports:
-    - number: 443
-      protocol: TLS
-      name: https
+  http:
+  - match:
+    - uri:
+        regex: ".+"
+    rewrite:
+      uri: "/enterprise-data-service.production.anchore.io"
+      authority: s3.us-west-2.amazonaws.com
+    route:
+    - destination:
+        host: s3.us-west-2.amazonaws.com
+        port:
+          number: 443
 {{- end -}}

@@ -1,17 +1,16 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 2.10.0-bb.1](https://img.shields.io/badge/Version-2.10.0--bb.1-informational?style=flat-square) ![AppVersion: 5.9.0](https://img.shields.io/badge/AppVersion-5.9.0-informational?style=flat-square)
+![Version: 3.0.0-bb.1](https://img.shields.io/badge/Version-3.0.0--bb.1-informational?style=flat-square) ![AppVersion: 5.10.0](https://img.shields.io/badge/AppVersion-5.10.0-informational?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
 It is based on Anchore Engine, an open-source image inspection and scanning tool.
 
 ## Upstream References
-
 - <https://anchore.com>
 
-- <https://github.com/anchore/anchore-charts/tree/main/stable/enterprise>
+* <https://github.com/anchore/anchore-charts/tree/main/stable/enterprise>
 
 ## Upstream Release Notes
 
@@ -33,7 +32,7 @@ Kubernetes: `>=1.23.x || >=1.23.x-x`
 
 Install Helm
 
-<https://helm.sh/docs/intro/install/>
+https://helm.sh/docs/intro/install/
 
 ## Deployment
 
@@ -72,7 +71,8 @@ helm install anchore chart/
 | networkPolicies.ingressLabels.app | string | `"istio-ingressgateway"` |  |
 | networkPolicies.ingressLabels.istio | string | `"ingressgateway"` |  |
 | networkPolicies.additionalPolicies | list | `[]` |  |
-| feedsHosts | list | `[]` |  |
+| datasyncerHosts[0] | string | `"data.anchore-enterprise.com"` |  |
+| datasyncerHosts[1] | string | `"s3.us-west-2.amazonaws.com/enterprise-data-service.production.anchore.io"` |  |
 | openshift | bool | `false` | Openshift Container Platform Feature Toggle |
 | postgresqlSuperUser.postgresUsername | string | `""` |  |
 | postgresqlSuperUser.postgresPassword | string | `""` |  |
@@ -251,8 +251,8 @@ helm install anchore chart/
 | anchoreConfig.catalog.down_analyzer_task_requeue | bool | `true` |  |
 | anchoreConfig.policy_engine.cycle_timers.feed_sync | int | `14400` |  |
 | anchoreConfig.policy_engine.cycle_timers.feed_sync_checker | int | `3600` |  |
-| anchoreConfig.policy_engine.vulnerabilities.matching.exclude.providers | string | `nil` |  |
-| anchoreConfig.policy_engine.vulnerabilities.matching.exclude.package_types | string | `nil` |  |
+| anchoreConfig.policy_engine.vulnerabilities.matching.exclude.providers | list | `[]` |  |
+| anchoreConfig.policy_engine.vulnerabilities.matching.exclude.package_types | list | `[]` |  |
 | anchoreConfig.policy_engine.enable_user_base_image | bool | `true` |  |
 | anchoreConfig.notifications.cycle_timers.notifications | int | `30` |  |
 | anchoreConfig.notifications.ui_url | string | `""` |  |
@@ -627,3 +627,4 @@ Please see the [contributing guide](./CONTRIBUTING.md) if you are interested in 
 ---
 
 _This file is programatically generated using `helm-docs` and some BigBang-specific templates. The `gluon` repository has [instructions for regenerating package READMEs](https://repo1.dso.mil/big-bang/product/packages/gluon/-/blob/master/docs/bb-package-readme.md)._
+

@@ -1,0 +1,12 @@
+{{- /* Render Istio ServiceEntry for datasyncer */ -}}
+{{- if and .Values.istio.enabled .Values.istio.hardened.enabled (gt (len .Values.datasyncerHosts) 0) -}}
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: anchore-datasyncer-destination-rule
+spec:
+  host: "s3.us-west-2.amazonaws.com"
+  trafficPolicy:
+    tls:
+      mode: SIMPLE
+{{- end -}}
