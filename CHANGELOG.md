@@ -4,6 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [3.0.0-bb.2] - 2024-11-07
+
+### Changed
+
+- Updated startmigrationpod value to false
+
 ## [3.0.0-bb.1] - 2024-11-04
 
 ### Changed
