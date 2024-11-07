@@ -226,7 +226,7 @@ imageCredentials:
 
 ## @param startMigrationPod Spin up a Database migration pod to help migrate the database to the new schema
 ##
-startMigrationPod: true
+startMigrationPod: false
 
 ## @param migrationPodImage The image reference to the migration pod
 ##
