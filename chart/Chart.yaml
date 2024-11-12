@@ -1,5 +1,5 @@
 name: anchore
-version: 3.0.0-bb.2
+version: 3.0.0-bb.3
 apiVersion: v2
 appVersion: 5.10.0
 kubeVersion: ">=1.23.x || >=1.23.x-x"
@@ -39,11 +39,11 @@ dependencies:
     condition: ui-redis.enabled
     alias: ui-redis
   - name: gluon
-    version: "0.5.8"
+    version: "0.5.10"
     repository: "oci://registry1.dso.mil/bigbang"
 annotations:
   bigbang.dev/applicationVersions: |
-    - Enterprise: 5.10.0
+    - Enterprise: 5.11.0
   bigbang.dev/upstreamReleaseNotesMarkdown: |
     - [Find our upstream chart's CHANGELOG here](https://github.com/anchore/anchore-charts/tree/main)
     - [and our upstream application release notes here](https://docs.anchore.com/current/docs/releasenotes/)
@@ -52,9 +52,9 @@ annotations:
     - name: redis
       image: registry1.dso.mil/ironbank/bitnami/redis:7.4.1
     - name: enterprise
-      image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.10.0
+      image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.11.0
     - name: postgresql
       condition: postgresql.enabled
       image: registry1.dso.mil/ironbank/opensource/postgres/postgresql:16.2
     - name: enterpriseui
-      image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.10.0
+      image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.11.0

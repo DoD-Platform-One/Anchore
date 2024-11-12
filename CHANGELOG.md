@@ -2,7 +2,16 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
----
+=======
+
+## [3.0.0-bb.3] - 2024-11-08
+
+### Changed
+
+- Updated gluon to `0.5.10`
+- Updated enterprise to `5.11.0`
+- Updated enterpriseui to `5.11.0`
+- Updated kubectl to `1.30.6`
 
 ## [3.0.0-bb.2] - 2024-11-07
 
