@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 3.0.0-bb.3](https://img.shields.io/badge/Version-3.0.0--bb.3-informational?style=flat-square) ![AppVersion: 5.10.0](https://img.shields.io/badge/AppVersion-5.10.0-informational?style=flat-square)
+![Version: 3.1.1-bb.0](https://img.shields.io/badge/Version-3.1.1--bb.0-informational?style=flat-square) ![AppVersion: 5.11.1](https://img.shields.io/badge/AppVersion-5.11.1-informational?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -109,7 +109,7 @@ helm install anchore chart/
 | sso.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | global.fullnameOverride | string | `""` |  |
 | global.nameOverride | string | `"anchore-enterprise"` |  |
-| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.11.0"` |  |
+| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.11.1"` |  |
 | imagePullPolicy | string | `"IfNotPresent"` |  |
 | imagePullSecretName | string | `"private-registry"` |  |
 | useExistingPullCredSecret | bool | `true` |  |
@@ -249,6 +249,7 @@ helm install anchore chart/
 | anchoreConfig.catalog.object_store.storage_driver.config | object | `{}` |  |
 | anchoreConfig.catalog.runtime_inventory.inventory_ttl_days | int | `120` |  |
 | anchoreConfig.catalog.runtime_inventory.inventory_ingest_overwrite | bool | `false` |  |
+| anchoreConfig.catalog.integrations.integration_health_report_ttl_days | int | `2` |  |
 | anchoreConfig.catalog.down_analyzer_task_requeue | bool | `true` |  |
 | anchoreConfig.policy_engine.cycle_timers.feed_sync | int | `14400` |  |
 | anchoreConfig.policy_engine.cycle_timers.feed_sync_checker | int | `3600` |  |
@@ -275,6 +276,7 @@ helm install anchore chart/
 | anchoreConfig.reports_worker.cycle_timers.reports_metrics | int | `3600` |  |
 | anchoreConfig.reports_worker.cycle_timers.reports_image_egress | int | `600` |  |
 | anchoreConfig.reports_worker.cycle_timers.reports_tag_egress | int | `600` |  |
+| anchoreConfig.reports_worker.runtime_report_generation.use_legacy_loaders_and_queries | bool | `false` |  |
 | anchoreConfig.ui.enable_proxy | bool | `false` |  |
 | anchoreConfig.ui.enable_ssl | bool | `false` |  |
 | anchoreConfig.ui.enable_shared_login | bool | `true` |  |

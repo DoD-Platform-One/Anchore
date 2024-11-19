@@ -1,7 +1,7 @@
 name: anchore
-version: 3.0.0-bb.3
+version: 3.1.1-bb.0
 apiVersion: v2
-appVersion: 5.10.0
+appVersion: 5.11.1
 kubeVersion: ">=1.23.x || >=1.23.x-x"
 description: |
   Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
@@ -43,7 +43,7 @@ dependencies:
     repository: "oci://registry1.dso.mil/bigbang"
 annotations:
   bigbang.dev/applicationVersions: |
-    - Enterprise: 5.11.0
+    - Enterprise: 5.11.1
   bigbang.dev/upstreamReleaseNotesMarkdown: |
     - [Find our upstream chart's CHANGELOG here](https://github.com/anchore/anchore-charts/tree/main)
     - [and our upstream application release notes here](https://docs.anchore.com/current/docs/releasenotes/)
@@ -52,7 +52,7 @@ annotations:
     - name: redis
       image: registry1.dso.mil/ironbank/bitnami/redis:7.4.1
     - name: enterprise
-      image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.11.0
+      image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.11.1
     - name: postgresql
       condition: postgresql.enabled
       image: registry1.dso.mil/ironbank/opensource/postgres/postgresql:16.2
