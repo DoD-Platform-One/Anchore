@@ -32,7 +32,7 @@ spec:
         app.kubernetes.io/component: read
         role: read
 {{- with .Values.readReplicas.podLabels }}
-{{ tpl (toYaml . | indent 8) $ }}
+{{ toYaml . | indent 8 }}
 {{- end }}
 {{- with .Values.readReplicas.podAnnotations }}
       annotations:
