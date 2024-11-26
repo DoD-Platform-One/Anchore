@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 3.1.1-bb.2](https://img.shields.io/badge/Version-3.1.1--bb.2-informational?style=flat-square) ![AppVersion: 5.11.1](https://img.shields.io/badge/AppVersion-5.11.1-informational?style=flat-square) ![Maintenance Track: unknown](https://img.shields.io/badge/Maintenance_Track-unknown-red?style=flat-square)
+![Version: 3.1.1-bb.3](https://img.shields.io/badge/Version-3.1.1--bb.3-informational?style=flat-square) ![AppVersion: 5.11.1](https://img.shields.io/badge/AppVersion-5.11.1-informational?style=flat-square) ![Maintenance Track: unknown](https://img.shields.io/badge/Maintenance_Track-unknown-red?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -501,7 +501,7 @@ helm install anchore chart/
 | upgradeJob.rbacCreate | bool | `true` |  |
 | upgradeJob.serviceAccountName | string | `""` |  |
 | upgradeJob.usePostUpgradeHook | bool | `false` |  |
-| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.6"` |  |
+| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.7"` |  |
 | upgradeJob.nodeSelector | object | `{}` |  |
 | upgradeJob.tolerations | list | `[]` |  |
 | upgradeJob.affinity | object | `{}` |  |
@@ -580,7 +580,7 @@ helm install anchore chart/
 | postgresql.containerSecurityContext.runAsGroup | int | `1001` |  |
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | osaaMigrationJob.enabled | bool | `false` |  |
-| osaaMigrationJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.6"` |  |
+| osaaMigrationJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.7"` |  |
 | osaaMigrationJob.extraEnv | list | `[]` |  |
 | osaaMigrationJob.extraVolumes | list | `[]` |  |
 | osaaMigrationJob.extraVolumeMounts | list | `[]` |  |

@@ -1721,7 +1721,7 @@ upgradeJob:
   ## @param upgradeJob.kubectlImage The image to use for the upgrade job's init container that uses kubectl to scale down deployments before an upgrade
   ## This is only used in the preupgrade job.
   ##
-  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.6
+  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.7
 
   ## @param upgradeJob.nodeSelector Node labels for the Anchore upgrade job pod assignment
   ##
@@ -2014,7 +2014,7 @@ osaaMigrationJob:
   ## @param osaaMigrationJob.kubectlImage The image to use for the job's init container that uses kubectl to scale down deployments for the migration
   ## This is only used in the osaaMigrationJob job.
   ##
-  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.6
+  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.7
 
   ## @param osaaMigrationJob.extraEnv An array to add extra environment variables
   ##
