@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - updated gluon to `0.5.12`
 - updated kubectl to `1.30.7`
+- Added the maintenance track
 
 ## [3.1.1-bb.2] - 2024-11-25
 
