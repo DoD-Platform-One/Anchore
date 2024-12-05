@@ -42,6 +42,7 @@ dependencies:
     version: "0.5.12"
     repository: "oci://registry1.dso.mil/bigbang"
 annotations:
+  bigbang.dev/maintenanceTrack: bb_integrated
   bigbang.dev/applicationVersions: |
     - Enterprise: 5.11.1
   bigbang.dev/upstreamReleaseNotesMarkdown: |
