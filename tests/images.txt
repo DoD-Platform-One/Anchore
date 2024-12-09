@@ -1,2 +1,2 @@
-registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.11.1
-registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.11.0
+registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.12.0
+registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.12.0

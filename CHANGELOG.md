@@ -4,6 +4,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [3.2.0-bb.0] - 2024-12-02
+
+### Changed
+
+- Updated Anchore Enterprise chart to `3.2.0`
+- Updated Anchore Enterprise tag to `5.12.0`
+- Updated Anchore Enterprise UI tag to `5.12.0`
+- Bumped resources for anchore-catalog
+
 ## [3.1.1-bb.3] - 2024-11-26
 
 ### Changed
