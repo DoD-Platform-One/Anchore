@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 3.1.1-bb.2](https://img.shields.io/badge/Version-3.1.1--bb.2-informational?style=flat-square) ![AppVersion: 5.11.1](https://img.shields.io/badge/AppVersion-5.11.1-informational?style=flat-square) ![Maintenance Track: unknown](https://img.shields.io/badge/Maintenance_Track-unknown-red?style=flat-square)
+![Version: 3.2.0-bb.1](https://img.shields.io/badge/Version-3.2.0--bb.1-informational?style=flat-square) ![AppVersion: 5.12.0](https://img.shields.io/badge/AppVersion-5.12.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -109,7 +109,7 @@ helm install anchore chart/
 | sso.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | global.fullnameOverride | string | `""` |  |
 | global.nameOverride | string | `"anchore-enterprise"` |  |
-| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.11.1"` |  |
+| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.12.0"` |  |
 | imagePullPolicy | string | `"IfNotPresent"` |  |
 | imagePullSecretName | string | `"private-registry"` |  |
 | useExistingPullCredSecret | bool | `true` |  |
@@ -158,13 +158,13 @@ helm install anchore chart/
 | scripts.anchore-config | string | `"#!/bin/bash\nwhile IFS= read -r line; do\n  while [[ \"$line\" =~ (\\$\\{[a-zA-Z_][a-zA-Z_0-9]*\\}) ]]; do\n    VAR_NAME=${BASH_REMATCH[1]#*\\{}; VAR_NAME=${VAR_NAME%\\}};\n    line=${line//${BASH_REMATCH[1]}/${!VAR_NAME}};\n  done;\n  printf '%s\\n' \"$line\";\ndone < /config/config.yaml\n"` |  |
 | domainSuffix | string | `""` |  |
 | anchoreConfig.service_dir | string | `"/anchore_service"` |  |
-| anchoreConfig.log_level | string | `"INFO"` |  |
+| anchoreConfig.log_level | string | `"<ALLOW_API_CONFIGURATION>"` |  |
 | anchoreConfig.logging.colored_logging | bool | `false` |  |
 | anchoreConfig.logging.exception_backtrace_logging | bool | `false` |  |
 | anchoreConfig.logging.exception_diagnose_logging | bool | `false` |  |
 | anchoreConfig.logging.file_rotation_rule | string | `"10 MB"` |  |
 | anchoreConfig.logging.file_retention_rule | int | `10` |  |
-| anchoreConfig.logging.log_level | string | `"INFO"` |  |
+| anchoreConfig.logging.log_level | string | `"<ALLOW_API_CONFIGURATION>"` |  |
 | anchoreConfig.logging.server_access_logging | bool | `true` |  |
 | anchoreConfig.logging.server_response_debug_logging | bool | `false` |  |
 | anchoreConfig.logging.server_log_level | string | `"info"` |  |
@@ -222,7 +222,7 @@ helm install anchore chart/
 | anchoreConfig.analyzer.configFile.secret_search.regexp_match[2] | string | `"PRIV_KEY=(?i)-+BEGIN(.*)PRIVATE KEY-+"` |  |
 | anchoreConfig.analyzer.configFile.secret_search.regexp_match[3] | string | `"DOCKER_AUTH=(?i).*\"auth\": *\".+\""` |  |
 | anchoreConfig.analyzer.configFile.secret_search.regexp_match[4] | string | `"API_KEY=(?i).*api(-\|_)key( *=+ *).*(?<![A-Z0-9])[A-Z0-9]{20,60}(?![A-Z0-9]).*"` |  |
-| anchoreConfig.analyzer.configFile.malware.clamav.enabled | bool | `false` |  |
+| anchoreConfig.analyzer.configFile.malware.clamav.enabled | string | `"<ALLOW_API_CONFIGURATION>"` |  |
 | anchoreConfig.analyzer.configFile.malware.clamav.db_update_enabled | bool | `true` |  |
 | anchoreConfig.catalog.cycle_timers.image_watcher | int | `3600` |  |
 | anchoreConfig.catalog.cycle_timers.policy_eval | int | `3600` |  |
@@ -346,9 +346,9 @@ helm install anchore chart/
 | catalog.extraVolumes | list | `[]` |  |
 | catalog.extraVolumeMounts | list | `[]` |  |
 | catalog.resources.limits.cpu | int | `1` |  |
-| catalog.resources.limits.memory | string | `"2G"` |  |
+| catalog.resources.limits.memory | string | `"3G"` |  |
 | catalog.resources.requests.cpu | int | `1` |  |
-| catalog.resources.requests.memory | string | `"2G"` |  |
+| catalog.resources.requests.memory | string | `"3G"` |  |
 | catalog.labels | object | `{}` |  |
 | catalog.annotations | object | `{}` |  |
 | catalog.nodeSelector | object | `{}` |  |
@@ -471,7 +471,7 @@ helm install anchore chart/
 | reports.affinity | object | `{}` |  |
 | reports.serviceAccountName | string | `""` |  |
 | ui.enabled | bool | `true` |  |
-| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.11.0"` |  |
+| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.12.0"` |  |
 | ui.imagePullPolicy | string | `"IfNotPresent"` |  |
 | ui.imagePullSecretName | string | `"private-registry"` |  |
 | ui.existingSecretName | string | `"anchore-enterprise-ui-env"` |  |
@@ -501,7 +501,7 @@ helm install anchore chart/
 | upgradeJob.rbacCreate | bool | `true` |  |
 | upgradeJob.serviceAccountName | string | `""` |  |
 | upgradeJob.usePostUpgradeHook | bool | `false` |  |
-| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.6"` |  |
+| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.7"` |  |
 | upgradeJob.nodeSelector | object | `{}` |  |
 | upgradeJob.tolerations | list | `[]` |  |
 | upgradeJob.affinity | object | `{}` |  |
@@ -580,7 +580,7 @@ helm install anchore chart/
 | postgresql.containerSecurityContext.runAsGroup | int | `1001` |  |
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | osaaMigrationJob.enabled | bool | `false` |  |
-| osaaMigrationJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.6"` |  |
+| osaaMigrationJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.7"` |  |
 | osaaMigrationJob.extraEnv | list | `[]` |  |
 | osaaMigrationJob.extraVolumes | list | `[]` |  |
 | osaaMigrationJob.extraVolumeMounts | list | `[]` |  |
