@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 3.2.0-bb.1](https://img.shields.io/badge/Version-3.2.0--bb.1-informational?style=flat-square) ![AppVersion: 5.12.0](https://img.shields.io/badge/AppVersion-5.12.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
+![Version: 3.3.1-bb.0](https://img.shields.io/badge/Version-3.3.1--bb.0-informational?style=flat-square) ![AppVersion: 5.13.1](https://img.shields.io/badge/AppVersion-5.13.1-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -109,7 +109,7 @@ helm install anchore chart/
 | sso.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | global.fullnameOverride | string | `""` |  |
 | global.nameOverride | string | `"anchore-enterprise"` |  |
-| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.12.0"` |  |
+| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.13.1"` |  |
 | imagePullPolicy | string | `"IfNotPresent"` |  |
 | imagePullSecretName | string | `"private-registry"` |  |
 | useExistingPullCredSecret | bool | `true` |  |
@@ -224,6 +224,7 @@ helm install anchore chart/
 | anchoreConfig.analyzer.configFile.secret_search.regexp_match[4] | string | `"API_KEY=(?i).*api(-\|_)key( *=+ *).*(?<![A-Z0-9])[A-Z0-9]{20,60}(?![A-Z0-9]).*"` |  |
 | anchoreConfig.analyzer.configFile.malware.clamav.enabled | string | `"<ALLOW_API_CONFIGURATION>"` |  |
 | anchoreConfig.analyzer.configFile.malware.clamav.db_update_enabled | bool | `true` |  |
+| anchoreConfig.analyzer.configFile.malware.clamav.max_scan_time | int | `180000` |  |
 | anchoreConfig.catalog.cycle_timers.image_watcher | int | `3600` |  |
 | anchoreConfig.catalog.cycle_timers.policy_eval | int | `3600` |  |
 | anchoreConfig.catalog.cycle_timers.vulnerability_scan | int | `14400` |  |
@@ -424,6 +425,7 @@ helm install anchore chart/
 | simpleQueue.resources.limits.memory | string | `"1G"` |  |
 | simpleQueue.resources.requests.cpu | int | `1` |  |
 | simpleQueue.resources.requests.memory | string | `"1G"` |  |
+| simpleQueue.resources | object | `{}` |  |
 | simpleQueue.labels | object | `{}` |  |
 | simpleQueue.annotations | object | `{}` |  |
 | simpleQueue.nodeSelector | object | `{}` |  |
@@ -471,7 +473,7 @@ helm install anchore chart/
 | reports.affinity | object | `{}` |  |
 | reports.serviceAccountName | string | `""` |  |
 | ui.enabled | bool | `true` |  |
-| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.12.0"` |  |
+| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.13.0"` |  |
 | ui.imagePullPolicy | string | `"IfNotPresent"` |  |
 | ui.imagePullSecretName | string | `"private-registry"` |  |
 | ui.existingSecretName | string | `"anchore-enterprise-ui-env"` |  |
@@ -501,7 +503,7 @@ helm install anchore chart/
 | upgradeJob.rbacCreate | bool | `true` |  |
 | upgradeJob.serviceAccountName | string | `""` |  |
 | upgradeJob.usePostUpgradeHook | bool | `false` |  |
-| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.7"` |  |
+| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8"` |  |
 | upgradeJob.nodeSelector | object | `{}` |  |
 | upgradeJob.tolerations | list | `[]` |  |
 | upgradeJob.affinity | object | `{}` |  |
@@ -539,6 +541,7 @@ helm install anchore chart/
 | ui-redis.commonConfiguration | string | `"maxmemory 200mb\nsave \"\""` |  |
 | postgresql.enabled | bool | `true` |  |
 | postgresql.externalEndpoint | string | `""` |  |
+| postgresql.primary.resources | object | `{}` |  |
 | postgresql.primary.service.ports.postgresql | int | `5432` |  |
 | postgresql.primary.podSecurityContext.enabled | bool | `true` |  |
 | postgresql.primary.podSecurityContext.fsGroup | int | `1001` |  |
@@ -580,7 +583,7 @@ helm install anchore chart/
 | postgresql.containerSecurityContext.runAsGroup | int | `1001` |  |
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | osaaMigrationJob.enabled | bool | `false` |  |
-| osaaMigrationJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.7"` |  |
+| osaaMigrationJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8"` |  |
 | osaaMigrationJob.extraEnv | list | `[]` |  |
 | osaaMigrationJob.extraVolumes | list | `[]` |  |
 | osaaMigrationJob.extraVolumeMounts | list | `[]` |  |

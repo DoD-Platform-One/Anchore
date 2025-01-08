@@ -195,7 +195,7 @@ global:
 ## ** Big Bang Change **
 ## @param image Image used for all Anchore Enterprise deployments, excluding Anchore UI
 ##
-image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.12.0
+image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.13.1
 
 ## @param imagePullPolicy Image pull policy used by all deployments
 ## ref: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
@@ -681,6 +681,8 @@ anchoreConfig:
         clamav:
           enabled: "<ALLOW_API_CONFIGURATION>"  # false
           db_update_enabled: true
+          # Maximum time in milliseconds that a ClamAV scan is allowed to run
+          max_scan_time: 180000
 
   catalog:
     ## @param anchoreConfig.catalog.cycle_timers.image_watcher Interval (seconds) to check for an update to a tag
@@ -1221,10 +1223,10 @@ dataSyncer:
   ##
   resources: {}
     # requests:
-    #   cpu: 1000m
-    #   memory: 8000Mi
+    #   cpu: 1
+    #   memory: 8G
     # limits:
-    #   memory: 8000Mi
+    #   memory: 8G
 
   ## @param dataSyncer.labels Labels for Anchore DataSyncer pods
   ##
@@ -1296,10 +1298,10 @@ notifications:
   ##
   resources: {}
     # requests:
-    #   cpu: 100m
-    #   memory: 500Mi
+    #   cpu: 1
+    #   memory: 8G
     # limits:
-    #   memory: 500Mi
+    #   memory: 8G
 
   ## @param notifications.labels Labels for Anchore Notifications pods
   ##
@@ -1439,6 +1441,20 @@ simpleQueue:
       memory: 1G
 
   ## @param simpleQueue.labels Labels for Anchore Simple Queue pods
+  ## @param reports.resources Resource requests and limits for Anchore Reports pods
+  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  ## Commented values below are just a suggested baseline. Contact Anchore support for deployment specific recommendations
+  ## NOTE: the commented resources below are assuming the use of a scratch volume with `anchoreConfig.reports.use_volume=true`
+  ## If not using a scratch volume, the memory resources may need to be increased.
+  ##
+  resources: {}
+    # requests:
+    #   memory: 8G
+    #   cpu: 1
+    # limits:
+    #   memory: 8G
+
+  ## @param reports.labels Labels for Anchore Reports pods
   ##
   labels: {}
 
@@ -1605,7 +1621,7 @@ ui:
   ## ** Big Bang Change **
   ## @param ui.image Image used for the Anchore UI container
   ##
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.12.0
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.13.0
 
   ## @param ui.imagePullPolicy Image pull policy for Anchore UI image
   ##
@@ -1721,7 +1737,7 @@ upgradeJob:
   ## @param upgradeJob.kubectlImage The image to use for the upgrade job's init container that uses kubectl to scale down deployments before an upgrade
   ## This is only used in the preupgrade job.
   ##
-  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.7
+  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8
 
   ## @param upgradeJob.nodeSelector Node labels for the Anchore upgrade job pod assignment
   ##
@@ -1906,6 +1922,16 @@ postgresql:
   ## @param postgresql.postgresDatabase Database name used when connecting to postgresql
 
   primary:
+    ## PostgreSQL Primary resource requests and limits
+    ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+    ## @param postgresql.primary.resources The resource limits & requests for the PostgreSQL Primary containers
+    ##
+    resources: {}
+      # limits: {}
+      # requests:
+      #   memory: 512Mi
+      #   cpu: 2
+
     ## @param postgresql.primary.service.ports.postgresql Port used to connect to Postgresql
     ##
     service:
@@ -2014,7 +2040,7 @@ osaaMigrationJob:
   ## @param osaaMigrationJob.kubectlImage The image to use for the job's init container that uses kubectl to scale down deployments for the migration
   ## This is only used in the osaaMigrationJob job.
   ##
-  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.7
+  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8
 
   ## @param osaaMigrationJob.extraEnv An array to add extra environment variables
   ##
