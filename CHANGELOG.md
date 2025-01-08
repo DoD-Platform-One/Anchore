@@ -4,6 +4,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [3.3.1-bb.0] - 2025-01-06
+
+### Changed
+
+- Updated Anchore Enterprise chart to `3.3.1`
+- Updated Anchore Enterprise tag to `5.13.1`
+- Updated Anchore Enterprise UI tag to `5.13.0`
+- Updated Redis to `20.6.0-bb.0`
+- Updated kubectl to `1.30.8`
+
 ## [3.2.0-bb.1] - 2024-12-12
 
 ### Changed
