@@ -4,6 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [3.3.1-bb.1] - 2025-01-13
+
+### Changed
+
+- ability to disable `ensure-anchore-db` job
+
 ## [3.3.1-bb.0] - 2025-01-06
 
 ### Changed
