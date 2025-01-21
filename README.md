@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 3.3.1-bb.0](https://img.shields.io/badge/Version-3.3.1--bb.0-informational?style=flat-square) ![AppVersion: 5.13.1](https://img.shields.io/badge/AppVersion-5.13.1-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
+![Version: 3.3.1-bb.1](https://img.shields.io/badge/Version-3.3.1--bb.1-informational?style=flat-square) ![AppVersion: 5.13.1](https://img.shields.io/badge/AppVersion-5.13.1-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -541,6 +541,7 @@ helm install anchore chart/
 | ui-redis.commonConfiguration | string | `"maxmemory 200mb\nsave \"\""` |  |
 | postgresql.enabled | bool | `true` |  |
 | postgresql.externalEndpoint | string | `""` |  |
+| postgresql.externalDBCheckEnabled | bool | `false` |  |
 | postgresql.primary.resources | object | `{}` |  |
 | postgresql.primary.service.ports.postgresql | int | `5432` |  |
 | postgresql.primary.podSecurityContext.enabled | bool | `true` |  |

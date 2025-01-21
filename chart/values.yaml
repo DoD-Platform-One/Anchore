@@ -1917,6 +1917,10 @@ postgresql:
   externalEndpoint: ""
 
   ## ** Big Bang Change **
+  ## switch to true for externalDBCheckEnabled if externalEndpoint is used. This disables ensure-anchore-db job 
+  externalDBCheckEnabled: false  
+
+  ## ** Big Bang Change **
   ## @param postgresql.postgresUser Username used to connect to postgresql
   ## @param postgresql.postgresPassword Password used to connect to postgresql
   ## @param postgresql.postgresDatabase Database name used when connecting to postgresql
