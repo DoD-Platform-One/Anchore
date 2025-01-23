@@ -4,6 +4,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [3.3.2-bb.0] - 2025-01-22
+
+### Changed
+
+- Updated Anchore Enterprise chart to `3.3.2`
+- Updated Redis to `7.4.2`
+- Updated Redis to `20.6.2-bb.0`
+- Updated gluon to `0.5.14`
+
 ## [3.3.1-bb.1] - 2025-01-13
 
 ### Changed

@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 3.3.1-bb.1](https://img.shields.io/badge/Version-3.3.1--bb.1-informational?style=flat-square) ![AppVersion: 5.13.1](https://img.shields.io/badge/AppVersion-5.13.1-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
+![Version: 3.3.2-bb.0](https://img.shields.io/badge/Version-3.3.2--bb.0-informational?style=flat-square) ![AppVersion: 5.13.1](https://img.shields.io/badge/AppVersion-5.13.1-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -10,7 +10,6 @@ It is based on Anchore Engine, an open-source image inspection and scanning tool
 ## Upstream References
 
 - <https://anchore.com>
-
 - <https://github.com/anchore/anchore-charts/tree/main/stable/enterprise>
 
 ## Upstream Release Notes
@@ -288,6 +287,7 @@ helm install anchore chart/
 | anchoreConfig.ui.sso_auth_only | bool | `false` |  |
 | anchoreConfig.ui.custom_links | object | `{}` |  |
 | anchoreConfig.ui.enable_add_repositories | object | `{}` |  |
+| anchoreConfig.ui.custom_message | object | `{}` |  |
 | anchoreConfig.ui.log_level | string | `"http"` |  |
 | anchoreConfig.ui.enrich_inventory_view | bool | `true` |  |
 | anchoreConfig.ui.appdb_config.native | bool | `true` |  |
