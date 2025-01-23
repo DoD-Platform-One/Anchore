@@ -1,5 +1,5 @@
 name: anchore
-version: 3.3.1-bb.1
+version: 3.3.2-bb.0
 apiVersion: v2
 appVersion: 5.13.1
 kubeVersion: ">=1.23.x || >=1.23.x-x"
@@ -34,12 +34,12 @@ dependencies:
     repository: "file://./deps/postgresql"
     condition: postgresql.enabled
   - name: redis
-    version: 20.6.0-bb.0
+    version: 20.6.2-bb.0
     repository: "oci://registry1.dso.mil/bigbang"
     condition: ui-redis.enabled
     alias: ui-redis
   - name: gluon
-    version: "0.5.12"
+    version: "0.5.14"
     repository: "oci://registry1.dso.mil/bigbang"
 annotations:
   bigbang.dev/maintenanceTrack: bb_integrated
@@ -51,7 +51,7 @@ annotations:
   # Note engine image won't be used at all if enterprise is enabled
   helm.sh/images: |
     - name: redis
-      image: registry1.dso.mil/ironbank/bitnami/redis:7.4.1
+      image: registry1.dso.mil/ironbank/bitnami/redis:7.4.2
     - name: enterprise
       image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.13.1
     - name: postgresql
