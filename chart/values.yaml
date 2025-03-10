@@ -80,7 +80,7 @@ networkPolicies:
 
 # For stricter control over the enterprise datasyncer pod egress, uncomment the list of known datasyncer endpoints below
 # Warning: This list may not be complete depending on your desired feeds
-datasyncerHosts: 
+datasyncerHosts:
     - data.anchore-enterprise.com
     - s3.us-west-2.amazonaws.com #/enterprise-data-service.production.anchore.io
   # - anchore-feed-service.s3.amazonaws.com
@@ -195,7 +195,7 @@ global:
 ## ** Big Bang Change **
 ## @param image Image used for all Anchore Enterprise deployments, excluding Anchore UI
 ##
-image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.13.1
+image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.15.0
 
 ## @param imagePullPolicy Image pull policy used by all deployments
 ## ref: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
@@ -308,6 +308,12 @@ tolerations: []
 ## @param affinity Common affinity set on all Kubernetes pods
 ##
 affinity: {}
+
+## @param topologySpreadConstraints Common topologySpreadConstraints set on all Kubernetes pods.
+## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-aware-scheduling/
+## Service level topologySpreadConstraints will override these ones
+##
+topologySpreadConstraints: []
 
 ## @param scratchVolume.mountPath The mount path of an external volume for scratch space. Used for the following pods: analyzer, policy-engine, catalog, and reports
 ## @param scratchVolume.fixGroupPermissions Enable an initContainer that will fix the fsGroup permissions on all scratch volumes
@@ -631,7 +637,7 @@ anchoreConfig:
       image_analyzer: 1
 
     ## @param anchoreConfig.analyzer.layer_cache_max_gigabytes Specify a cache size > 0GB to enable image layer caching
-    ## This chart sets up a scratch directory for all Anchore Analyzer pods using the values found at .Values.scratchVolume
+    ## This chart sets up a scratch directory for all Anchore Analyzer pods using the values found at .Values.analyzer.scratchVolume object or .Values.scratchVolume
     ## When setting .Values.anchoreConfig.analyzer.layer_cache_max_gigabytes, ensure the scratch volume has sufficient storage space
     ## ref: https://docs.anchore.com/current/docs/installation/storage/layer_caching/
     ##
@@ -923,8 +929,10 @@ anchoreConfig:
       # admin: True
       # standard: True
 
-    ## @param anchoreConfig.ui.custom_message.title A title key, whose string value provides a title for the message
-    ## @param anchoreConfig.ui.custom_message.message A message key, whose string value is the message itself
+    ## @param anchoreConfig.ui.custom_message Custom message to display on the login page
+    ## anchoreConfig.ui.custom_message.title A title key, whose string value provides a title for the message (limited to 250 characters)
+    ## anchoreConfig.ui.custom_message.message A message key, whose string value is the message itself (limited to 10,000 characters and supporting Markdown)
+    ## NOTE: You may need to HTML encode the title and/or message if there are any non-alphanumeric characters present.
     ##
     custom_message: {}
       # title: "Title goes here..."
@@ -1039,6 +1047,9 @@ api:
   ## @param api.serviceAccountName Service account name for Anchore API pods
   ##
   serviceAccountName: ""
+
+  ## @param api.topologySpreadConstraints Topology spread constraints for Anchore API pod assignment
+  topologySpreadConstraints: []
 
 ######################################################
 ## @section Anchore Analyzer k8s Deployment Parameters
@@ -1180,11 +1191,16 @@ catalog:
   ##
   affinity: {}
 
+  ## @param catalog.topologySpreadConstraints Topology spread constraints for Anchore Catalog pod assignment
+  ##
+  topologySpreadConstraints: []
+
   ## @param catalog.serviceAccountName Service account name for Anchore Catalog pods
   ##
   serviceAccountName: ""
 
   ## @param catalog.scratchVolume.details [object] Details for the k8s volume to be created for Anchore Catalog scratch space
+  ## Used for the Anchore Catalog service archival process, which uses tempfile where the parent directory is the tmp_dir in the config (/analysis_scratch).
   ##
   scratchVolume:
     details: {}
@@ -1255,11 +1271,16 @@ dataSyncer:
   ##
   affinity: {}
 
+  ## @param dataSyncer.topologySpreadConstraints Topology spread constraints for Anchore DataSyncer pod assignment
+  ##
+  topologySpreadConstraints: []
+
   ## @param dataSyncer.serviceAccountName Service account name for Anchore DataSyncer pods
   ##
   serviceAccountName: ""
 
   ## @param dataSyncer.scratchVolume.details [object] Details for the k8s volume to be created for Anchore DataSyncer scratch space
+  ## Used for the Anchore DataSyncer service to download and sync the feeds data
   ##
   scratchVolume:
     details: {}
@@ -1287,28 +1308,17 @@ notifications:
     nodePort: ""
     domainSuffix: ""
 
-  ## @param notifications.extraEnv Set extra environment variables for Anchore Notifications pods
-  ##
-  extraEnv: []
 
-  ## @param notifications.extraVolumes Define additional volumes for Anchore Notifications pods
-  ##
-  extraVolumes: []
-
-  ## @param notifications.extraVolumeMounts Define additional volume mounts for Anchore Notifications pods
-  ##
-  extraVolumeMounts: []
-
+  ## ** Big Bang Change **
   ## @param notifications.resources Resource requests and limits for Anchore Notifications pods
-  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-  ## Commented values below are just a suggested baseline. Contact Anchore support for deployment specific recommendations.
   ##
-  resources: {}
-    # requests:
-    #   cpu: 1
-    #   memory: 8G
-    # limits:
-    #   memory: 8G
+  resources:
+    limits:
+      cpu: 1
+      memory: 1G
+    requests:
+      cpu: 1
+      memory: 1G
 
   ## @param notifications.labels Labels for Anchore Notifications pods
   ##
@@ -1329,6 +1339,22 @@ notifications:
   ## @param notifications.affinity Affinity for Anchore Notifications pod assignment
   ##
   affinity: {}
+
+  ## @param notifications.extraEnv Set extra environment variables for Anchore Notifications pods
+  ##
+  extraEnv: []
+
+  ## @param notifications.extraVolumes Define additional volumes for Anchore Notifications pods
+  ##
+  extraVolumes: []
+
+  ## @param notifications.extraVolumeMounts Define additional volume mounts for Anchore Notifications pods
+  ##
+  extraVolumeMounts: []
+
+  ## @param notifications.topologySpreadConstraints Topology spread constraints for Anchore Notifications pod assignment
+  ##
+  topologySpreadConstraints: []
 
   ## @param notifications.serviceAccountName Service account name for Anchore Notifications pods
   ##
@@ -1401,11 +1427,16 @@ policyEngine:
   ##
   affinity: {}
 
+  ## @param policyEngine.topologySpreadConstraints Topology spread constraints for Anchore Policy Engine pod assignment
+  ##
+  topologySpreadConstraints: []
+
   ## @param policyEngine.serviceAccountName Service account name for Anchore Policy Engine pods
   ##
   serviceAccountName: ""
 
   ## @param policyEngine.scratchVolume.details [object] Details for the k8s volume to be created for Anchore Policy Engine scratch space
+  ## policy_engine uses the scratch space for locally synced copy of the feeds data
   ##
   scratchVolume:
     details: {}
@@ -1485,6 +1516,10 @@ simpleQueue:
   ##
   serviceAccountName: ""
 
+  ## @param simpleQueue.topologySpreadConstraints Topology spread constraints for Anchore Simple Queue pod assignment
+  ##
+  topologySpreadConstraints: []
+
 #############################################
 ## @section Anchore Reports Worker Parameters
 #############################################
@@ -1552,10 +1587,13 @@ reportsWorker:
   ##
   affinity: {}
 
+  ## @param reportsWorker.topologySpreadConstraints Topology spread constraints for Anchore Reports Worker pod assignment
+  ##
+  topologySpreadConstraints: []
+
   ## @param reportsWorker.serviceAccountName Service account name for Anchore Reports Worker pods
   ##
   serviceAccountName: ""
-
 
 ########################################
 ## @section Anchore Reports Parameters
@@ -1573,10 +1611,6 @@ reports:
     nodePort: ""
     domainSuffix: ""
 
-  ## @param notifications.extraEnv Set extra environment variables for Anchore Notifications pods
-  ##
-  extraEnv: []
-
   ## @param reports.extraVolumes Define additional volumes for Anchore Reports pods
   ##
   extraVolumes: []
@@ -1585,40 +1619,30 @@ reports:
   ##
   extraVolumeMounts: []
 
-  ## ** Big Bang Change **
-  ## @param notifications.resources Resource requests and limits for Anchore Notifications pods
+  ## @param reports.topologySpreadConstraints Topology spread constraints for Anchore Reports pod assignment
   ##
-  resources:
-    limits:
-      cpu: 1
-      memory: 1G
-    requests:
-      cpu: 1
-      memory: 1G
+  topologySpreadConstraints: []
 
-  ## @param notifications.labels Labels for Anchore Notifications pods
-  ##
-  labels: {}
-
-  ## @param notifications.annotations Annotation for Anchore Notifications pods
-  ##
-  annotations: {}
-
-  ## @param notifications.nodeSelector Node labels for Anchore Notifications pod assignment
-  ##
-  nodeSelector: {}
-
-  ## @param notifications.tolerations Tolerations for Anchore Notifications pod assignment
-  ##
-  tolerations: []
-
-  ## @param notifications.affinity Affinity for Anchore Notifications pod assignment
-  ##
-  affinity: {}
-
-  ## @param notifications.serviceAccountName Service account name for Anchore Notifications pods
+  ## @param reports.serviceAccountName Service account name for Anchore Reports pods
   ##
   serviceAccountName: ""
+
+  ## @param reports.scratchVolume.details [object] Details for the k8s volume to be created for Anchore Reports scratch space
+  ## Used for the Anchore Reports service to buffer report generation to disk instead of in memory. Off by default, only used if `anchoreConfig.reports.use_volume=true`
+  ## ref: https://kubernetes.io/docs/concepts/storage/volumes/
+  ##
+  scratchVolume:
+    details: {}
+      # ephemeral:
+      #   volumeClaimTemplate:
+      #     spec:
+      #       accessModes:
+      #       - ReadWriteOnce
+      #       resources:
+      #         requests:
+      #           storage: 100Gi
+      #       storageClassName: ""
+
 
 #################################
 ## @section Anchore UI Parameters
@@ -1628,7 +1652,7 @@ ui:
   ## ** Big Bang Change **
   ## @param ui.image Image used for the Anchore UI container
   ##
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.13.0
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.15.0
 
   ## @param ui.imagePullPolicy Image pull policy for Anchore UI image
   ##
@@ -1709,6 +1733,10 @@ ui:
   ##
   affinity: {}
 
+  ## @param ui.topologySpreadConstraints Topology spread constraints for Anchore UI pod assignment
+  ##
+  topologySpreadConstraints: []
+
   ## @param ui.serviceAccountName Service account name for Anchore UI pods
   ##
   serviceAccountName: ""
@@ -1757,6 +1785,10 @@ upgradeJob:
   ## @param upgradeJob.affinity Affinity for the Anchore upgrade job pod assignment
   ##
   affinity: {}
+
+  ## @param upgradeJob.topologySpreadConstraints Topology spread constraints for the Anchore upgrade job pod assignment
+  ##
+  topologySpreadConstraints: []
 
   ## @param upgradeJob.annotations Annotations for the Anchore upgrade job
   ##
@@ -1925,7 +1957,7 @@ postgresql:
 
   ## ** Big Bang Change **
   ## switch to true for externalDBCheckEnabled if externalEndpoint is used. This disables ensure-anchore-db job 
-  externalDBCheckEnabled: false  
+  externalDBCheckEnabled: false
 
   ## ** Big Bang Change **
   ## @param postgresql.postgresUser Username used to connect to postgresql
@@ -2100,6 +2132,10 @@ osaaMigrationJob:
   ## @param osaaMigrationJob.affinity Affinity for Anchore Object Store and Analysis Archive migration job pod assignment
   ##
   affinity: {}
+
+  ## @param osaaMigrationJob.topologySpreadConstraints Topology spread constraints for Anchore Object Store and Analysis Archive migration job pod assignment
+  ##
+  topologySpreadConstraints: []
 
   ## @param osaaMigrationJob.serviceAccountName Service account name for Anchore Object Store and Analysis Archive migration job pods
   ##
