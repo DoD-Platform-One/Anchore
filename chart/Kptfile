@@ -5,7 +5,7 @@ metadata:
 upstream:
   type: git
   git:
-    commit: 0e4d729bf460acde0d1ca9fcca4a994b9a0fcc82
+    commit: ca926ea6487358093b44150ce35ced3169a0a1e8
     repo: https://github.com/anchore/anchore-charts
     directory: /
-    ref: enterprise-3.3.2
+    ref: enterprise-3.5.0
