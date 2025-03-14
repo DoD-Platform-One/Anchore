@@ -1,16 +1,16 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 3.3.1-bb.0](https://img.shields.io/badge/Version-3.3.1--bb.0-informational?style=flat-square) ![AppVersion: 5.13.1](https://img.shields.io/badge/AppVersion-5.13.1-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
+![Version: 3.5.0-bb.1](https://img.shields.io/badge/Version-3.5.0--bb.1-informational?style=flat-square) ![AppVersion: 5.15.0](https://img.shields.io/badge/AppVersion-5.15.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
 It is based on Anchore Engine, an open-source image inspection and scanning tool.
 
 ## Upstream References
-- <https://anchore.com>
 
-* <https://github.com/anchore/anchore-charts/tree/main/stable/enterprise>
+- <https://anchore.com>
+- <https://github.com/anchore/anchore-charts/tree/main/stable/enterprise>
 
 ## Upstream Release Notes
 
@@ -32,7 +32,7 @@ Kubernetes: `>=1.23.x || >=1.23.x-x`
 
 Install Helm
 
-https://helm.sh/docs/intro/install/
+<https://helm.sh/docs/intro/install/>
 
 ## Deployment
 
@@ -108,7 +108,7 @@ helm install anchore chart/
 | sso.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | global.fullnameOverride | string | `""` |  |
 | global.nameOverride | string | `"anchore-enterprise"` |  |
-| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.13.1"` |  |
+| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.15.0"` |  |
 | imagePullPolicy | string | `"IfNotPresent"` |  |
 | imagePullSecretName | string | `"private-registry"` |  |
 | useExistingPullCredSecret | bool | `true` |  |
@@ -132,6 +132,7 @@ helm install anchore chart/
 | nodeSelector | object | `{}` |  |
 | tolerations | list | `[]` |  |
 | affinity | object | `{}` |  |
+| topologySpreadConstraints | list | `[]` |  |
 | scratchVolume.fixerInitContainerImage | string | `"alpine"` |  |
 | scratchVolume.mountPath | string | `"/analysis_scratch"` |  |
 | scratchVolume.fixGroupPermissions | bool | `false` |  |
@@ -287,6 +288,7 @@ helm install anchore chart/
 | anchoreConfig.ui.sso_auth_only | bool | `false` |  |
 | anchoreConfig.ui.custom_links | object | `{}` |  |
 | anchoreConfig.ui.enable_add_repositories | object | `{}` |  |
+| anchoreConfig.ui.custom_message | object | `{}` |  |
 | anchoreConfig.ui.log_level | string | `"http"` |  |
 | anchoreConfig.ui.enrich_inventory_view | bool | `true` |  |
 | anchoreConfig.ui.appdb_config.native | bool | `true` |  |
@@ -317,6 +319,7 @@ helm install anchore chart/
 | api.tolerations | list | `[]` |  |
 | api.affinity | object | `{}` |  |
 | api.serviceAccountName | string | `""` |  |
+| api.topologySpreadConstraints | list | `[]` |  |
 | analyzer.replicaCount | int | `2` |  |
 | analyzer.service.port | int | `8084` |  |
 | analyzer.service.domainSuffix | string | `""` |  |
@@ -354,6 +357,7 @@ helm install anchore chart/
 | catalog.nodeSelector | object | `{}` |  |
 | catalog.tolerations | list | `[]` |  |
 | catalog.affinity | object | `{}` |  |
+| catalog.topologySpreadConstraints | list | `[]` |  |
 | catalog.serviceAccountName | string | `""` |  |
 | catalog.scratchVolume.details | object | `{}` |  |
 | dataSyncer.replicaCount | int | `1` |  |
@@ -372,6 +376,7 @@ helm install anchore chart/
 | dataSyncer.nodeSelector | object | `{}` |  |
 | dataSyncer.tolerations | list | `[]` |  |
 | dataSyncer.affinity | object | `{}` |  |
+| dataSyncer.topologySpreadConstraints | list | `[]` |  |
 | dataSyncer.serviceAccountName | string | `""` |  |
 | dataSyncer.scratchVolume.details | object | `{}` |  |
 | notifications.replicaCount | int | `1` |  |
@@ -381,15 +386,19 @@ helm install anchore chart/
 | notifications.service.labels | object | `{}` |  |
 | notifications.service.nodePort | string | `""` |  |
 | notifications.service.domainSuffix | string | `""` |  |
-| notifications.extraEnv | list | `[]` |  |
-| notifications.extraVolumes | list | `[]` |  |
-| notifications.extraVolumeMounts | list | `[]` |  |
-| notifications.resources | object | `{}` |  |
+| notifications.resources.limits.cpu | int | `1` |  |
+| notifications.resources.limits.memory | string | `"1G"` |  |
+| notifications.resources.requests.cpu | int | `1` |  |
+| notifications.resources.requests.memory | string | `"1G"` |  |
 | notifications.labels | object | `{}` |  |
 | notifications.annotations | object | `{}` |  |
 | notifications.nodeSelector | object | `{}` |  |
 | notifications.tolerations | list | `[]` |  |
 | notifications.affinity | object | `{}` |  |
+| notifications.extraEnv | list | `[]` |  |
+| notifications.extraVolumes | list | `[]` |  |
+| notifications.extraVolumeMounts | list | `[]` |  |
+| notifications.topologySpreadConstraints | list | `[]` |  |
 | notifications.serviceAccountName | string | `""` |  |
 | policyEngine.replicaCount | int | `1` |  |
 | policyEngine.service.type | string | `"ClusterIP"` |  |
@@ -410,6 +419,7 @@ helm install anchore chart/
 | policyEngine.nodeSelector | object | `{}` |  |
 | policyEngine.tolerations | list | `[]` |  |
 | policyEngine.affinity | object | `{}` |  |
+| policyEngine.topologySpreadConstraints | list | `[]` |  |
 | policyEngine.serviceAccountName | string | `""` |  |
 | policyEngine.scratchVolume.details | object | `{}` |  |
 | simpleQueue.replicaCount | int | `1` |  |
@@ -431,6 +441,7 @@ helm install anchore chart/
 | simpleQueue.tolerations | list | `[]` |  |
 | simpleQueue.affinity | object | `{}` |  |
 | simpleQueue.serviceAccountName | string | `""` |  |
+| simpleQueue.topologySpreadConstraints | list | `[]` |  |
 | reportsWorker.replicaCount | int | `1` |  |
 | reportsWorker.service.type | string | `"ClusterIP"` |  |
 | reportsWorker.service.port | int | `8559` |  |
@@ -450,6 +461,7 @@ helm install anchore chart/
 | reportsWorker.nodeSelector | object | `{}` |  |
 | reportsWorker.tolerations | list | `[]` |  |
 | reportsWorker.affinity | object | `{}` |  |
+| reportsWorker.topologySpreadConstraints | list | `[]` |  |
 | reportsWorker.serviceAccountName | string | `""` |  |
 | reports.replicaCount | int | `1` |  |
 | reports.service.type | string | `"ClusterIP"` |  |
@@ -458,21 +470,13 @@ helm install anchore chart/
 | reports.service.labels | object | `{}` |  |
 | reports.service.nodePort | string | `""` |  |
 | reports.service.domainSuffix | string | `""` |  |
-| reports.extraEnv | list | `[]` |  |
 | reports.extraVolumes | list | `[]` |  |
 | reports.extraVolumeMounts | list | `[]` |  |
-| reports.resources.limits.cpu | int | `1` |  |
-| reports.resources.limits.memory | string | `"1G"` |  |
-| reports.resources.requests.cpu | int | `1` |  |
-| reports.resources.requests.memory | string | `"1G"` |  |
-| reports.labels | object | `{}` |  |
-| reports.annotations | object | `{}` |  |
-| reports.nodeSelector | object | `{}` |  |
-| reports.tolerations | list | `[]` |  |
-| reports.affinity | object | `{}` |  |
+| reports.topologySpreadConstraints | list | `[]` |  |
 | reports.serviceAccountName | string | `""` |  |
+| reports.scratchVolume.details | object | `{}` |  |
 | ui.enabled | bool | `true` |  |
-| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.13.0"` |  |
+| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.15.0"` |  |
 | ui.imagePullPolicy | string | `"IfNotPresent"` |  |
 | ui.imagePullSecretName | string | `"private-registry"` |  |
 | ui.existingSecretName | string | `"anchore-enterprise-ui-env"` |  |
@@ -496,6 +500,7 @@ helm install anchore chart/
 | ui.nodeSelector | object | `{}` |  |
 | ui.tolerations | list | `[]` |  |
 | ui.affinity | object | `{}` |  |
+| ui.topologySpreadConstraints | list | `[]` |  |
 | ui.serviceAccountName | string | `""` |  |
 | upgradeJob.enabled | bool | `true` |  |
 | upgradeJob.force | bool | `false` |  |
@@ -506,6 +511,7 @@ helm install anchore chart/
 | upgradeJob.nodeSelector | object | `{}` |  |
 | upgradeJob.tolerations | list | `[]` |  |
 | upgradeJob.affinity | object | `{}` |  |
+| upgradeJob.topologySpreadConstraints | list | `[]` |  |
 | upgradeJob.annotations | object | `{}` |  |
 | upgradeJob.resources.limits.cpu | int | `1` |  |
 | upgradeJob.resources.limits.memory | string | `"1G"` |  |
@@ -540,6 +546,7 @@ helm install anchore chart/
 | ui-redis.commonConfiguration | string | `"maxmemory 200mb\nsave \"\""` |  |
 | postgresql.enabled | bool | `true` |  |
 | postgresql.externalEndpoint | string | `""` |  |
+| postgresql.externalDBCheckEnabled | bool | `false` |  |
 | postgresql.primary.resources | object | `{}` |  |
 | postgresql.primary.service.ports.postgresql | int | `5432` |  |
 | postgresql.primary.podSecurityContext.enabled | bool | `true` |  |
@@ -592,6 +599,7 @@ helm install anchore chart/
 | osaaMigrationJob.nodeSelector | object | `{}` |  |
 | osaaMigrationJob.tolerations | list | `[]` |  |
 | osaaMigrationJob.affinity | object | `{}` |  |
+| osaaMigrationJob.topologySpreadConstraints | list | `[]` |  |
 | osaaMigrationJob.serviceAccountName | string | `""` |  |
 | osaaMigrationJob.analysisArchiveMigration.run | bool | `false` |  |
 | osaaMigrationJob.analysisArchiveMigration.bucket | string | `"analysis_archive"` |  |
@@ -641,15 +649,16 @@ _This file is programatically generated using `helm-docs` and some BigBang-speci
 Chart for PostgreSQL, an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance.
 
 ## Upstream References
-- <https://github.com/bitnami/charts/tree/master/bitnami/postgresql>
 
-* <https://github.com/bitnami/bitnami-docker-postgresql>
-* <https://www.postgresql.org/>
+- <https://github.com/bitnami/charts/tree/master/bitnami/postgresql>
+- <https://github.com/bitnami/bitnami-docker-postgresql>
+- <https://www.postgresql.org/>
 
 ## Upstream Release Notes
 
 This package has no upstream release note links on file. Please add some to [chart/Chart.yaml](chart/Chart.yaml) under `annotations.bigbang.dev/upstreamReleaseNotesMarkdown`.
 Example:
+
 ```yaml
 annotations:
   bigbang.dev/upstreamReleaseNotesMarkdown: |
@@ -670,7 +679,7 @@ annotations:
 
 Install Helm
 
-https://helm.sh/docs/intro/install/
+<https://helm.sh/docs/intro/install/>
 
 ## Deployment
 
@@ -874,4 +883,3 @@ Please see the [contributing guide](./CONTRIBUTING.md) if you are interested in 
 ---
 
 _This file is programatically generated using `helm-docs` and some BigBang-specific templates. The `gluon` repository has [instructions for regenerating package READMEs](https://repo1.dso.mil/big-bang/product/packages/gluon/-/blob/master/docs/bb-package-readme.md)._
-
