@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 3.5.0-bb.1](https://img.shields.io/badge/Version-3.5.0--bb.1-informational?style=flat-square) ![AppVersion: 5.15.0](https://img.shields.io/badge/AppVersion-5.15.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
+![Version: 3.6.0-bb.0](https://img.shields.io/badge/Version-3.6.0--bb.0-informational?style=flat-square) ![AppVersion: 5.16.0](https://img.shields.io/badge/AppVersion-5.16.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -108,7 +108,7 @@ helm install anchore chart/
 | sso.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | global.fullnameOverride | string | `""` |  |
 | global.nameOverride | string | `"anchore-enterprise"` |  |
-| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.15.0"` |  |
+| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.16.0"` |  |
 | imagePullPolicy | string | `"IfNotPresent"` |  |
 | imagePullSecretName | string | `"private-registry"` |  |
 | useExistingPullCredSecret | bool | `true` |  |
@@ -252,8 +252,6 @@ helm install anchore chart/
 | anchoreConfig.catalog.runtime_inventory.inventory_ingest_overwrite | bool | `false` |  |
 | anchoreConfig.catalog.integrations.integration_health_report_ttl_days | int | `2` |  |
 | anchoreConfig.catalog.down_analyzer_task_requeue | bool | `true` |  |
-| anchoreConfig.policy_engine.cycle_timers.feed_sync | int | `14400` |  |
-| anchoreConfig.policy_engine.cycle_timers.feed_sync_checker | int | `3600` |  |
 | anchoreConfig.policy_engine.vulnerabilities.matching.exclude.providers | list | `[]` |  |
 | anchoreConfig.policy_engine.vulnerabilities.matching.exclude.package_types | list | `[]` |  |
 | anchoreConfig.policy_engine.enable_user_base_image | bool | `true` |  |
@@ -476,7 +474,7 @@ helm install anchore chart/
 | reports.serviceAccountName | string | `""` |  |
 | reports.scratchVolume.details | object | `{}` |  |
 | ui.enabled | bool | `true` |  |
-| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.15.0"` |  |
+| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.16.0"` |  |
 | ui.imagePullPolicy | string | `"IfNotPresent"` |  |
 | ui.imagePullSecretName | string | `"private-registry"` |  |
 | ui.existingSecretName | string | `"anchore-enterprise-ui-env"` |  |
