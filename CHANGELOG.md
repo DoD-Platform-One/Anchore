@@ -4,6 +4,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [3.6.0-bb.0] - 2025-04-11
+
+### Changed
+
+- Updated Anchore Enterprise chart to `3.6.0`
+- Updated Anchore Enterprise tag to `5.16.0`
+- Updated Anchore Enterprise UI tag to `5.16.0`
+- Updated Redis to `20.11.4-bb.0`
+- Updated Gluon to 0.5.15
+
 ## [3.5.0-bb.1] - 2025-03-12
 
 ### Changed
