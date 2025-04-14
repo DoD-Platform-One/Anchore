@@ -1,5 +1,5 @@
 name: anchore
-version: 3.6.0-bb.0
+version: 3.6.0-bb.1
 apiVersion: v2
 appVersion: 5.16.0
 kubeVersion: ">=1.23.x || >=1.23.x-x"
@@ -34,7 +34,7 @@ dependencies:
     repository: "file://./deps/postgresql"
     condition: postgresql.enabled
   - name: redis
-    version: 20.11.4-bb.0
+    version: 20.11.4-bb.1
     repository: "oci://registry1.dso.mil/bigbang"
     condition: ui-redis.enabled
     alias: ui-redis
