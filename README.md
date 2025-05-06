@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore
 
-![Version: 3.6.0-bb.1](https://img.shields.io/badge/Version-3.6.0--bb.1-informational?style=flat-square) ![AppVersion: 5.16.0](https://img.shields.io/badge/AppVersion-5.16.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
+![Version: 3.6.0-bb.2](https://img.shields.io/badge/Version-3.6.0--bb.2-informational?style=flat-square) ![AppVersion: 5.16.0](https://img.shields.io/badge/AppVersion-5.16.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -586,7 +586,7 @@ helm install anchore chart/
 | postgresql.containerSecurityContext.runAsUser | int | `1001` |  |
 | postgresql.containerSecurityContext.runAsGroup | int | `1001` |  |
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
-| osaaMigrationJob.enabled | bool | `false` |  |
+| osaaMigrationJob.enabled | bool | `true` |  |
 | osaaMigrationJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8"` |  |
 | osaaMigrationJob.extraEnv | list | `[]` |  |
 | osaaMigrationJob.extraVolumes | list | `[]` |  |
