@@ -1,19 +1,35 @@
-networkPolicies:
-  enabled: true
-
-bbtests:
-  enabled: true
-
-enterpriseLicenseYaml: |
-  "TBD"
-
-global:
-  saml:
-    secret: ci-testing-only
-
-analyzer:
-  replicaCount: 1
-
-istio:
-  enabled: true
-
+#########################
+# Disable Core Packages #
+#########################
+monitoring:
+  enabled: false
+grafana:
+  enabled: false
+neuvector:
+  enabled: false
+loki:
+  enabled: false
+promtail:
+  enabled: false
+tempo:
+  enabled: false
+kyvernoReporter:
+  enabled: false
+kiali:
+  enabled: false
+addons:
+  minioOperator:
+    enabled: false
+########################
+# Required for package #
+########################
+  anchore:
+    enabled: true
+kyvernoPolicies:
+  values:
+    bbtests:
+      enabled: false
+kyverno:
+  values:
+    bbtests:
+      enabled: false
