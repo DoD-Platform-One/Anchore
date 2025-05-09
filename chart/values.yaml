@@ -195,7 +195,7 @@ global:
 ## ** Big Bang Change **
 ## @param image Image used for all Anchore Enterprise deployments, excluding Anchore UI
 ##
-image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.16.0
+image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.17.0
 
 ## @param imagePullPolicy Image pull policy used by all deployments
 ## ref: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
@@ -691,6 +691,10 @@ anchoreConfig:
           max_scan_time: 180000
 
   catalog:
+    ## @param anchoreConfig.catalog.account_prometheus_metrics Enable per-account image status prometheus metrics.
+    ## Enabling this will expose account names on the potentially unauthenticated `/metrics` route.
+    account_prometheus_metrics: "<ALLOW_API_CONFIGURATION>"  # false
+
     ## @param anchoreConfig.catalog.cycle_timers.image_watcher Interval (seconds) to check for an update to a tag
     ## @param anchoreConfig.catalog.cycle_timers.policy_eval Interval (seconds) to run a policy evaluation on images with policy_eval subscription activated
     ## @param anchoreConfig.catalog.cycle_timers.vulnerability_scan Interval to run a vulnerability scan on images with vuln_update subscription activated
@@ -1645,7 +1649,7 @@ ui:
   ## ** Big Bang Change **
   ## @param ui.image Image used for the Anchore UI container
   ##
-  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.16.0
+  image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.17.0
 
   ## @param ui.imagePullPolicy Image pull policy for Anchore UI image
   ##
