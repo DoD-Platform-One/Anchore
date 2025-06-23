@@ -125,6 +125,7 @@ spec:
       port: {{ .Values.ui.service.port }}
       protocol: TCP
       targetPort: 3000
+      appProtocol: http
       {{ include "enterprise.service.nodePort" (merge (dict "component" $component) .) }}
   selector:
     app.kubernetes.io/name: {{ template "enterprise.fullname" . }}
