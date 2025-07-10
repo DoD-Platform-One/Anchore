@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
-# anchore-enterprise
+# enterprise
 
-![Version: 3.7.0-bb.2](https://img.shields.io/badge/Version-3.7.0--bb.2-informational?style=flat-square) ![AppVersion: 5.17.0](https://img.shields.io/badge/AppVersion-5.17.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
+![Version: 3.10.0-bb.0](https://img.shields.io/badge/Version-3.10.0--bb.0-informational?style=flat-square) ![AppVersion: 5.18.0](https://img.shields.io/badge/AppVersion-5.18.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -32,7 +32,7 @@ Kubernetes: `>=1.23.x || >=1.23.x-x`
 
 Install Helm
 
-https://helm.sh/docs/intro/install/
+<https://helm.sh/docs/intro/install/>
 
 ## Deployment
 
@@ -40,7 +40,7 @@ https://helm.sh/docs/intro/install/
 - cd into directory
 
 ```bash
-helm install anchore-enterprise chart/
+helm install enterprise chart/
 ```
 
 ## Values
@@ -108,9 +108,10 @@ helm install anchore-enterprise chart/
 | sso.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | global.fullnameOverride | string | `""` |  |
 | global.nameOverride | string | `"anchore-enterprise"` |  |
-| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.17.0"` |  |
+| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.18.0"` |  |
 | imagePullPolicy | string | `"IfNotPresent"` |  |
 | imagePullSecretName | string | `"private-registry"` |  |
+| kubectlImage | string | `"bitnami/kubectl:1.30"` |  |
 | useExistingPullCredSecret | bool | `true` |  |
 | imageCredentials.registry | string | `""` |  |
 | imageCredentials.username | string | `""` |  |
@@ -211,6 +212,7 @@ helm install anchore-enterprise chart/
 | anchoreConfig.apiext.external.useTLS | bool | `true` |  |
 | anchoreConfig.apiext.external.hostname | string | `""` |  |
 | anchoreConfig.apiext.external.port | int | `8443` |  |
+| anchoreConfig.apiext.image_content.remove_license_content_from_sbom_return | string | `"<ALLOW_API_CONFIGURATION>"` |  |
 | anchoreConfig.analyzer.cycle_timers.image_analyzer | int | `1` |  |
 | anchoreConfig.analyzer.layer_cache_max_gigabytes | int | `0` |  |
 | anchoreConfig.analyzer.enable_hints | bool | `false` |  |
@@ -226,6 +228,9 @@ helm install anchore-enterprise chart/
 | anchoreConfig.analyzer.configFile.malware.clamav.db_update_enabled | bool | `true` |  |
 | anchoreConfig.analyzer.configFile.malware.clamav.max_scan_time | int | `180000` |  |
 | anchoreConfig.catalog.account_prometheus_metrics | string | `"<ALLOW_API_CONFIGURATION>"` |  |
+| anchoreConfig.catalog.sbom_vuln_scan.auto_scale | bool | `true` |  |
+| anchoreConfig.catalog.sbom_vuln_scan.batch_size | int | `1` |  |
+| anchoreConfig.catalog.sbom_vuln_scan.pool_size | int | `1` |  |
 | anchoreConfig.catalog.cycle_timers.image_watcher | int | `3600` |  |
 | anchoreConfig.catalog.cycle_timers.policy_eval | int | `3600` |  |
 | anchoreConfig.catalog.cycle_timers.vulnerability_scan | int | `14400` |  |
@@ -475,7 +480,7 @@ helm install anchore-enterprise chart/
 | reports.serviceAccountName | string | `""` |  |
 | reports.scratchVolume.details | object | `{}` |  |
 | ui.enabled | bool | `true` |  |
-| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.17.0"` |  |
+| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.18.0"` |  |
 | ui.imagePullPolicy | string | `"IfNotPresent"` |  |
 | ui.imagePullSecretName | string | `"private-registry"` |  |
 | ui.existingSecretName | string | `"anchore-enterprise-ui-env"` |  |
@@ -639,4 +644,3 @@ Please see the [contributing guide](./CONTRIBUTING.md) if you are interested in 
 ---
 
 _This file is programatically generated using `helm-docs` and some BigBang-specific templates. The `gluon` repository has [instructions for regenerating package READMEs](https://repo1.dso.mil/big-bang/product/packages/gluon/-/blob/master/docs/bb-package-readme.md)._
-

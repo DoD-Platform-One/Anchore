@@ -4,13 +4,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
-## [3.7.0-bb.2] - 2025-06-26
+## [3.10.0-bb.0] - 2025-07-09
 
 ### Changed
 
-- Renamed chart from enterprise to anchore-enterprise to align with preferred naming conventions
+- Updated Anchore Enterprise chart to `3.10.0`
+- Updated Anchore Enterprise tag to `5.18.0`
+- Updated Anchore Enterprise UI tag to `5.18.0`
+- Updated Redis to `21.1.3-bb.0`
+- Updated Gluon to 0.6.2
 
-## [3.7.0-bb.1] - 2025-05-08
+## [3.7.0-bb.2] - 2025-06-26
 
 ### Changed
 
