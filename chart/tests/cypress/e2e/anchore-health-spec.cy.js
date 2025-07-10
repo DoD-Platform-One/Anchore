@@ -8,11 +8,11 @@ describe('Anchore Login', () => {
     cy.get('button[id="anchore-login-form-submit"]').click()
     cy.wait(3000); // wait for the dashboard to load
     cy.get('body').then($body => {
-      if ($body.find('h2:contains("Welcome to Anchore Enterprise")').length > 0) {
+      if ($body.find('h2:contains("Welcome to Anchore!")').length > 0) {
         cy.get('button[data-action="close"]').click()
       } else {
         // Check if the dashboard is loaded
-        cy.contains('Welcome to your Dashboard!')
+        cy.contains('Getting Started')
       }
     })
   })
