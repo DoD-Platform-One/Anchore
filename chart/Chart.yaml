@@ -1,4 +1,4 @@
-name: enterprise
+name: anchore-enterprise
 version: 3.10.0-bb.0
 apiVersion: v2
 appVersion: 5.18.0
