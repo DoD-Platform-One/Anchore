@@ -214,7 +214,7 @@ imagePullSecretName: private-registry
 ## @param kubectlImage The image to use for the job's init container that uses kubectl to scale down deployments for the migration / upgrade
 ## This is only used in the osaaMigration and upgrade jobs.
 ##
-kubectlImage: bitnami/kubectl:1.30
+kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8
   # registry: docker.io
   # repository: bitnami/kubectl
   # tag: "1.30"
