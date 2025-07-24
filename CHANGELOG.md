@@ -4,6 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [3.10.0-bb.1] - 2025-07-23
+
+### Changed
+
+- Allow `configure-sso` job to use `existingSecretName`.
+
 ## [3.10.0-bb.0] - 2025-07-09
 
 ### Changed
