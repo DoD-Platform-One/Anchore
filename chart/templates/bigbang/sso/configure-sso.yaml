@@ -87,7 +87,7 @@ spec:
               {{- end }}
           envFrom:
             - secretRef:
-                name: {{ template "enterprise.fullname" . }}
+                name: {{ ternary .Values.existingSecretName (include "enterprise.fullname" .) .Values.useExistingSecrets }}
           volumeMounts:
             - name: anchore-sso
               mountPath: "/tmp"
