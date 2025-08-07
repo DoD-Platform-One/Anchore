@@ -78,28 +78,6 @@ networkPolicies:
   #           - 169.254.169.254/32
 
 
-# For stricter control over the enterprise datasyncer pod egress, uncomment the list of known datasyncer endpoints below
-# Warning: This list may not be complete depending on your desired feeds
-datasyncerHosts:
-    - data.anchore-enterprise.com
-    - s3.us-west-2.amazonaws.com #/enterprise-data-service.production.anchore.io
-  # - anchore-feed-service.s3.amazonaws.com
-  # - packages.cgr.dev
-  # - access.redhat.com
-  # - alas.aws.amazon.com
-  # - secdb.alpinelinux.org
-  # - security-tracker.debian.org
-  # - linux.oracle.com
-  # - git.launchpad.net
-  # - www.redhat.com
-  # - services.nvd.nist.gov
-  # - raw.githubusercontent.com
-  # - ftp.suse.com
-  # - data.anchore-enterprise.com
-  # - packages.wolfi.dev
-  # - packages.gcr.dev
-  # - salsa.debian.org
-
 # -- Openshift Container Platform Feature Toggle
 openshift: false
 
@@ -1264,12 +1242,12 @@ dataSyncer:
   ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
   ## Commented values below are just a suggested baseline. Contact Anchore support for deployment specific recommendations.
   ##
-  resources: {}
-    # requests:
+  resources: {} 
+    #  requests:
     #   cpu: 1
-    #   memory: 8G
-    # limits:
-    #   memory: 8G
+    #     memory: 8G
+    #   limits:
+    #     memory: 8G
 
   ## @param dataSyncer.labels Labels for Anchore DataSyncer pods
   ##
@@ -2069,11 +2047,11 @@ postgresql:
   # Configure resource limits and requests for the postgresql deployment
   resources:
     limits:
-      cpu: 200m
-      memory: 2048Mi
+      cpu: 1000m
+      memory: 4096Mi
     requests:
-      cpu: 200m
-      memory: 2048Mi
+      cpu: 1000m
+      memory: 4096Mi
 
   # Configure resource limits and requests for postgresql metrics (disabled by default)
   metrics:
