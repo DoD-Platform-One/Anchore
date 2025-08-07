@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore-enterprise
 
-![Version: 3.10.0-bb.1](https://img.shields.io/badge/Version-3.10.0--bb.1-informational?style=flat-square) ![AppVersion: 5.18.0](https://img.shields.io/badge/AppVersion-5.18.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
+![Version: 3.10.0-bb.2](https://img.shields.io/badge/Version-3.10.0--bb.2-informational?style=flat-square) ![AppVersion: 5.18.0](https://img.shields.io/badge/AppVersion-5.18.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -71,8 +71,6 @@ helm install anchore-enterprise chart/
 | networkPolicies.ingressLabels.app | string | `"istio-ingressgateway"` |  |
 | networkPolicies.ingressLabels.istio | string | `"ingressgateway"` |  |
 | networkPolicies.additionalPolicies | list | `[]` |  |
-| datasyncerHosts[0] | string | `"data.anchore-enterprise.com"` |  |
-| datasyncerHosts[1] | string | `"s3.us-west-2.amazonaws.com"` |  |
 | openshift | bool | `false` | Openshift Container Platform Feature Toggle |
 | postgresqlSuperUser.postgresUsername | string | `""` |  |
 | postgresqlSuperUser.postgresPassword | string | `""` |  |
@@ -576,10 +574,10 @@ helm install anchore-enterprise chart/
 | postgresql.postgresUser | string | `"anchore"` |  |
 | postgresql.postgresPassword | string | `"anchore-postgres,123"` |  |
 | postgresql.postgresDatabase | string | `"anchore"` |  |
-| postgresql.resources.limits.cpu | string | `"200m"` |  |
-| postgresql.resources.limits.memory | string | `"2048Mi"` |  |
-| postgresql.resources.requests.cpu | string | `"200m"` |  |
-| postgresql.resources.requests.memory | string | `"2048Mi"` |  |
+| postgresql.resources.limits.cpu | string | `"1000m"` |  |
+| postgresql.resources.limits.memory | string | `"4096Mi"` |  |
+| postgresql.resources.requests.cpu | string | `"1000m"` |  |
+| postgresql.resources.requests.memory | string | `"4096Mi"` |  |
 | postgresql.metrics.resources.limits.cpu | string | `"100m"` |  |
 | postgresql.metrics.resources.limits.memory | string | `"256Mi"` |  |
 | postgresql.metrics.resources.requests.cpu | string | `"100m"` |  |

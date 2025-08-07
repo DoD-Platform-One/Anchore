@@ -631,8 +631,8 @@ readReplicas:
 ##
 resources:
   requests:
-    memory: 256Mi
-    cpu: 250m
+    memory: 4096Mi
+    cpu: 1000m
 
 ## Add annotations to all the deployed resources
 ##
