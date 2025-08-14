@@ -4,6 +4,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [3.13.0-bb.0] - 2025-08-13
+
+### Changed
+
+- Updated Anchore Enterprise chart to `3.13.0`
+- Updated Anchore Enterprise tag to `5.20.1`
+- Updated Anchore Enterprise UI tag to `5.20.0`
+- Updated Gluon to `0.7.0`
+
 ## [3.10.0-bb.2] - 2025-08-07
 
 ### Changed

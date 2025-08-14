@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore-enterprise
 
-![Version: 3.10.0-bb.2](https://img.shields.io/badge/Version-3.10.0--bb.2-informational?style=flat-square) ![AppVersion: 5.18.0](https://img.shields.io/badge/AppVersion-5.18.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
+![Version: 3.13.0-bb.0](https://img.shields.io/badge/Version-3.13.0--bb.0-informational?style=flat-square) ![AppVersion: 5.20.1](https://img.shields.io/badge/AppVersion-5.20.1-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -106,7 +106,7 @@ helm install anchore-enterprise chart/
 | sso.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | global.fullnameOverride | string | `""` |  |
 | global.nameOverride | string | `"anchore-enterprise"` |  |
-| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.18.0"` |  |
+| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.20.1"` |  |
 | imagePullPolicy | string | `"IfNotPresent"` |  |
 | imagePullSecretName | string | `"private-registry"` |  |
 | kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8"` |  |
@@ -156,6 +156,7 @@ helm install anchore-enterprise chart/
 | configOverride | string | `""` |  |
 | scripts.anchore-config | string | `"#!/bin/bash\nwhile IFS= read -r line; do\n  while [[ \"$line\" =~ (\\$\\{[a-zA-Z_][a-zA-Z_0-9]*\\}) ]]; do\n    VAR_NAME=${BASH_REMATCH[1]#*\\{}; VAR_NAME=${VAR_NAME%\\}};\n    line=${line//${BASH_REMATCH[1]}/${!VAR_NAME}};\n  done;\n  printf '%s\\n' \"$line\";\ndone < /config/config.yaml\n"` |  |
 | domainSuffix | string | `""` |  |
+| dnsConfig.ndots | int | `2` |  |
 | anchoreConfig.service_dir | string | `"/anchore_service"` |  |
 | anchoreConfig.log_level | string | `"<ALLOW_API_CONFIGURATION>"` |  |
 | anchoreConfig.logging.colored_logging | bool | `false` |  |
@@ -224,8 +225,9 @@ helm install anchore-enterprise chart/
 | anchoreConfig.analyzer.configFile.secret_search.regexp_match[4] | string | `"API_KEY=(?i).*api(-\|_)key( *=+ *).*(?<![A-Z0-9])[A-Z0-9]{20,60}(?![A-Z0-9]).*"` |  |
 | anchoreConfig.analyzer.configFile.malware.clamav.enabled | string | `"<ALLOW_API_CONFIGURATION>"` |  |
 | anchoreConfig.analyzer.configFile.malware.clamav.db_update_enabled | bool | `true` |  |
-| anchoreConfig.analyzer.configFile.malware.clamav.max_scan_time | int | `180000` |  |
+| anchoreConfig.analyzer.configFile.malware.clamav.max_scan_time | int | `1800000` |  |
 | anchoreConfig.catalog.account_prometheus_metrics | string | `"<ALLOW_API_CONFIGURATION>"` |  |
+| anchoreConfig.catalog.analysis_queue_priority | string | `"<ALLOW_API_CONFIGURATION>"` |  |
 | anchoreConfig.catalog.sbom_vuln_scan.auto_scale | bool | `true` |  |
 | anchoreConfig.catalog.sbom_vuln_scan.batch_size | int | `1` |  |
 | anchoreConfig.catalog.sbom_vuln_scan.pool_size | int | `1` |  |
@@ -255,16 +257,17 @@ helm install anchore-enterprise chart/
 | anchoreConfig.catalog.runtime_inventory.inventory_ttl_days | int | `120` |  |
 | anchoreConfig.catalog.runtime_inventory.inventory_ingest_overwrite | bool | `false` |  |
 | anchoreConfig.catalog.integrations.integration_health_report_ttl_days | int | `2` |  |
-| anchoreConfig.catalog.down_analyzer_task_requeue | bool | `true` |  |
 | anchoreConfig.policy_engine.vulnerabilities.matching.exclude.providers | list | `[]` |  |
 | anchoreConfig.policy_engine.vulnerabilities.matching.exclude.package_types | list | `[]` |  |
 | anchoreConfig.policy_engine.enable_user_base_image | bool | `true` |  |
+| anchoreConfig.policy_engine.nvd_fallback_to_secondary_cvss | string | `"<ALLOW_API_CONFIGURATION>"` |  |
 | anchoreConfig.notifications.cycle_timers.notifications | int | `30` |  |
 | anchoreConfig.notifications.ui_url | string | `""` |  |
 | anchoreConfig.reports.enable_graphiql | bool | `true` |  |
 | anchoreConfig.reports.async_execution_timeout | string | `"48h"` |  |
 | anchoreConfig.reports.cycle_timers.reports_scheduled_queries | int | `600` |  |
 | anchoreConfig.reports.use_volume | bool | `false` |  |
+| anchoreConfig.reports_worker.ingress_images_max_workers | int | `10` |  |
 | anchoreConfig.reports_worker.enable_data_ingress | bool | `true` |  |
 | anchoreConfig.reports_worker.enable_data_egress | bool | `false` |  |
 | anchoreConfig.reports_worker.data_egress_window | int | `0` |  |
@@ -291,6 +294,7 @@ helm install anchore-enterprise chart/
 | anchoreConfig.ui.custom_links | object | `{}` |  |
 | anchoreConfig.ui.enable_add_repositories | object | `{}` |  |
 | anchoreConfig.ui.custom_message | object | `{}` |  |
+| anchoreConfig.ui.banners | object | `{}` |  |
 | anchoreConfig.ui.log_level | string | `"http"` |  |
 | anchoreConfig.ui.enrich_inventory_view | bool | `true` |  |
 | anchoreConfig.ui.appdb_config.native | bool | `true` |  |
@@ -478,7 +482,7 @@ helm install anchore-enterprise chart/
 | reports.serviceAccountName | string | `""` |  |
 | reports.scratchVolume.details | object | `{}` |  |
 | ui.enabled | bool | `true` |  |
-| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.18.0"` |  |
+| ui.image | string | `"registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.20.0"` |  |
 | ui.imagePullPolicy | string | `"IfNotPresent"` |  |
 | ui.imagePullSecretName | string | `"private-registry"` |  |
 | ui.existingSecretName | string | `"anchore-enterprise-ui-env"` |  |
@@ -527,14 +531,16 @@ helm install anchore-enterprise chart/
 | ingress.apiHosts | list | `[]` |  |
 | ingress.apiPaths[0] | string | `"/v2/"` |  |
 | ingress.apiPaths[1] | string | `"/version/"` |  |
+| ingress.apiPaths[2] | string | `"/exp/"` |  |
 | ingress.uiHosts | list | `[]` |  |
 | ingress.uiPath | string | `"/"` |  |
 | ingress.tls | list | `[]` |  |
 | ingress.ingressClassName | string | `"nginx"` |  |
 | cloudsql.enabled | bool | `false` |  |
-| cloudsql.image | string | `"gcr.io/cloudsql-docker/gce-proxy:1.25.0"` |  |
+| cloudsql.image | string | `"gcr.io/cloudsql-docker/gce-proxy:1.37.8"` |  |
 | cloudsql.imagePullPolicy | string | `"IfNotPresent"` |  |
 | cloudsql.instance | string | `""` |  |
+| cloudsql.useSideCar | bool | `false` |  |
 | cloudsql.useExistingServiceAcc | bool | `false` |  |
 | cloudsql.serviceAccSecretName | string | `""` |  |
 | cloudsql.serviceAccJsonName | string | `""` |  |
@@ -634,6 +640,7 @@ helm install anchore-enterprise chart/
 | bbtests.cypress.secretEnvs[0].name | string | `"cypress_password"` |  |
 | bbtests.cypress.secretEnvs[0].valueFrom.secretKeyRef.name | string | `"{{ template \"enterprise.fullname\" . }}"` |  |
 | bbtests.cypress.secretEnvs[0].valueFrom.secretKeyRef.key | string | `"ANCHORE_ADMIN_PASSWORD"` |  |
+| extraManifests | list | `[]` |  |
 
 ## Contributing
 
