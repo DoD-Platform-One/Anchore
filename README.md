@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore-enterprise
 
-![Version: 3.13.0-bb.0](https://img.shields.io/badge/Version-3.13.0--bb.0-informational?style=flat-square) ![AppVersion: 5.20.1](https://img.shields.io/badge/AppVersion-5.20.1-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
+![Version: 3.14.2-bb.0](https://img.shields.io/badge/Version-3.14.2--bb.0-informational?style=flat-square) ![AppVersion: 5.20.2](https://img.shields.io/badge/AppVersion-5.20.2-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -106,7 +106,7 @@ helm install anchore-enterprise chart/
 | sso.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | global.fullnameOverride | string | `""` |  |
 | global.nameOverride | string | `"anchore-enterprise"` |  |
-| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.20.1"` |  |
+| image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.20.2"` |  |
 | imagePullPolicy | string | `"IfNotPresent"` |  |
 | imagePullSecretName | string | `"private-registry"` |  |
 | kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8"` |  |
