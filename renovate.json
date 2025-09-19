@@ -38,8 +38,8 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "^chart/values\\.yaml$"
+      "managerFilePatterns": [
+        "/^chart/values\\.yaml$/"
       ],
       "matchStrings": [
         "image:\\s+registry1.dso.mil/ironbank/anchore/engine/engine:(?<currentValue>.+)"
@@ -50,8 +50,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^chart/values\\.yaml$"
+      "managerFilePatterns": [
+        "/^chart/values\\.yaml$/"
       ],
       "matchStrings": [
         "image:\\s+registry1.dso.mil/ironbank/anchore/enterprise/enterprise:(?<currentValue>.+)"
@@ -62,8 +62,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^chart/values\\.yaml$"
+      "managerFilePatterns": [
+        "/^chart/values\\.yaml$/"
       ],
       "matchStrings": [
         "image:\\s+registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:(?<currentValue>.+)"
@@ -74,8 +74,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^chart/values\\.yaml$"
+      "managerFilePatterns": [
+        "/^chart/values\\.yaml$/"
       ],
       "matchStrings": [
         "image:\\s+registry1.dso.mil/ironbank/opensource/postgres/*:(?<currentValue>.+)"
@@ -86,8 +86,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^chart/Chart\\.yaml$"
+      "managerFilePatterns": [
+        "/^chart/Chart\\.yaml$/"
       ],
       "matchStrings": [
         "redis\\s*\\n\\s*version:\\s*(?<currentValue>.+)"
@@ -99,8 +99,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^chart/Chart\\.yaml$"
+      "managerFilePatterns": [
+        "/^chart/Chart\\.yaml$/"
       ],
       "matchStrings": [
         "appVersion:[^\\S\\r\\n]+(?<currentValue>.+)"
@@ -111,8 +111,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^chart/Chart\\.yaml$"
+      "managerFilePatterns": [
+        "/^chart/Chart\\.yaml$/"
       ],
       "matchStrings": [
         "- Engine:\\s+(?<currentValue>.+)"
@@ -123,8 +123,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^chart/Chart\\.yaml$"
+      "managerFilePatterns": [
+        "/^chart/Chart\\.yaml$/"
       ],
       "matchStrings": [
         "- Enterprise:\\s+(?<currentValue>.+)"
@@ -135,8 +135,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^chart/Chart\\.yaml$"
+      "managerFilePatterns": [
+        "/^chart/Chart\\.yaml$/"
       ],
       "matchStrings": [
         "image:[^\\S\\r\\n]+(?<depName>.+):(?<currentValue>.+)"
@@ -145,8 +145,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^tests/images\\.txt$"
+      "managerFilePatterns": [
+        "/^tests/images\\.txt$/"
       ],
       "matchStrings": [
         "s*(?<depName>.+):(?<currentValue>.+)"
