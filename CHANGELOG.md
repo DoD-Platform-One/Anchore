@@ -4,6 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [3.14.2-bb.1] - 2025-09-10
+
+### Changed
+
+- Updated test-values.yaml to ensure bbtests are enabled
+
 ## [3.14.2-bb.0] - 2025-09-10
 
 ### Changed
