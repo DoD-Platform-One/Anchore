@@ -21,8 +21,6 @@ addons:
 ########################
 # Required for package #
 ########################
-  anchore:
-    enabled: true
 kyvernoPolicies:
   values:
     bbtests:
@@ -31,3 +29,9 @@ kyverno:
   values:
     bbtests:
       enabled: false
+addons:
+  anchoreEnterprise:
+    enabled: true
+    values:
+      bbtests:
+        enabled: true  
