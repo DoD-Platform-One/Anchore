@@ -12,7 +12,7 @@ spec:
       port: {{ .Values.analyzer.service.port }}
       targetPort: {{ .Values.analyzer.service.port }}
       protocol: TCP
-      appProtocol: http
+      appProtocol: {{ include "enterprise.setProtocol" . }}
   selector:
     app.kubernetes.io/name: {{ template "enterprise.fullname" . }}
     app.kubernetes.io/component: {{ $component }}
