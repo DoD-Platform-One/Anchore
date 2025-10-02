@@ -1,26 +1,4 @@
-#########################
-# Disable Core Packages #
-#########################
-monitoring:
-  enabled: false
-grafana:
-  enabled: false
-neuvector:
-  enabled: false
-loki:
-  enabled: false
-tempo:
-  enabled: false
-kyvernoReporter:
-  enabled: false
-kiali:
-  enabled: false
-addons:
-  minioOperator:
-    enabled: false
-########################
-# Required for package #
-########################
+# By default we pull these values: https://repo1.dso.mil/big-bang/bigbang/-/blob/master/tests/disable-core-values.yaml
 kyvernoPolicies:
   values:
     bbtests:
@@ -29,9 +7,7 @@ kyverno:
   values:
     bbtests:
       enabled: false
+
 addons:
   anchoreEnterprise:
     enabled: true
-    values:
-      bbtests:
-        enabled: true  
