@@ -3,10 +3,10 @@ dependencies:
   repository: file://./deps/postgresql
   version: 12.5.9
 - name: redis
-  repository: oci://registry1.dso.mil/bigbang
-  version: 21.1.3-bb.0
+  repository: oci://registry1.dso.mil/bigbang/maintained
+  version: 23.1.1-bb.1
 - name: gluon
   repository: oci://registry1.dso.mil/bigbang
-  version: 0.9.0
-digest: sha256:edfab94d4d59d2d20c57ac4de4fcb21806473865a10d3ae83c9728dc65c8b80f
-generated: "2025-09-09T06:20:06.308173725Z"
+  version: 0.9.5
+digest: sha256:f7c25f5004a13fd0642651d81a51c5a48b363b492181b555878bff6c2c25e071
+generated: "2025-10-23T14:27:37.457187-04:00"

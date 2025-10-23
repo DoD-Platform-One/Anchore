@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore-enterprise
 
-![Version: 3.14.2-bb.3](https://img.shields.io/badge/Version-3.14.2--bb.3-informational?style=flat-square) ![AppVersion: 5.20.2](https://img.shields.io/badge/AppVersion-5.20.2-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
+![Version: 3.14.2-bb.4](https://img.shields.io/badge/Version-3.14.2--bb.4-informational?style=flat-square) ![AppVersion: 5.20.2](https://img.shields.io/badge/AppVersion-5.20.2-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -109,7 +109,7 @@ helm install anchore-enterprise chart/
 | image | string | `"registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.20.2"` |  |
 | imagePullPolicy | string | `"IfNotPresent"` |  |
 | imagePullSecretName | string | `"private-registry"` |  |
-| kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8"` |  |
+| kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.33.5"` |  |
 | useExistingPullCredSecret | bool | `true` |  |
 | imageCredentials.registry | string | `""` |  |
 | imageCredentials.username | string | `""` |  |
@@ -513,7 +513,7 @@ helm install anchore-enterprise chart/
 | upgradeJob.rbacCreate | bool | `true` |  |
 | upgradeJob.serviceAccountName | string | `""` |  |
 | upgradeJob.usePostUpgradeHook | bool | `false` |  |
-| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8"` |  |
+| upgradeJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.33.5"` |  |
 | upgradeJob.nodeSelector | object | `{}` |  |
 | upgradeJob.tolerations | list | `[]` |  |
 | upgradeJob.affinity | object | `{}` |  |
@@ -548,10 +548,16 @@ helm install anchore-enterprise chart/
 | ui-redis.enabled | bool | `true` |  |
 | ui-redis.istio.enabled | string | `"{{ .Values.istio.enabled }}"` |  |
 | ui-redis.externalEndpoint | string | `""` |  |
-| ui-redis.auth.password | string | `"anchore-redis,123"` |  |
-| ui-redis.architecture | string | `"standalone"` |  |
-| ui-redis.master.persistence.enabled | bool | `false` |  |
-| ui-redis.commonConfiguration | string | `"maxmemory 200mb\nsave \"\""` |  |
+| ui-redis.upstream.nameOverride | string | `"ui-redis"` |  |
+| ui-redis.upstream.fullnameOverride | string | `"anchore-enterprise-ui-redis"` |  |
+| ui-redis.upstream.auth.password | string | `"anchore-redis,123"` |  |
+| ui-redis.upstream.architecture | string | `"standalone"` |  |
+| ui-redis.upstream.master.persistence.enabled | bool | `false` |  |
+| ui-redis.upstream.commonConfiguration | string | `"maxmemory 200mb\nsave \"\""` |  |
+| ui-redis.upstream.cleanUpgrade.enabled | bool | `true` |  |
+| ui-redis.upstream.redisLabel | string | `"app.kubernetes.io/name: ui-redis"` |  |
+| ui-redis.cleanUpgrade.enabled | bool | `true` |  |
+| ui-redis.cleanUpgrade.redisLabel | string | `"app.kubernetes.io/name: ui-redis"` |  |
 | postgresql.enabled | bool | `true` |  |
 | postgresql.externalEndpoint | string | `""` |  |
 | postgresql.externalDBCheckEnabled | bool | `false` |  |
@@ -597,7 +603,7 @@ helm install anchore-enterprise chart/
 | postgresql.containerSecurityContext.runAsGroup | int | `1001` |  |
 | postgresql.containerSecurityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | osaaMigrationJob.enabled | bool | `false` |  |
-| osaaMigrationJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8"` |  |
+| osaaMigrationJob.kubectlImage | string | `"registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.33.5"` |  |
 | osaaMigrationJob.extraEnv | list | `[]` |  |
 | osaaMigrationJob.extraVolumes | list | `[]` |  |
 | osaaMigrationJob.extraVolumeMounts | list | `[]` |  |
