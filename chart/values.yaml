@@ -192,10 +192,10 @@ imagePullSecretName: private-registry
 ## @param kubectlImage The image to use for the job's init container that uses kubectl to scale down deployments for the migration / upgrade
 ## This is only used in the osaaMigration and upgrade jobs.
 ##
-kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8
+kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.33.5
   # registry: docker.io
   # repository: bitnami/kubectl
-  # tag: "1.30"
+  # tag: "1.33"
   # digest: sha256:abcdef123456
 
 ## @param useExistingPullCredSecret forgoes pullcred secret creation and uses the secret defined in imagePullSecretName
@@ -1809,7 +1809,7 @@ upgradeJob:
   ## @param upgradeJob.kubectlImage The image to use for the upgrade job's init container that uses kubectl to scale down deployments before an upgrade
   ## This is only used in the preupgrade job. NOTE: This is deprecated. Please use `common.kubectlImage` instead.
   ##
-  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8
+  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.33.5
 
   ## @param upgradeJob.nodeSelector Node labels for the Anchore upgrade job pod assignment
   ##
@@ -1958,39 +1958,53 @@ cloudsql:
 
 ui-redis:
   enabled: true
-
+  
   ## ** Big Bang Addition **
   ## @param ui-redis.isio.enabled Enable Istio sidecar injection for the UI Redis deployment
   istio:
     enabled: "{{ .Values.istio.enabled }}"
-
+    
   ## @param ui-redis.externalEndpoint External Redis endpoint when not using Helm managed chart (eg redis://:<password>@hostname:6379)
   ##
   externalEndpoint: ""
 
-  ## @param ui-redis.auth.password Password used for connecting to Redis
-  ##
-  auth:
-    password: anchore-redis,123
+  upstream:
+    nameOverride: "ui-redis"
+    fullnameOverride: "anchore-enterprise-ui-redis"
+    
+    ## @param ui-redis.auth.password Password used for connecting to Redis
+    ##
+    auth:
+      password: anchore-redis,123
 
-  ## @param ui-redis.architecture Redis deployment architecture
-  ##
-  architecture: standalone
+    ## @param ui-redis.architecture Redis deployment architecture
+    ##
+    architecture: standalone
 
-  ## @param ui-redis.master.persistence.enabled enables persistence
-  master:
-    persistence:
-      enabled: false
+    ## @param ui-redis.master.persistence.enabled enables persistence
+    master:
+      persistence:
+        enabled: false
 
-  ## ** Big Bang Addition **
-  ## @param ui-redis.commonConfiguration Configure common redis parameters
-  commonConfiguration: |-
-    maxmemory 200mb
-    save ""
-  ## @param ui-redis.image.registry Specifies the image registry to use for this chart.
-  ## @param ui-redis.image.repository Specifies the image repository to use for this chart.
-  ## @param ui-redis.image.tag Specifies the image to use for this chart.
-  ## @param ui-redis.image.pullSecrets Specifies the image pull secrets to use for this chart.
+    ## ** Big Bang Addition **
+    ## @param ui-redis.commonConfiguration Configure common redis parameters
+    commonConfiguration: |-
+      maxmemory 200mb
+      save ""
+    ## @param ui-redis.image.registry Specifies the image registry to use for this chart.
+    ## @param ui-redis.image.repository Specifies the image repository to use for this chart.
+    ## @param ui-redis.image.tag Specifies the image to use for this chart.
+    ## @param ui-redis.image.pullSecrets Specifies the image pull secrets to use for this chart.
+    cleanUpgrade:
+      enabled: true
+    # When upgrading to Big Bang Redis release 23.1.1-bb.1, set this label to match your existing Redis StatefulSet pre-upgrade.
+    # This can be removed after the upgrade completes.
+    redisLabel: "app.kubernetes.io/name: ui-redis"
+  cleanUpgrade:
+    enabled: true
+    # When upgrading to Big Bang Redis release 23.1.1-bb.1, set this label to match your existing Redis StatefulSet pre-upgrade.
+    # This can be removed after the upgrade completes.
+    redisLabel: "app.kubernetes.io/name: ui-redis"
 
 #######################################
 ## @section Anchore Database Parameters
@@ -2137,7 +2151,7 @@ osaaMigrationJob:
   ## @param osaaMigrationJob.kubectlImage The image to use for the job's init container that uses kubectl to scale down deployments for the migration
   ## This is only used in the osaaMigrationJob job. NOTE: This is deprecated. Please use `common.kubectlImage` instead.
   ##
-  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.30.8
+  kubectlImage: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.33.5
 
   ## @param osaaMigrationJob.extraEnv An array to add extra environment variables
   ##
