@@ -32,7 +32,7 @@ Kubernetes: `>=1.23.x || >=1.23.x-x`
 
 Install Helm
 
-https://helm.sh/docs/intro/install/
+<https://helm.sh/docs/intro/install/>
 
 ## Deployment
 
@@ -554,8 +554,6 @@ helm install anchore-enterprise chart/
 | ui-redis.upstream.architecture | string | `"standalone"` |  |
 | ui-redis.upstream.master.persistence.enabled | bool | `false` |  |
 | ui-redis.upstream.commonConfiguration | string | `"maxmemory 200mb\nsave \"\""` |  |
-| ui-redis.upstream.cleanUpgrade.enabled | bool | `true` |  |
-| ui-redis.upstream.redisLabel | string | `"app.kubernetes.io/name: ui-redis"` |  |
 | ui-redis.cleanUpgrade.enabled | bool | `true` |  |
 | ui-redis.cleanUpgrade.redisLabel | string | `"app.kubernetes.io/name: ui-redis"` |  |
 | postgresql.enabled | bool | `true` |  |
@@ -655,4 +653,3 @@ Please see the [contributing guide](./CONTRIBUTING.md) if you are interested in 
 ---
 
 _This file is programatically generated using `helm-docs` and some BigBang-specific templates. The `gluon` repository has [instructions for regenerating package READMEs](https://repo1.dso.mil/big-bang/product/packages/gluon/-/blob/master/docs/bb-package-readme.md)._
-

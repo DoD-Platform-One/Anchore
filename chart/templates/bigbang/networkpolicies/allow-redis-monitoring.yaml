@@ -8,7 +8,7 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: ui-redis
-      app.kubernetes.io/instance: anchore
+      app.kubernetes.io/instance: anchore-enterprise
   policyTypes:
   - Ingress
   ingress:
