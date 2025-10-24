@@ -1995,11 +1995,6 @@ ui-redis:
     ## @param ui-redis.image.repository Specifies the image repository to use for this chart.
     ## @param ui-redis.image.tag Specifies the image to use for this chart.
     ## @param ui-redis.image.pullSecrets Specifies the image pull secrets to use for this chart.
-    cleanUpgrade:
-      enabled: true
-    # When upgrading to Big Bang Redis release 23.1.1-bb.1, set this label to match your existing Redis StatefulSet pre-upgrade.
-    # This can be removed after the upgrade completes.
-    redisLabel: "app.kubernetes.io/name: ui-redis"
   cleanUpgrade:
     enabled: true
     # When upgrading to Big Bang Redis release 23.1.1-bb.1, set this label to match your existing Redis StatefulSet pre-upgrade.

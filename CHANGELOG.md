@@ -8,10 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
-- Updated bitnami redis image to v8.2.2 (address CVE-2025-49844)
-- Updated redis to v23.1.1-bb.1
+- Updated redis image to v8.2.2 (address CVE-2025-49844)
+- Updated redis release  to v23.1.1-bb.1
 - Updated gluon to v0.9.5
 - Update kubectl to v1.33.5
+- adjust cleanUpgrade in values.yaml
 
 ## [3.14.2-bb.3] - 2025-10-01
 
