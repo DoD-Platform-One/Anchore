@@ -1,4 +1,7 @@
 dependencies:
+- name: enterprise
+  repository: https://charts.anchore.io
+  version: 3.13.0
 - name: postgresql
   repository: file://./deps/postgresql
   version: 12.5.9
@@ -8,5 +11,5 @@ dependencies:
 - name: gluon
   repository: oci://registry1.dso.mil/bigbang
   version: 0.9.5
-digest: sha256:f7c25f5004a13fd0642651d81a51c5a48b363b492181b555878bff6c2c25e071
-generated: "2025-10-23T14:27:37.457187-04:00"
+digest: sha256:632c51e987b14497b0144cde861d619e7ab44467e9be8377a298641a1e37b978
+generated: "2025-10-30T13:26:58.671848519-04:00"

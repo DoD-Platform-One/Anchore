@@ -4,17 +4,13 @@ Check the [upstream release notes](https://docs.anchore.com/current/docs/release
 
 ### Upgrading
 
-Find the latest enterprise chart version that corresponds with the Anchore Enterprise version identified by Renovate.
+Find the latest enterprise chart version that corresponds with the Anchore Enterprise version identified by Renovate. If the subcharts have not been updated by renovate bot, then do the following:
 
-Update the chart with KPT
+Check the values of the dependencies in `chart.yaml` then update the chart with helm, by entering the `chart` directory:
 
 ```shell
-kpt pkg update chart@enterprise-${chart.version} --strategy alpha-git-patch
+helm dep update
 ```
-
-### Modifications made to upstream
-
-Review the list of [Big Bang Changes](https://repo1.dso.mil/big-bang/product/packages/anchore-enterprise/-/blob/main/docs/BBCHANGES.md) to this chart and ensure they weren't overwritten in the update.
 
 ### automountServiceAccountToken
 
@@ -29,26 +25,28 @@ This policy revokes access to the K8s API for Pods utilizing said ServiceAccount
 - Obtain the Big Bang dev Anchore enterprise license by following the below instructions:
   - Clone the dogfood repo if you have not already, from <https://repo1.dso.mil/big-bang/team/deployments/bigbang.git>
   - Run `sops -d bigbang/prod2/environment-bb-secret.enc.yaml | yq '.stringData."values.yaml"' | yq '.addons.anchore.enterprise.licenseYaml'` to get the full license contents.
-  - Add the full output from that command under `licenseYaml` in your override values (shown below), making sure that indentation is properly preserved
+  - Add the full output from that command under `license` in your override values as a yaml object (shown below), making sure that indentation is properly preserved.
 
 `overrides/anchore.yaml`
 
 ```
 addons:
-  anchore:
+  anchoreEnterprise:
     enabled: true
     git:
       tag: Null
       branch: "renovate/anchore"
-    adminPassword: "foobar"
-    enterprise:
+    upstream:
+      anchoreConfig:
+        default_admin_password: "test"
       # -- License for Anchore Enterprise. Enterprise is the only option available for the chart starting with chart major version 2.X.
       # For formatting examples see https://repo1.dso.mil/big-bang/product/packages/CHART.md#enabling-enterprise-services
-      licenseYaml: |
-        $LICENSE_CONTENT
+      license:
+        $LICENSE_CONTENT        
     sso:
       enabled: true
-      client_id: "platform1_a8604cc9-f5e9-4656-802d-d05624370245_bb8-anchore"
+      spEntityId: "platform1_a8604cc9-f5e9-4656-802d-d05624370245_bb8-anchore"
+      acsUrl: "https://anchore.bigbang.dev/service/sso/auth/keycloak"
     values:
       anchoreAnalyzer:
         replicaCount: 2

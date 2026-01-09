@@ -74,7 +74,7 @@ spec:
       {{- end }}
       #jobLabel: anchore-metrics-simplequeue-api
 
-    {{- if .Values.feeds.enabled }}
+    {{- if .Values.upstream.feeds.enabled }}
     - interval: 30s
       path: /metrics
       params:
@@ -91,7 +91,7 @@ spec:
       #jobLabel: anchore-metrics-feeds-api
     {{- end }}
 
-    {{- if .Values.reports.enabled }}
+    {{- if .Values.upstream.reports.enabled }}
     - interval: 30s
       path: /metrics
       params:
@@ -108,7 +108,7 @@ spec:
       #jobLabel: anchore-metrics-enterprise-reports
     {{- end }}
 
-    {{- if .Values.notifications.enabled }}
+    {{- if .Values.upstream.notifications.enabled }}
     - interval: 30s
       path: /metrics
       params:

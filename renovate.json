@@ -38,8 +38,17 @@
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/^chart/values\\.yaml$/"
+      "description": "Update upstream anchore-enterprise chart version",
+      "fileMatch": ["^chart/Chart\\.yaml$"],
+      "matchStrings": ["version:\\s+(?<currentValue>.+)-bb\\.\\d+"],
+      "depNameTemplate": "enterprise",
+      "datasourceTemplate": "helm",
+      "registryUrlTemplate": "https://charts.anchore.io"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "^chart/values\\.yaml$"
       ],
       "matchStrings": [
         "image:\\s+registry1.dso.mil/ironbank/anchore/engine/engine:(?<currentValue>.+)"
