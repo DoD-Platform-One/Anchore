@@ -208,8 +208,8 @@ istio:
 
 ```yaml
 data:
-  ANCHORE_ENABLE_METRICS: "{{ .Values.anchoreConfig.metrics.enabled }}"
-  ANCHORE_DISABLE_METRICS_AUTH: "{{ .Values.anchoreConfig.metrics.auth_disabled }}"
+  ANCHORE_ENABLE_METRICS: "{{ .Values.upstream.anchoreConfig.metrics.enabled }}"
+  ANCHORE_DISABLE_METRICS_AUTH: "{{ .Values.upstream.anchoreConfig.metrics.auth_disabled }}"
 ```
 
 ---
@@ -217,7 +217,7 @@ data:
 11) To resolve OPA Gatekeeper violations around istio sidecar injection, a curl should be added to `chart/templates/hooks/pre-upgrade/upgrade_job.yaml`, `chart/templates/hooks/post-upgrade/upgrade_job.yaml`, `chart/deps/feeds/templates/hooks/pre-upgrade/upgrade_job.yaml`, `chart/deps/feeds/templates/hooks/post-upgrade/upgrade_job.yaml`, `chart/templates/bigbang/sso/configure-sso.yaml`, `chart/templates/bigbang/db/ensure-anchore-db.yaml`, `chart/templates/bigbang/db/ensure-feeds-db.yaml`:
 
 ```yaml
-          {{- if not .Values.anchoreConfig.database.ssl }}
+          {{- if not .Values.upstream.anchoreConfig.database.ssl }}
             - |
               # istio quit logic added by BigBang
               {{ print (include "enterprise.doSourceFile" .) }} anchore-enterprise-manager db --db-connect postgresql://"${ANCHORE_DB_USER}":"${ANCHORE_DB_PASSWORD}"@"${ANCHORE_DB_HOST}":"${ANCHORE_DB_PORT}"/"${ANCHORE_DB_NAME}" upgrade --dontask;
@@ -226,10 +226,10 @@ data:
               echo "Stopping the istio proxy..."
               curl -X POST http://localhost:15020/quitquitquit
               {{ end }}
-          {{- else if eq .Values.anchoreConfig.database.sslMode "require" }}
+          {{- else if eq .Values.upstream.anchoreConfig.database.sslMode "require" }}
             - |
               # istio quit logic added by BigBang
-              {{ print (include "enterprise.doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_DB_USER}":"${ANCHORE_DB_PASSWORD}"@"${ANCHORE_DB_HOST}":"${ANCHORE_DB_PORT}"/"${ANCHORE_DB_NAME}"?sslmode={{- .Values.anchoreConfig.database.sslMode }} upgrade --dontask;
+              {{ print (include "enterprise.doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_DB_USER}":"${ANCHORE_DB_PASSWORD}"@"${ANCHORE_DB_HOST}":"${ANCHORE_DB_PORT}"/"${ANCHORE_DB_NAME}"?sslmode={{- .Values.upstream.anchoreConfig.database.sslMode }} upgrade --dontask;
               {{ if and .Values.istio.enabled (eq .Values.istio.injection "enabled") }}
               sleep 5
               echo "Stopping the istio proxy..."
@@ -238,7 +238,7 @@ data:
           {{- else }}
             - |
               # istio quit logic added by BigBang
-              {{ print (include "enterprise.doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_DB_USER}":"${ANCHORE_DB_PASSWORD}"@"${ANCHORE_DB_HOST}":"${ANCHORE_DB_PORT}"/"${ANCHORE_DB_NAME}"?sslmode={{- .Values.anchoreConfig.database.sslMode -}}\&sslrootcert=/home/anchore/certs/{{- .Values.anchoreConfig.datab>
+              {{ print (include "enterprise.doSourceFile" .) }} anchore-enterprise-manager db --db-use-ssl --db-connect postgresql://"${ANCHORE_DB_USER}":"${ANCHORE_DB_PASSWORD}"@"${ANCHORE_DB_HOST}":"${ANCHORE_DB_PORT}"/"${ANCHORE_DB_NAME}"?sslmode={{- .Values.upstream.anchoreConfig.database.sslMode -}}\&sslrootcert=/home/anchore/certs/{{- .Values.upstream.anchoreConfig.datab>
               {{ if and .Values.istio.enabled (eq .Values.istio.injection "enabled") }}
               sleep 5
               echo "Stopping the istio proxy..."

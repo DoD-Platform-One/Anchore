@@ -29,7 +29,7 @@ spec:
       route:
         - destination:
             port:
-              number: {{ .Values.ui.service.port }}
+              number: {{ .Values.upstream.ui.service.port }}
             #host: {{ .Release.Name }}-enterprise-ui
             host: {{ template "enterprise.ui.fullname" . }}
 
@@ -65,7 +65,7 @@ spec:
       route:
         - destination:
             port:
-              number: {{ .Values.api.service.port }}
+              number: {{ .Values.upstream.api.service.port }}
             host: {{ .Release.Name }}-anchore-enterprise-api
       fault:
         abort:
@@ -78,6 +78,6 @@ spec:
       route:
         - destination:
             port:
-              number: {{ .Values.api.service.port }}
+              number: {{ .Values.upstream.api.service.port }}
             host: {{ .Release.Name }}-anchore-enterprise-api
 {{- end }}

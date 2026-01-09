@@ -6,13 +6,17 @@ metadata:
   labels: {{- include "enterprise.common.labels" (merge (dict "component" $component) .) | nindent 4 }}
   annotations: {{- include "enterprise.common.annotations" (merge (dict "component" $component "nil" true) .) | nindent 8 }}
 spec:
-  type: {{ .Values.analyzer.serviceType }}
+  type: {{ .Values.upstream.analyzer.serviceType }}
   ports:
     - name: analyzer-api
-      port: {{ .Values.analyzer.service.port }}
-      targetPort: {{ .Values.analyzer.service.port }}
+      port: {{ .Values.upstream.analyzer.service.port }}
+      targetPort: {{ .Values.upstream.analyzer.service.port }}
       protocol: TCP
-      appProtocol: {{ include "enterprise.setProtocol" . }}
+      {{ if .Values.upstream.anchoreConfig.internalServicesSSL.enabled }}
+      appProtocol: "https"
+      {{ else }}
+      appProtocol: "http"
+      {{ end }}
   selector:
     app.kubernetes.io/name: {{ template "enterprise.fullname" . }}
     app.kubernetes.io/component: {{ $component }}

@@ -17,18 +17,18 @@ spec:
         matchLabels:
           app: prometheus
     ports:
-    - port: {{ .Values.api.service.port }} # anchore engine api (default: 8228)
+    - port: {{ .Values.upstream.api.service.port }} # anchore engine api (default: 8228)
       protocol: TCP
-    - port: {{ .Values.catalog.service.port }} # anchore catalog api (default: 8082)
+    - port: {{ .Values.upstream.catalog.service.port }} # anchore catalog api (default: 8082)
       protocol: TCP
-    - port: {{ .Values.policyEngine.service.port }} # anchore policy engine api (default: 8087)
+    - port: {{ .Values.upstream.policyEngine.service.port }} # anchore policy engine api (default: 8087)
       protocol: TCP
-    - port: {{ .Values.simpleQueue.service.port }} # anchore simplequeue api (default: 8083)
+    - port: {{ .Values.upstream.simpleQueue.service.port }} # anchore simplequeue api (default: 8083)
       protocol: TCP
-    - port: {{ .Values.analyzer.service.port }} # anchore analyzer (default: 8084)
+    - port: {{ .Values.upstream.analyzer.service.port }} # anchore analyzer (default: 8084)
       protocol: TCP
-    - port: {{ .Values.reports.service.port }} # anchore enterprise reports (default: 8778)
+    - port: {{ .Values.upstream.reports.service.port }} # anchore enterprise reports (default: 8778)
       protocol: TCP
-    - port: {{ .Values.notifications.service.port }} # anchore enterprise notifications (default: 8668)
+    - port: {{ .Values.upstream.notifications.service.port }} # anchore enterprise notifications (default: 8668)
       protocol: TCP
 {{- end }}

@@ -105,7 +105,7 @@ spec:
 {{- if hasKey .Values.postgresql "enabled" }}
 {{- if (not .Values.postgresql.enabled) }}
 ---
-{{- if .Values.reports.enabled }}
+{{- if .Values.upstream.reports.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -126,7 +126,7 @@ spec:
         - 169.254.169.254/32
 ---
 {{- end }}
-{{- if .Values.notifications.enabled }}
+{{- if .Values.upstream.notifications.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

@@ -3,10 +3,10 @@ tmp_dir: ${ANCHORE_TMP_DIR}
 log_level: ${ANCHORE_LOG_LEVEL} # Deprecated - prefer use of logging.log_level
 
 logging:
-  {{- toYaml .Values.anchoreConfig.logging | nindent 2 }}
+  {{- toYaml .Values.upstream.anchoreConfig.logging | nindent 2 }}
 
 server:
-  {{- toYaml .Values.anchoreConfig.server | nindent 2 }}
+  {{- toYaml .Values.upstream.anchoreConfig.server | nindent 2 }}
 
 allow_awsecr_iam_auto: ${ANCHORE_ALLOW_ECR_IAM_AUTO}
 host_id: "${ANCHORE_HOST_ID}"
@@ -26,7 +26,7 @@ max_import_content_size_mb: ${ANCHORE_MAX_IMPORT_CONTENT_SIZE_MB}
 max_compressed_image_size_mb: ${ANCHORE_MAX_COMPRESSED_IMAGE_SIZE_MB}
 
 audit:
-  enabled: {{ .Values.anchoreConfig.audit.enabled }}
+  enabled: {{ .Values.upstream.anchoreConfig.audit.enabled }}
   mode: log
   verbs:
     - post
@@ -59,7 +59,7 @@ metrics:
   enabled: {{ .Values.monitoring.enabled }}
   auth_disabled: {{ .Values.monitoring.enabled }}
 
-webhooks: {{- toYaml .Values.anchoreConfig.webhooks | nindent 2 }}
+webhooks: {{- toYaml .Values.upstream.anchoreConfig.webhooks | nindent 2 }}
 
 default_admin_password: "${ANCHORE_ADMIN_PASSWORD}"
 default_admin_email: ${ANCHORE_ADMIN_EMAIL}
@@ -79,12 +79,12 @@ user_authentication:
     refresh_token_expiration_seconds: ${ANCHORE_OAUTH_REFRESH_TOKEN_EXPIRATION}
   hashed_passwords: ${ANCHORE_AUTH_ENABLE_HASHED_PASSWORDS}
   sso_require_existing_users: ${ANCHORE_SSO_REQUIRES_EXISTING_USERS}
-  allow_api_keys_for_saml_users: {{ .Values.anchoreConfig.user_authentication.allow_api_keys_for_saml_users }}
-  max_api_key_age_days: {{ .Values.anchoreConfig.user_authentication.max_api_key_age_days }}
-  max_api_keys_per_user: {{ .Values.anchoreConfig.user_authentication.max_api_keys_per_user }}
-  remove_deleted_user_api_keys_older_than_days: {{ .Values.anchoreConfig.user_authentication.remove_deleted_user_api_keys_older_than_days }}
-  disallow_native_users: {{ .Values.anchoreConfig.user_authentication.disallow_native_users }}
-  log_saml_assertions: {{ .Values.anchoreConfig.user_authentication.log_saml_assertions }}
+  allow_api_keys_for_saml_users: {{ .Values.upstream.anchoreConfig.user_authentication.allow_api_keys_for_saml_users }}
+  max_api_key_age_days: {{ .Values.upstream.anchoreConfig.user_authentication.max_api_key_age_days }}
+  max_api_keys_per_user: {{ .Values.upstream.anchoreConfig.user_authentication.max_api_keys_per_user }}
+  remove_deleted_user_api_keys_older_than_days: {{ .Values.upstream.anchoreConfig.user_authentication.remove_deleted_user_api_keys_older_than_days }}
+  disallow_native_users: {{ .Values.upstream.anchoreConfig.user_authentication.disallow_native_users }}
+  log_saml_assertions: {{ .Values.upstream.anchoreConfig.user_authentication.log_saml_assertions }}
 credentials:
   database:
     user: "${ANCHORE_DB_USER}"
@@ -95,13 +95,13 @@ credentials:
     db_connect_args:
       timeout: ${ANCHORE_DB_TIMEOUT}
       ssl: ${ANCHORE_DB_SSL}
-    {{- if .Values.anchoreConfig.database.ssl }}
+    {{- if .Values.upstream.anchoreConfig.database.ssl }}
       sslmode: ${ANCHORE_DB_SSL_MODE}
       sslrootcert: ${ANCHORE_DB_SSL_ROOT_CERT}
     {{- end }}
     db_pool_size: ${ANCHORE_DB_POOL_SIZE}
     db_pool_max_overflow: ${ANCHORE_DB_POOL_MAX_OVERFLOW}
-  {{- with .Values.anchoreConfig.database.engineArgs }}
+  {{- with .Values.upstream.anchoreConfig.database.engineArgs }}
     db_engine_args: {{- toYaml . | nindent 6 }}
   {{- end }}
 
@@ -113,16 +113,16 @@ services:
   apiext:
     enabled: true
     image_content:
-      remove_license_content_from_sbom_return: {{ .Values.anchoreConfig.apiext.image_content.remove_license_content_from_sbom_return }}
+      remove_license_content_from_sbom_return: {{ .Values.upstream.anchoreConfig.apiext.image_content.remove_license_content_from_sbom_return }}
     require_auth: true
     endpoint_hostname: ${ANCHORE_ENDPOINT_HOSTNAME}
     max_request_threads: ${ANCHORE_MAX_REQUEST_THREADS}
     listen: '0.0.0.0'
     port: ${ANCHORE_PORT}
-  {{- if .Values.anchoreConfig.apiext.external.enabled }}
-    external_tls: {{ .Values.anchoreConfig.apiext.external.useTLS }}
-    external_hostname: {{ .Values.anchoreConfig.apiext.external.hostname }}
-    external_port: {{ .Values.anchoreConfig.apiext.external.port }}
+  {{- if .Values.upstream.anchoreConfig.apiext.external.enabled }}
+    external_tls: {{ .Values.upstream.anchoreConfig.apiext.external.useTLS }}
+    external_hostname: {{ .Values.upstream.anchoreConfig.apiext.external.hostname }}
+    external_port: {{ .Values.upstream.anchoreConfig.apiext.external.port }}
   {{- end }}
     ssl_enable: ${ANCHORE_SSL_ENABLED}
     ssl_cert: ${ANCHORE_SSL_CERT}
@@ -136,7 +136,7 @@ services:
     port: ${ANCHORE_PORT}
     max_request_threads: ${ANCHORE_MAX_REQUEST_THREADS}
     cycle_timer_seconds: 1
-    cycle_timers: {{- toYaml .Values.anchoreConfig.analyzer.cycle_timers | nindent 6 }}
+    cycle_timers: {{- toYaml .Values.upstream.anchoreConfig.analyzer.cycle_timers | nindent 6 }}
     analyzer_driver: 'nodocker'
     layer_cache_enable: ${ANCHORE_LAYER_CACHE_ENABLED}
     layer_cache_max_gigabytes: ${ANCHORE_LAYER_CACHE_SIZE_GB}
@@ -154,10 +154,10 @@ services:
     listen: '0.0.0.0'
     port: ${ANCHORE_PORT}
     max_request_threads: ${ANCHORE_MAX_REQUEST_THREADS}
-    account_prometheus_metrics: {{ .Values.anchoreConfig.catalog.account_prometheus_metrics }}
+    account_prometheus_metrics: {{ .Values.upstream.anchoreConfig.catalog.account_prometheus_metrics }}
     cycle_timer_seconds: 1
-    cycle_timers: {{- toYaml .Values.anchoreConfig.catalog.cycle_timers | nindent 6 }}
-    event_log: {{- toYaml .Values.anchoreConfig.catalog.event_log | nindent 6 }}
+    cycle_timers: {{- toYaml .Values.upstream.anchoreConfig.catalog.cycle_timers | nindent 6 }}
+    event_log: {{- toYaml .Values.upstream.anchoreConfig.catalog.event_log | nindent 6 }}
     runtime_inventory:
       inventory_ttl_days: ${ANCHORE_ENTERPRISE_RUNTIME_INVENTORY_TTL_DAYS}
       inventory_ingest_overwrite: ${ANCHORE_ENTERPRISE_RUNTIME_INVENTORY_INGEST_OVERWRITE}
@@ -168,13 +168,13 @@ services:
     runtime_compliance:
       object_store_bucket: "runtime_compliance_check"
     import_operation_expiration_days: ${ANCHORE_IMPORT_OPERATION_EXPIRATION_DAYS}
-    analysis_queue_priority: {{ .Values.anchoreConfig.catalog.analysis_queue_priority }}
+    analysis_queue_priority: {{ .Values.upstream.anchoreConfig.catalog.analysis_queue_priority }}
     sbom_vuln_scan:
-      auto_scale: {{ .Values.anchoreConfig.catalog.sbom_vuln_scan.auto_scale }}
-      batch_size: {{ .Values.anchoreConfig.catalog.sbom_vuln_scan.batch_size }}
-      pool_size: {{ .Values.anchoreConfig.catalog.sbom_vuln_scan.pool_size }}
-    analysis_archive: {{- toYaml .Values.anchoreConfig.catalog.analysis_archive | nindent 6 }}
-    object_store: {{- toYaml .Values.anchoreConfig.catalog.object_store | nindent 6 }}
+      auto_scale: {{ .Values.upstream.anchoreConfig.catalog.sbom_vuln_scan.auto_scale }}
+      batch_size: {{ .Values.upstream.anchoreConfig.catalog.sbom_vuln_scan.batch_size }}
+      pool_size: {{ .Values.upstream.anchoreConfig.catalog.sbom_vuln_scan.pool_size }}
+    analysis_archive: {{- toYaml .Values.upstream.anchoreConfig.catalog.analysis_archive | nindent 6 }}
+    object_store: {{- toYaml .Values.upstream.anchoreConfig.catalog.object_store | nindent 6 }}
     ssl_enable: ${ANCHORE_SSL_ENABLED}
     ssl_cert: ${ANCHORE_SSL_CERT}
     ssl_key: ${ANCHORE_SSL_KEY}
@@ -199,7 +199,7 @@ services:
     port: ${ANCHORE_PORT}
     policy_evaluation_cache_ttl: ${ANCHORE_POLICY_EVAL_CACHE_TTL_SECONDS}
     enable_package_db_load: ${ANCHORE_POLICY_ENGINE_ENABLE_PACKAGE_DB_LOAD}
-    enable_user_base_image: {{ .Values.anchoreConfig.policy_engine.enable_user_base_image }}
+    enable_user_base_image: {{ .Values.upstream.anchoreConfig.policy_engine.enable_user_base_image }}
     vulnerabilities:
       sync:
         enabled: true
@@ -211,13 +211,13 @@ services:
             enabled: true
       matching:
         exclude:
-          {{- if .Values.anchoreConfig.policy_engine.vulnerabilities.matching.exclude.providers }}
-          providers: {{ .Values.anchoreConfig.policy_engine.vulnerabilities.matching.exclude.providers | toJson }}
+          {{- if .Values.upstream.anchoreConfig.policy_engine.vulnerabilities.matching.exclude.providers }}
+          providers: {{ .Values.upstream.anchoreConfig.policy_engine.vulnerabilities.matching.exclude.providers | toJson }}
           {{- else }}
           providers: []
           {{- end }}
-          {{- if .Values.anchoreConfig.policy_engine.vulnerabilities.matching.exclude.package_types }}
-          package_types: {{ .Values.anchoreConfig.policy_engine.vulnerabilities.matching.exclude.package_types | toJson }}
+          {{- if .Values.upstream.anchoreConfig.policy_engine.vulnerabilities.matching.exclude.package_types }}
+          package_types: {{ .Values.upstream.anchoreConfig.policy_engine.vulnerabilities.matching.exclude.package_types | toJson }}
           {{- else }}
           package_types: []
           {{- end }}
@@ -255,7 +255,7 @@ services:
               by_cpe:
                 # Disabling search by CPE for the stock matcher will entirely disable binary-only matches and is not advised
                 enabled: ${ANCHORE_VULN_MATCHING_ECOSYSTEM_SPECIFIC_STOCK_SEARCH_BY_CPE_ENABLED}
-    nvd_fallback_to_secondary_cvss: {{ .Values.anchoreConfig.policy_engine.nvd_fallback_to_secondary_cvss }}
+    nvd_fallback_to_secondary_cvss: {{ .Values.upstream.anchoreConfig.policy_engine.nvd_fallback_to_secondary_cvss }}
     ssl_enable: ${ANCHORE_SSL_ENABLED}
     ssl_cert: ${ANCHORE_SSL_CERT}
     ssl_key: ${ANCHORE_SSL_KEY}
@@ -268,13 +268,13 @@ services:
     port: ${ANCHORE_PORT}
     max_request_threads: ${ANCHORE_MAX_REQUEST_THREADS}
     enable_graphiql: ${ANCHORE_ENTERPRISE_REPORTS_ENABLE_GRAPHIQL}
-    cycle_timers: {{- toYaml .Values.anchoreConfig.reports.cycle_timers | nindent 6 }}
+    cycle_timers: {{- toYaml .Values.upstream.anchoreConfig.reports.cycle_timers | nindent 6 }}
     max_async_execution_threads: ${ANCHORE_ENTERPRISE_REPORTS_MAX_ASYNC_EXECUTION_THREADS}
     async_execution_timeout: ${ANCHORE_ENTERPRISE_REPORTS_ASYNC_EXECUTION_TIMEOUT}
     ssl_enable: ${ANCHORE_SSL_ENABLED}
     ssl_cert: ${ANCHORE_SSL_CERT}
     ssl_key: ${ANCHORE_SSL_KEY}
-    use_volume: {{ .Values.anchoreConfig.reports.use_volume }}
+    use_volume: {{ .Values.upstream.anchoreConfig.reports.use_volume }}
 
   reports_worker:
     enabled: true
@@ -288,10 +288,10 @@ services:
     data_egress_window: ${ANCHORE_ENTERPRISE_REPORTS_DATA_EGRESS_WINDOW}
     data_refresh_max_workers: ${ANCHORE_ENTERPRISE_REPORTS_DATA_REFRESH_MAX_WORKERS}
     data_load_max_workers: ${ANCHORE_ENTERPRISE_REPORTS_DATA_LOAD_MAX_WORKERS}
-    ingress_images_max_workers: {{ .Values.anchoreConfig.reports_worker.ingress_images_max_workers }}
-    cycle_timers: {{- toYaml .Values.anchoreConfig.reports_worker.cycle_timers | nindent 6 }}
+    ingress_images_max_workers: {{ .Values.upstream.anchoreConfig.reports_worker.ingress_images_max_workers }}
+    cycle_timers: {{- toYaml .Values.upstream.anchoreConfig.reports_worker.cycle_timers | nindent 6 }}
     runtime_report_generation:
-      use_legacy_loaders_and_queries: {{ .Values.anchoreConfig.reports_worker.runtime_report_generation.use_legacy_loaders_and_queries }}
+      use_legacy_loaders_and_queries: {{ .Values.upstream.anchoreConfig.reports_worker.runtime_report_generation.use_legacy_loaders_and_queries }}
       inventory_images_by_vulnerability: true
       vulnerabilities_by_k8s_namespace: ${ANCHORE_ENTERPRISE_REPORTS_VULNERABILITIES_BY_K8S_NAMESPACE}
       vulnerabilities_by_k8s_container: ${ANCHORE_ENTERPRISE_REPORTS_VULNERABILITIES_BY_K8S_CONTAINER}
@@ -307,7 +307,7 @@ services:
     listen: '0.0.0.0'
     port: ${ANCHORE_PORT}
     max_request_threads: ${ANCHORE_MAX_REQUEST_THREADS}
-    cycle_timers: {{- toYaml .Values.anchoreConfig.notifications.cycle_timers | nindent 6 }}
+    cycle_timers: {{- toYaml .Values.upstream.anchoreConfig.notifications.cycle_timers | nindent 6 }}
     ui_url: ${ANCHORE_ENTERPRISE_UI_URL}
     ssl_enable: ${ANCHORE_SSL_ENABLED}
     ssl_cert: ${ANCHORE_SSL_CERT}

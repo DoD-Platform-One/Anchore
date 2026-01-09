@@ -1,12 +1,12 @@
 To use Anchore you need the URL, username, and password to access the API and/or the UI.
 
-The Anchore API can be accessed via port {{ .Values.api.service.port }} on the following DNS name from within the cluster:
+The Anchore API can be accessed via port {{ .Values.upstream.api.service.port }} on the following DNS name from within the cluster:
 
     {{ include "enterprise.api.fullname" . -}}.{{- .Release.Namespace -}}.svc.cluster.local
 
 The Anchore UI can be accessed via localhost:8080 with kubernetes port-forwarding:
 
-    kubectl port-forward -n {{ .Release.Namespace }} svc/{{- template "enterprise.ui.fullname" . }} 8080:{{- .Values.ui.service.port }}
+    kubectl port-forward -n {{ .Release.Namespace }} svc/{{- template "enterprise.ui.fullname" . }} 8080:{{- .Values.upstream.ui.service.port }}
 
 Get the default admin password using the following command:
 
@@ -36,9 +36,9 @@ For more details see the v2.1.0 release notes - https://github.com/anchore/ancho
 ******************
 {{ end }}
 
-{{ include "enterprise.kubectl.deprecationWarnings" . }}
 
-{{ if or (.Values.postgresql.chartEnabled) (index .Values "ui-redis" "chartEnabled") }}
+
+{{ if or (.Values.upstream.postgresql.chartEnabled) (index .Values "ui-redis" "chartEnabled") }}
 ******************
 
 WARNING: Starting August 28th, 2025, the Bitnami public catalog will undergo changes that will remove the current images used in the dependent helm chart for postgres and redis.

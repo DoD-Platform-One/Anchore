@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Wait for Anchore Engine API to go live
-while [ $(curl -sw '%{http_code}' "${ANCHORE_CLI_URL}/swagger.json" -o /dev/null) -ne 200 ]; do
+while [ $(curl -sw '%{http_code}' "${ANCHORE_CLI_URL}/openapi.json" -o /dev/null) -ne 200 ]; do
   echo "Waiting for Anchore API..."
   sleep 10;
 done

@@ -1,4 +1,7 @@
 # By default we pull these values: https://repo1.dso.mil/big-bang/bigbang/-/blob/master/tests/disable-core-values.yaml
+########################
+# Required for package #
+########################
 kyvernoPolicies:
   values:
     bbtests:
@@ -7,7 +10,9 @@ kyverno:
   values:
     bbtests:
       enabled: false
-
 addons:
   anchoreEnterprise:
     enabled: true
+    values:
+      bbtests:
+        enabled: true  

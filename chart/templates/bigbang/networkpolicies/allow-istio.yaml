@@ -22,7 +22,7 @@ spec:
         matchLabels:
           {{- toYaml .Values.networkPolicies.ingressLabels | nindent 10}}
     ports:
-    - port: {{ .Values.api.service.port }} # anchore engine api (default: 8228)
+    - port: {{ .Values.upstream.api.service.port }} # anchore engine api (default: 8228)
       protocol: TCP
     - port: 3000 # anchore enterprise UI (default: 3000; note: Big Bang has configured Istio to use port 80)
       protocol: TCP
