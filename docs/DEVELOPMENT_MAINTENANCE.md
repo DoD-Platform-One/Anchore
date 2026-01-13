@@ -24,8 +24,8 @@ This policy revokes access to the K8s API for Pods utilizing said ServiceAccount
 
 - Obtain the Big Bang dev Anchore enterprise license by following the below instructions:
   - Clone the dogfood repo if you have not already, from <https://repo1.dso.mil/big-bang/team/deployments/bigbang.git>
-  - Run `sops -d bigbang/prod2/environment-bb-secret.enc.yaml | yq '.stringData."values.yaml"' | yq '.addons.anchore.enterprise.licenseYaml'` to get the full license contents.
-  - Add the full output from that command under `license` in your override values as a yaml object (shown below), making sure that indentation is properly preserved.
+  - Run `sops -d bigbang-eks/overlays/development/environment-bb-secret.enc.yaml | yq '.stringData."values.yaml"' | yq '.addons.anchore.enterprise.licenseYaml'` to get the full license contents.
+  - Add the full output from that command under `licenseYaml` in your override values (shown below), making sure that indentation is properly preserved
 
 `overrides/anchore.yaml`
 
