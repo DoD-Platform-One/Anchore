@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # anchore-enterprise
 
-![Version: 3.14.2-bb.5](https://img.shields.io/badge/Version-3.14.2--bb.5-informational?style=flat-square) ![AppVersion: 5.20.2](https://img.shields.io/badge/AppVersion-5.20.2-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
+![Version: 3.19.2-bb.0](https://img.shields.io/badge/Version-3.19.2--bb.0-informational?style=flat-square) ![AppVersion: 5.23.0](https://img.shields.io/badge/AppVersion-5.23.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
 it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -28,11 +28,11 @@ It is based on Anchore Engine, an open-source image inspection and scanning tool
 - Kubernetes config installed in `~/.kube/config`
 - Helm installed
 
-Kubernetes: `>=1.23.x || >=1.23.x-x`
+Kubernetes: `1.23.x - 1.34.x || 1.23.x-x - 1.34.x-x`
 
 Install Helm
 
-<https://helm.sh/docs/intro/install/>
+https://helm.sh/docs/intro/install/
 
 ## Deployment
 
@@ -97,32 +97,39 @@ helm install anchore-enterprise chart/
 | monitoring.serviceMonitor.tlsConfig | object | `{}` |  |
 | bbtests.enabled | bool | `false` |  |
 | bbtests.scripts.image | string | `"registry1.dso.mil/ironbank/anchore/cli/cli:0.9.4"` |  |
-| bbtests.scripts.envs.ANCHORE_CLI_URL | string | `"http://{{ template \"enterprise.api.fullname\" . }}:{{ .Values.upstream.api.service.port }}/v1"` |  |
+| bbtests.scripts.envs.ANCHORE_CLI_URL | string | `"http://{{ include \"enterprise.api.fullname\" . }}:{{ .Values.api.service.port }}/v2"` |  |
 | bbtests.scripts.envs.ANCHORE_CLI_USER | string | `"admin"` |  |
 | bbtests.scripts.envs.ANCHORE_SCAN_IMAGE | string | `"quay.io/prometheus/node-exporter:latest"` |  |
 | bbtests.scripts.secretEnvs[0].name | string | `"ANCHORE_CLI_PASS"` |  |
-| bbtests.scripts.secretEnvs[0].valueFrom.secretKeyRef.name | string | `"{{ template \"enterprise.fullname\" . }}"` |  |
+| bbtests.scripts.secretEnvs[0].valueFrom.secretKeyRef.name | string | `"{{ include \"enterprise.fullname\" . }}"` |  |
 | bbtests.scripts.secretEnvs[0].valueFrom.secretKeyRef.key | string | `"ANCHORE_ADMIN_PASSWORD"` |  |
 | bbtests.cypress.resources.requests.cpu | string | `"2"` |  |
 | bbtests.cypress.resources.requests.memory | string | `"4Gi"` |  |
 | bbtests.cypress.resources.limits.cpu | string | `"2"` |  |
 | bbtests.cypress.resources.limits.memory | string | `"4Gi"` |  |
 | bbtests.cypress.artifacts | bool | `true` |  |
-| bbtests.cypress.envs.cypress_url | string | `"http://{{ template \"enterprise.ui.fullname\" . }}:{{ .Values.ui.service.port }}"` |  |
+| bbtests.cypress.envs.cypress_url | string | `"http://{{ include \"enterprise.ui.fullname\" . }}:{{ .Values.ui.service.port }}"` |  |
 | bbtests.cypress.envs.cypress_user | string | `"admin"` |  |
 | bbtests.cypress.envs.cypress_registry | string | `"docker.io"` |  |
 | bbtests.cypress.envs.cypress_repository | string | `"anchore/grype"` |  |
 | bbtests.cypress.envs.cypress_tag | string | `"latest"` |  |
 | bbtests.cypress.secretEnvs[0].name | string | `"cypress_password"` |  |
-| bbtests.cypress.secretEnvs[0].valueFrom.secretKeyRef.name | string | `"{{ template \"enterprise.fullname\" . }}"` |  |
+| bbtests.cypress.secretEnvs[0].valueFrom.secretKeyRef.name | string | `"{{ include \"enterprise.fullname\" . }}"` |  |
 | bbtests.cypress.secretEnvs[0].valueFrom.secretKeyRef.key | string | `"ANCHORE_ADMIN_PASSWORD"` |  |
-| global.fullnameOverride | string | `"anchore-enterprise"` |  |
+| global.fullnameOverride | string | `""` |  |
 | global.nameOverride | string | `"anchore-enterprise"` |  |
 | upstream | object | Upstream chart values | Values to pass to [the upstream Anchore Enterprise chart](https://github.com/anchore/anchore-charts/blob/main/stable/enterprise/values.yaml) |
 | ui-redis.enabled | bool | `true` |  |
 | ui-redis.istio.enabled | string | `"{{ .Values.istio.enabled }}"` |  |
-| ui-redis.auth.password | string | `"anchore-redis,123"` |  |
-| ui-redis.commonConfiguration | string | `"maxmemory 200mb\nsave \"\""` |  |
+| ui-redis.externalEndpoint | string | `""` |  |
+| ui-redis.upstream.nameOverride | string | `"ui-redis"` |  |
+| ui-redis.upstream.fullnameOverride | string | `"anchore-enterprise-ui-redis"` |  |
+| ui-redis.upstream.auth.password | string | `"anchore-redis,123"` |  |
+| ui-redis.upstream.architecture | string | `"standalone"` |  |
+| ui-redis.upstream.master.persistence.enabled | bool | `false` |  |
+| ui-redis.upstream.commonConfiguration | string | `"maxmemory 200mb\nsave \"\""` |  |
+| ui-redis.cleanUpgrade.enabled | bool | `false` |  |
+| ui-redis.cleanUpgrade.redisLabel | string | `"app.kubernetes.io/name: ui-redis"` |  |
 | postgresql.enabled | bool | `true` |  |
 | postgresql.externalDBCheckEnabled | bool | `false` |  |
 | postgresql.primary.podSecurityContext.enabled | bool | `true` |  |
@@ -137,9 +144,10 @@ helm install anchore-enterprise chart/
 | postgresql.primary.persistence.subPath | string | `"data/pgdata"` |  |
 | postgresql.primary.persistence.mountPath | string | `"/var/lib/postgresql"` |  |
 | postgresql.primary.postgresqlDataDir | string | `"/var/lib/postgresql/data"` |  |
+| postgresql.primary.service.ports.postgresql | int | `5432` |  |
 | postgresql.image.registry | string | `"registry1.dso.mil"` |  |
 | postgresql.image.repository | string | `"ironbank/opensource/postgres/postgresql"` |  |
-| postgresql.image.tag | string | `"16.2"` |  |
+| postgresql.image.tag | string | `"18.1"` |  |
 | postgresql.global.imagePullSecrets[0] | string | `"private-registry"` |  |
 | postgresql.postgresqlConfiguration.listen_addresses | string | `"*"` |  |
 | postgresql.pgHbaConfiguration | string | `"local all all scram-sha-256\nhost all all all scram-sha-256"` |  |
@@ -150,9 +158,9 @@ helm install anchore-enterprise chart/
 | postgresql.resources.limits.memory | string | `"4096Mi"` |  |
 | postgresql.resources.requests.cpu | string | `"1000m"` |  |
 | postgresql.resources.requests.memory | string | `"4096Mi"` |  |
-| postgresql.metrics.resources.limits.cpu | string | `"100m"` |  |
+| postgresql.metrics.resources.limits.cpu | string | `"200m"` |  |
 | postgresql.metrics.resources.limits.memory | string | `"256Mi"` |  |
-| postgresql.metrics.resources.requests.cpu | string | `"100m"` |  |
+| postgresql.metrics.resources.requests.cpu | string | `"200m"` |  |
 | postgresql.metrics.resources.requests.memory | string | `"256Mi"` |  |
 | postgresql.securityContext.enabled | bool | `true` |  |
 | postgresql.securityContext.fsGroup | int | `1001` |  |
@@ -177,3 +185,4 @@ Please see the [contributing guide](./CONTRIBUTING.md) if you are interested in 
 ---
 
 _This file is programatically generated using `helm-docs` and some BigBang-specific templates. The `gluon` repository has [instructions for regenerating package READMEs](https://repo1.dso.mil/big-bang/product/packages/gluon/-/blob/master/docs/bb-package-readme.md)._
+
