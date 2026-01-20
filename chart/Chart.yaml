@@ -1,8 +1,8 @@
 name: anchore-enterprise
-version: 3.14.2-bb.5
+version: 3.19.2-bb.0
 apiVersion: v2
-appVersion: 5.20.2
-kubeVersion: ">=1.23.x || >=1.23.x-x"
+appVersion: 5.23.0
+kubeVersion: "1.23.x - 1.34.x || 1.23.x-x - 1.34.x-x"
 description: |
   Anchore Enterprise is a complete container security workflow solution for professional teams. Easily integrating with CI/CD systems,
   it allows developers to bolster security without compromising velocity and enables security teams to audit and verify compliance in real-time.
@@ -30,7 +30,7 @@ maintainers:
 icon: https://anchore.com/wp-content/uploads/2016/08/anchore.png
 dependencies:
   - name: enterprise
-    version: "3.13.0"
+    version: "3.19.2"
     alias: upstream
     repository: "https://charts.anchore.io"
   - name: postgresql
@@ -43,12 +43,12 @@ dependencies:
     condition: ui-redis.enabled
     alias: ui-redis
   - name: gluon
-    version: "0.9.5"
+    version: "0.9.7"
     repository: "oci://registry1.dso.mil/bigbang"
 annotations:
   bigbang.dev/maintenanceTrack: bb_integrated
   bigbang.dev/applicationVersions: |
-    - Enterprise: 5.20.2
+    - Enterprise: 5.23.0
   bigbang.dev/upstreamReleaseNotesMarkdown: |
     - [Find our upstream chart's CHANGELOG here](https://github.com/anchore/anchore-charts/tree/main)
     - [and our upstream application release notes here](https://docs.anchore.com/current/docs/releasenotes/)
@@ -56,14 +56,17 @@ annotations:
   helm.sh/images: |
     - name: redis
       condition: ui-redis.enabled
-      image: registry1.dso.mil/ironbank/opensource/redis/redis8-slim:8.2.2
+      image: registry1.dso.mil/ironbank/opensource/redis/redis8-slim:8.4.0
     - name: redis-exporter
       condition: ui-redis.enabled
-      image: registry1.dso.mil/ironbank/bitnami/analytics/redis-exporter:v1.78.0
+      image: registry1.dso.mil/ironbank/bitnami/analytics/redis-exporter:v1.80.1
     - name: enterprise
-      image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.20.2-amd64
+      image: registry1.dso.mil/ironbank/anchore/enterprise/enterprise:5.23.0
     - name: postgresql
       condition: postgresql.enabled
       image: registry1.dso.mil/ironbank/opensource/postgres/postgresql:16.2
     - name: enterpriseui
-      image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.20.0-amd64
+      image: registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui:5.23.0
+    - name: kubectl
+      image: registry1.dso.mil/ironbank/opensource/kubernetes/kubectl:v1.34
+

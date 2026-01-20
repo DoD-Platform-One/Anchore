@@ -4,6 +4,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [3.19.2-bb.0] - 2026-01-09
+
+### Changed
+
+- gluon 0.9.5 -> 0.9.7
+- ironbank/anchore/enterprise/enterprise 5.20.2 -> 5.23.0
+- ironbank/anchore/enterpriseui/enterpriseui 5.20.0 -> 5.23.0
+- registry1.dso.mil/ironbank/anchore/enterprise/enterprise 5.20.2 -> 5.23.0
+- registry1.dso.mil/ironbank/anchore/enterpriseui/enterpriseui 5.20.0 -> 5.23.0
+- registry1.dso.mil/ironbank/bitnami/analytics/redis-exporter v1.78.0 -> v1.80.1
+- registry1.dso.mil/ironbank/opensource/redis/redis8-slim  8.2.2 -> 8.4.0
+
 ## [3.14.2-bb.5] - 2025-12-26
 
 ### Changed
